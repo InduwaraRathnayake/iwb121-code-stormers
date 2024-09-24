@@ -28,11 +28,12 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import ReportAnalyzer from './ReportAnalyzer/ReportAnalyzer';
-import FBCPage from './FBCPage/FBCPage';
-import LipidPanel from './LipidPanelPage/LipidPanelPage';
-import LiverFunctionTests from './LiverFunctionPage/LiverFunctionPage';
-import BloodGlucoseTest from './BloodGlucosePage/BloodGlucosePage';
-import ThyroidFunctionTests from './ThyroidFunctionPage/ThyroidFunctionPage';
+import FBCPage from './ReportAnalyzer/FBCPage/FBCPage';
+import LipidPanel from './ReportAnalyzer/LipidPanelPage/LipidPanelPage';
+import LiverFunctionTests from './ReportAnalyzer/LiverFunctionPage/LiverFunctionPage';
+import BloodGlucoseTest from './ReportAnalyzer/BloodGlucosePage/BloodGlucosePage';
+import ThyroidFunctionTests from './ReportAnalyzer/ThyroidFunctionPage/ThyroidFunctionPage';
+import CRPTestPage from './ReportAnalyzer/CRPPage/CRPPage';
 
 function App() {
     return (
@@ -44,6 +45,7 @@ function App() {
                 <Route path="/liver-function-tests" element={<LiverFunctionTests />} />
                 <Route path="/blood-glucose-test" element={<BloodGlucoseTest />} />
                 <Route path="/thyroid-function-tests" element={<ThyroidFunctionTests />} />
+                <Route path="/c-reactive-protein-test" element={<CRPTestPage />} />
             </Routes>
         </Router>
     );
