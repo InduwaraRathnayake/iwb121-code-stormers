@@ -1,0 +1,44 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4; /* Light background color */
+}
+
+.container {
+    max-width: 400px; /* Set a max width for the card */
+    margin: 100px auto; /* Center the card vertically and horizontally */
+    padding: 20px;
+    background-color: white; /* Card background color */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    text-align: center; /* Center text inside the card */
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+input, select {
+    width: calc(100% - 20px); /* Full width minus padding */
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 4px; /* Rounded input fields */
+    border: 1px solid #ccc; /* Border style */
+}
+
+button {
+    padding: 10px 15px;
+    background-color: #007bff; /* Button color */
+    color: white; /* Button text color */
+    border: none; /* Remove default border */
+    border-radius: 4px; /* Rounded button corners */
+    cursor: pointer; /* Pointer cursor on hover */
+}
+
+button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+.result {
+    margin-top: 20px;
+}
