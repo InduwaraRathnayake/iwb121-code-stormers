@@ -24,27 +24,26 @@
 //   );
 // }
 
-// export default App;
+
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import ReportAnalyzer from './ReportAnalyzer/ReportAnalyzer.jsx'; // Create this component
-import FBCPage from './FBCPage/FBCPage.jsx'; // Create this component
-import LipidPanelPage from './LipidPanelPage/LipidPanelPage.jsx'; // Create this component
-import LiverFunctionPage from './LiverFunctionPage/LiverFunctionPage.jsx'; // Create this component
-import BloodGlucosePage from './BloodGlucosePage/BloodGlucosePage.jsx'; // Create this component
-import ThyroidFunctionPage from './ThyroidFunctionPage/ThyroidFunctionPage.jsx'; // Create this component
+import ReportAnalyzer from './ReportAnalyzer/ReportAnalyzer';
+import FBCPage from './FBCPage/FBCPage';
+import LipidPanel from './LipidPanelPage/LipidPanelPage';
+import LiverFunctionTests from './LiverFunctionPage/LiverFunctionPage';
+import BloodGlucoseTest from './BloodGlucosePage/BloodGlucosePage';
+import ThyroidFunctionTests from './ThyroidFunctionPage/ThyroidFunctionPage';
 
 function App() {
     return (
-        
         <Router>
             <Routes>
                 <Route path="/" element={<ReportAnalyzer />} />
                 <Route path="/fbc" element={<FBCPage />} />
-                <Route path="/lipid-panel" element={<LipidPanelPage />} />
-                <Route path="/liver-function" element={<LiverFunctionPage />} />
-                <Route path="/blood-glucose" element={<BloodGlucosePage />} />
-                <Route path="/thyroid-function" element={<ThyroidFunctionPage />} />
+                <Route path="/lipid-panel" element={<LipidPanel />} />
+                <Route path="/liver-function-tests" element={<LiverFunctionTests />} />
+                <Route path="/blood-glucose-test" element={<BloodGlucoseTest />} />
+                <Route path="/thyroid-function-tests" element={<ThyroidFunctionTests />} />
             </Routes>
         </Router>
     );
@@ -53,16 +52,6 @@ function App() {
 export default App;
 
 
-// import React from 'react'
-// import ReportAnalyzer from './ReportAnalyzer/ReportAnalyzer';
-
-// const App = () => {
-//   return (
-//     <ReportAnalyzer/>
-//   )
-// }
-
-// export default App
 
 
 
