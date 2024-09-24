@@ -1,0 +1,20 @@
+/* ReportAnalyzer.css */
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.box {
+    padding: 20px;
+    background-color: #15191d; /* Light blue background */
+}
+
+.card {
+    margin: 10px;
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: scale(1.05); /* Slightly enlarge the card on hover */
+}
