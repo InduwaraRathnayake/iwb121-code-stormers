@@ -23,6 +23,7 @@ const BMICalculator = () => {
   });
   const [bmi, setBmi] = useState(null);
   const [bmiCategory, setBmiCategory] = useState("");
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -30,11 +31,38 @@ const BMICalculator = () => {
       ...formData,
       [name]: value,
     });
+    setError(""); // Clear error message on input change
+  };
+
+  const handleKeyPress = (e) => {
+    // Allow only numeric input (0-9) and decimal point
+    const char = String.fromCharCode(e.which);
+    if (!/^[0-9.]+$/.test(char)) {
+      e.preventDefault();
+      setError("Please enter numbers only."); // Set error message for invalid input
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const { height, weight } = formData;
+
+    // Validate input values
+    if (!height || !weight) {
+      setError("Please enter both height and weight.");
+      return;
+    }
+
+    if (isNaN(height) || isNaN(weight)) {
+      setError("Height and weight must be numeric values.");
+      return;
+    }
+
+    if (height <= 0 || weight <= 0) {
+      setError("Height and weight must be positive numbers.");
+      return;
+    }
+
     const bmiValue = (weight / (height / 100) ** 2).toFixed(2);
     setBmi(bmiValue);
     categorizeBMI(bmiValue);
@@ -111,7 +139,10 @@ const BMICalculator = () => {
                 label="Height (cm)"
                 value={formData.height}
                 onChange={handleChange}
+                onKeyPress={handleKeyPress} // Validate input on key press
                 sx={{ marginBottom: "16px" }}
+                type="text" // Set input type to text to allow onKeyPress event
+                error={!!error} // Display error state if there's an error
               />
               <TextField
                 required
@@ -122,8 +153,20 @@ const BMICalculator = () => {
                 label="Weight (kg)"
                 value={formData.weight}
                 onChange={handleChange}
+                onKeyPress={handleKeyPress} // Validate input on key press
                 sx={{ marginBottom: "16px" }}
+                type="text" // Set input type to text to allow onKeyPress event
+                error={!!error} // Display error state if there's an error
               />
+              {error && (
+                <Typography
+                  variant="body2"
+                  color="red" // Changed to red for error message
+                  sx={{ marginBottom: "16px" }}
+                >
+                  {error}
+                </Typography>
+              )}
               <RadioGroup
                 name="gender"
                 value={formData.gender}
@@ -194,8 +237,8 @@ const BMICalculator = () => {
             </Box>
             <Box
               sx={{
-                marginLeft: { xs: 0, md: "30px" }, 
-                marginTop: { xs: "20px", md: 0 }, 
+                marginLeft: { xs: 0, md: "30px" },
+                marginTop: { xs: "20px", md: 0 },
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",

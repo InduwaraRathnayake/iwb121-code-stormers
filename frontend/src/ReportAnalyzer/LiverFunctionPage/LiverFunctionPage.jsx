@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { TextField, Typography, Card, CardContent, Button } from '@mui/material';
-import backgroundImg from '../../assets/background.jpg';
+import { TextField, Typography, Card, CardContent } from '@mui/material';
 import { BackgroundBox, ContentContainer, TitleBox, FormContainer, CardButton } from '../../components/Card';
 
 const LiverFunctionTestsPage = () => {
@@ -13,6 +12,7 @@ const LiverFunctionTestsPage = () => {
 
   const [report, setReport] = useState(null);
   const [history, setHistory] = useState([]);
+  const [error, setError] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -20,6 +20,12 @@ const LiverFunctionTestsPage = () => {
       ...formData,
       [name]: value,
     });
+    // Input validation to allow only numbers and decimal points
+    if (!/^\d*\.?\d*$/.test(value)) {
+      setError(`Invalid input for ${name}. Please enter a valid number.`);
+    } else {
+      setError('');
+    }
   };
 
   const interpretResults = () => {
@@ -59,128 +65,145 @@ const LiverFunctionTestsPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (Object.values(formData).some(value => value === '')) {
+      setError("Please fill in all fields.");
+      return;
+    }
     const interpretation = interpretResults();
     setReport(interpretation);
+    setError(''); // Clear error if submission is successful
   };
 
   const saveToHistory = () => {
+    if (Object.values(formData).some(value => value === '')) {
+      setError("Please fill in all fields before saving.");
+      return;
+    }
     setHistory([...history, formData]);
     alert("Report details saved successfully!");
   };
 
   return (
-      <ContentContainer>
-        <TitleBox>
-          <Typography variant="h4" component="h1" sx={{ fontWeight: 900, fontSize: '50px', color: '#034c81' }}>
-            Liver Function Tests Analyzer
-          </Typography>
-        </TitleBox>
+    <ContentContainer>
+      <TitleBox>
+        <Typography variant="h4" component="h1" sx={{ fontWeight: 900, fontSize: '50px', color: '#034c81' }}>
+          Liver Function Tests Analyzer
+        </Typography>
+      </TitleBox>
 
-        <FormContainer>
-          <form onSubmit={handleSubmit} className="form" style={{ width: '100%' }}>
-            <TextField
-              required
-              fullWidth
-              variant="outlined"
-              margin="normal"
-              name="alt"
-              label="ALT (U/L)"
-              value={formData.alt}
-              onChange={handleChange}
-              sx={{ marginBottom: '16px' }} // Add spacing between fields
-            />
-            <TextField
-              required
-              fullWidth
-              variant="outlined"
-              margin="normal"
-              name="ast"
-              label="AST (U/L)"
-              value={formData.ast}
-              onChange={handleChange}
-              sx={{ marginBottom: '16px' }}
-            />
-            <TextField
-              required
-              fullWidth
-              variant="outlined"
-              margin="normal"
-              name="alp"
-              label="ALP (U/L)"
-              value={formData.alp}
-              onChange={handleChange}
-              sx={{ marginBottom: '16px' }}
-            />
-            <TextField
-              required
-              fullWidth
-              variant="outlined"
-              margin="normal"
-              name="bilirubin"
-              label="Bilirubin (mg/dL)"
-              value={formData.bilirubin}
-              onChange={handleChange}
-              sx={{ marginBottom: '16px' }}
-            />
-            <CardButton type="submit">
-              Analyze
-            </CardButton>
-          </form>
-        </FormContainer>
+      <FormContainer>
+        <form onSubmit={handleSubmit} className="form" style={{ width: '100%' }}>
+          <TextField
+            required
+            fullWidth
+            variant="outlined"
+            margin="normal"
+            name="alt"
+            label="ALT (U/L)"
+            value={formData.alt}
+            onChange={handleChange}
+            sx={{ marginBottom: '16px' }}
+            error={!!error} // Display error state
+            helperText={error} // Show error message
+          />
+          <TextField
+            required
+            fullWidth
+            variant="outlined"
+            margin="normal"
+            name="ast"
+            label="AST (U/L)"
+            value={formData.ast}
+            onChange={handleChange}
+            sx={{ marginBottom: '16px' }}
+            error={!!error}
+            helperText={error}
+          />
+          <TextField
+            required
+            fullWidth
+            variant="outlined"
+            margin="normal"
+            name="alp"
+            label="ALP (U/L)"
+            value={formData.alp}
+            onChange={handleChange}
+            sx={{ marginBottom: '16px' }}
+            error={!!error}
+            helperText={error}
+          />
+          <TextField
+            required
+            fullWidth
+            variant="outlined"
+            margin="normal"
+            name="bilirubin"
+            label="Bilirubin (mg/dL)"
+            value={formData.bilirubin}
+            onChange={handleChange}
+            sx={{ marginBottom: '16px' }}
+            error={!!error}
+            helperText={error}
+          />
+          <CardButton type="submit">
+            Analyze
+          </CardButton>
+        </form>
+      </FormContainer>
 
-        {/* Report Card Section */}
-        {report && (
-          <Card 
-            sx={{ 
-              marginTop: '40px', 
-              padding: '20px', 
-              border: '1px solid #004c8c', 
-              borderRadius: '20px', 
-              width: '600px',
-              boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)', 
-              backgroundColor: 'rgba(255, 255, 255,0.9)', 
-            }}
-          >
-            <CardContent>
+      {/* Report Card Section */}
+      {report && (
+        <Card 
+          sx={{ 
+            marginTop: '40px', 
+            padding: '20px', 
+            border: '1px solid #004c8c', 
+            borderRadius: '20px', 
+            width: '600px',
+            boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)', 
+            backgroundColor: 'rgba(255, 255, 255,0.9)', 
+          }}
+        >
+          <CardContent>
+            <Typography 
+              variant="h6" 
+              sx={{ 
+                fontWeight: 'bold', 
+                color: '#004c8c', 
+                fontSize: '30px', 
+                marginBottom: '30px', 
+                textAlign: 'center', 
+                padding: '8px', 
+                borderRadius: '4px' 
+              }}
+            >
+              Analyzation of Results
+            </Typography>
+            {report.map((text, index) => (
               <Typography 
-                variant="h6" 
+                key={index} 
+                variant="body1" 
                 sx={{ 
-                  fontWeight: 'bold', 
-                  color: '#004c8c', 
-                  fontSize: '30px', 
-                  marginBottom: '30px', 
-                  textAlign: 'center', 
-                  padding: '8px', 
-                  borderRadius: '4px' 
-                }}
+                  marginTop: '16px', 
+                  color: '#0A2472',
+                  fontSize: '16px', 
+                  lineHeight: '1.5', 
+                  textAlign: 'left' 
+                }} 
               >
-                Analyzation of Results
+                {text}
               </Typography>
-              {report.map((text, index) => (
-                <Typography 
-                  key={index} 
-                  variant="body1" 
-                  sx={{ 
-                    marginTop: '16px', 
-                    color: '#0A2472',
-                    fontSize: '16px', 
-                    lineHeight: '1.5', 
-                    textAlign: 'left' 
-                  }} 
-                >
-                  {text}
-                </Typography>
-              ))}
-              <CardButton 
-              type="submit"
+            ))}
+            <CardButton 
+              type="button" // Changed to "button" to prevent form submission
               onClick={saveToHistory}
             >
               Save report details 
             </CardButton>
-            </CardContent>
-          </Card>
-        )}
-      </ContentContainer>
+          </CardContent>
+        </Card>
+      )}
+    </ContentContainer>
   );
 };
 

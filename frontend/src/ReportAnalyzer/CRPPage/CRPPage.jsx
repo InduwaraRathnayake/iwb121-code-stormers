@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { TextField, Typography, Card, CardContent, Button } from '@mui/material';
+import { TextField, Typography, Card, CardContent } from '@mui/material';
 import backgroundImg from '../../assets/background.jpg';
 import { BackgroundBox, ContentContainer, TitleBox, FormContainer, CardButton } from '../../components/Card';
 
@@ -10,6 +10,7 @@ const CRPTestPage = () => {
 
   const [report, setReport] = useState(null);
   const [history, setHistory] = useState([]);
+  const [error, setError] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -17,6 +18,14 @@ const CRPTestPage = () => {
       ...formData,
       [name]: value,
     });
+
+    // Validate input: only numbers and decimal points
+    const regex = /^[0-9]*\.?[0-9]*$/;
+    if (!regex.test(value) && value !== '') {
+      setError('Please enter a valid number.');
+    } else {
+      setError('');
+    }
   };
 
   const interpretResults = () => {
@@ -45,6 +54,15 @@ const CRPTestPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!formData.crpLevel) {
+      setError('CRP level is required.');
+      return;
+    }
+
+    if (error) {
+      return; // Prevent submission if there's an error
+    }
+
     const interpretation = interpretResults();
     setReport(interpretation);
   };
@@ -75,6 +93,8 @@ const CRPTestPage = () => {
               value={formData.crpLevel}
               onChange={handleChange}
               sx={{ marginBottom: '16px' }} // Add spacing between fields
+              error={!!error} // Show error state
+              helperText={error} // Display error message
             />
             <CardButton type="submit">
               Analyze
@@ -123,11 +143,12 @@ const CRPTestPage = () => {
                 {report.text}
               </Typography>
               <CardButton 
-              type="submit"
-              onClick={saveToHistory}
-            >
-              Save report details 
-            </CardButton>
+                type="button" // Changed to 'button' to prevent form submission
+                onClick={saveToHistory}
+                sx={{ marginTop: '16px' }} // Add spacing above the button
+              >
+                Save report details 
+              </CardButton>
             </CardContent>
           </Card>
         )}
