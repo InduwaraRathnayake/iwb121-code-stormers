@@ -9,8 +9,8 @@ import {
   Radio,
   Card,
 } from "@mui/material";
-import bmiImage from "../assets/bmi.jpg";
-import { ContentContainer, TitleBox, CardButton } from "../components/Card";
+import bmiImage from "../../assets/bmi.jpg";
+import { ContentContainer, TitleBox, CardButton } from "../../components/Card";
 import GaugeChart from "react-gauge-chart";
 
 import "./BmiCalculator.css";
