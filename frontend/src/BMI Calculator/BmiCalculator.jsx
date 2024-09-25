@@ -1,88 +1,223 @@
-import React, { useState } from 'react';
-import Speedometer from 'react-d3-speedometer';
-import './BmiCalculator.css'; // Optional for additional custom styles
+import React, { useState } from "react";
+import {
+  Container,
+  Box,
+  TextField,
+  Typography,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+  Card,
+} from "@mui/material";
+import bmiImage from "../assets/bmi.jpg";
+import { ContentContainer, TitleBox, CardButton } from "../components/Card";
+import GaugeChart from "react-gauge-chart";
 
-function BmiCalculator() {
-    const [weight, setWeight] = useState('');
-    const [height, setHeight] = useState('');
-    const [age, setAge] = useState('');
-    const [gender, setGender] = useState('male');
-    const [bmi, setBmi] = useState(null);
-    const [status, setStatus] = useState('');
+import "./BmiCalculator.css";
 
-    const calculateBMI = () => {
-        if (!weight || !height || !age) {
-            alert('Please enter weight, height, and age!');
-            return;
-        }
+const BMICalculator = () => {
+  const [formData, setFormData] = useState({
+    height: "",
+    weight: "",
+    gender: "male",
+  });
+  const [bmi, setBmi] = useState(null);
+  const [bmiCategory, setBmiCategory] = useState("");
 
-        const heightInMeters = parseFloat(height) / 100;
-        const bmiValue = (parseFloat(weight) / (heightInMeters * heightInMeters)).toFixed(2);
-        setBmi(bmiValue);
-        
-        let bmiStatus = '';
-        if (bmiValue < 18.5) {
-            bmiStatus = 'Underweight';
-        } else if (bmiValue < 24.9) {
-            bmiStatus = 'Normal weight';
-        } else if (bmiValue < 29.9) {
-            bmiStatus = 'Overweight';
-        } else {
-            bmiStatus = 'Obesity';
-        }
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
 
-        if (age < 18) {
-            bmiStatus += ' (Consider consulting a healthcare provider)';
-        } else if (age >= 65) {
-            bmiStatus += ' (Older adults may have different health considerations)';
-        }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const { height, weight } = formData;
+    const bmiValue = (weight / (height / 100) ** 2).toFixed(2);
+    setBmi(bmiValue);
+    categorizeBMI(bmiValue);
+  };
 
-        setStatus(bmiStatus);
-    };
+  const categorizeBMI = (bmi) => {
+    let category = "";
+    let message = "";
+    if (bmi < 18.5) {
+      category = "Underweight";
+      message =
+        "Your body is less than the normal recommended weight. You need to eat more nutritious food with adequate exercises. ";
+    } else if (bmi >= 18.5 && bmi <= 22.9) {
+      category = "Normal weight";
+      message =
+        "Your weight is within the normal recommended weight. Maintain your weight with adequate exercises.";
+    } else if (bmi >= 23 && bmi <= 24.9) {
+      category = "Risk to overweight";
+      message =
+        "Your weight is within the normal recommended weight. Try to bring down it with more exercises and correct dietary practices.";
+    } else if (bmi >= 25 && bmi <= 29.9) {
+      category = "Overweight";
+      message =
+        "Your weight is more than the normal recommended weight. Bring down it with more exercises and correct dietary practices. ";
+    } else {
+      category = "Obesity";
+      message =
+        "Your weight is very much higher than the normal recommended weight and is a risk factor for many other diseases like diabetes and heart disease. ";
+    }
+    setBmiCategory(`${category} - ${message}`);
+  };
 
-    return (
-        <div className='flex items-center justify-center min-h-screen bg-gray-900'>
-            <div className='bg-gray-800 text-white p-8 rounded-lg shadow-lg w-96'>
-                <h1 className='text-2xl font-bold mb-4'>BMI Calculator</h1>
-                <div className='mb-4'>
-                    <label className='block mb-1'>Weight (kg):</label>
-                    <input type="number" value={weight} onChange={(e) => setWeight(e.target.value)} className='w-full p-2 rounded bg-gray-700 text-white' placeholder='Enter your weight' />
-                </div>
-                <div className='mb-4'>
-                    <label className='block mb-1'>Height (cm):</label>
-                    <input type="number" value={height} onChange={(e) => setHeight(e.target.value)} className='w-full p-2 rounded bg-gray-700 text-white' placeholder='Enter your height' />
-                </div>
-                <div className='mb-4'>
-                    <label className='block mb-1'>Age:</label>
-                    <input type="number" value={age} onChange={(e) => setAge(e.target.value)} className='w-full p-2 rounded bg-gray-700 text-white' placeholder='Enter your age' />
-                </div>
-                <div className='mb-4'>
-                    <label className='block mb-1'>Gender:</label>
-                    <select value={gender} onChange={(e) => setGender(e.target.value)} className='w-full p-2 rounded bg-gray-700 text-white'>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                        <option value="other">Other</option>
-                    </select>
-                </div>
-                <button onClick={calculateBMI} className='w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 rounded'>Calculate</button>
-                {bmi && (
-                    <div className='mt-6 text-center'>
-                        <h3>Your BMI: {bmi}</h3>
-                        <h3>Status: {status}</h3>
-                        <Speedometer 
-                            value={bmi}
-                            minValue={10}
-                            maxValue={50}
-                            needleColor="#fff"
-                            startColor="#FF0000"
-                            segments={5}
-                            endColor="#00FF00"
-                        />
-                    </div>
-                )}
-            </div>
-        </div>
-    );
-}
+  return (
+    <Container>
+      <ContentContainer>
+        <TitleBox>
+          <Typography
+            variant="h4"
+            component="h1"
+            sx={{
+              fontWeight: 900,
+              fontSize: "50px",
+              color: "#034c81",
+              textAlign: "center",
+              marginTop: "20px",
+              marginBottom: "20px",
+            }}
+          >
+            BMI Calculator
+          </Typography>
+        </TitleBox>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: { xs: "column", md: "row" },
+            alignItems: "center",
+            justifyContent: "center",
+            mt: 5,
+            mb: 5,
+            bgcolor: "white",
+            boxShadow: 3,
+            borderRadius: 3,
+            overflow: "hidden",
+          }}
+        >
+          <Box sx={{ flex: "1 1 50%", p: 3 }}>
+            <form onSubmit={handleSubmit}>
+              <TextField
+                required
+                fullWidth
+                variant="outlined"
+                margin="normal"
+                name="height"
+                label="Height (cm)"
+                value={formData.height}
+                onChange={handleChange}
+                sx={{ marginBottom: "16px" }}
+              />
+              <TextField
+                required
+                fullWidth
+                variant="outlined"
+                margin="normal"
+                name="weight"
+                label="Weight (kg)"
+                value={formData.weight}
+                onChange={handleChange}
+                sx={{ marginBottom: "16px" }}
+              />
+              <RadioGroup
+                name="gender"
+                value={formData.gender}
+                onChange={handleChange}
+                row
+                sx={{ marginTop: "10px" }}
+              >
+                <FormControlLabel
+                  value="male"
+                  control={<Radio />}
+                  label="Male"
+                />
+                <FormControlLabel
+                  value="female"
+                  control={<Radio />}
+                  label="Female"
+                />
+              </RadioGroup>
+              <CardButton type="submit">Calculate BMI</CardButton>
+            </form>
+          </Box>
+          <Box
+            sx={{
+              flex: "1 1 50%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <img
+              src={bmiImage}
+              alt="BMI Info"
+              style={{ width: "100%", height: "auto" }}
+            />
+          </Box>
+        </Box>
+        {bmi && (
+          <Card
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              margin: "30px auto",
+              maxWidth: 800,
+              padding: "30px",
+              borderRadius: "20px",
+              backgroundColor: "rgba(255, 255, 255, 0.7)",
+              boxShadow: "rgba(0, 0, 0, 0.2) 0px 10px 20px",
+              flexDirection: { xs: "column", md: "row" },
+            }}
+          >
+            <Box
+              sx={{
+                padding: "30px",
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <GaugeChart
+                id="gauge-chart"
+                nrOfLevels={5}
+                arcsLength={[0.136, 0.176, 0.076, 0.196, 0.4]}
+                colors={["#60ccf3", "#63bc46", "#fbec31", "#f78f2c", "#ee3928"]}
+                percent={(bmi - 15) / 25}
+                arcPadding={0.02}
+                textColor="#000000"
+              />
+            </Box>
+            <Box
+              sx={{
+                marginLeft: { xs: 0, md: "30px" }, 
+                marginTop: { xs: "20px", md: 0 }, 
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                textAlign: "center",
+              }}
+            >
+              <Typography
+                variant="h4"
+                component="span"
+                sx={{ color: "#034c81", fontSize: "36px", margin: "20px 0" }}
+              >
+                Your BMI: {bmi}
+              </Typography>
+              <Typography variant="h6" component="span">
+                <br /> {bmiCategory}
+              </Typography>
+            </Box>
+          </Card>
+        )}
+      </ContentContainer>
+    </Container>
+  );
+};
 
-export default BmiCalculator;
+export default BMICalculator;
