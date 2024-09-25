@@ -1,0 +1,60 @@
+### Analyze Blood Glucose Data
+POST http://localhost:9090/api/analyzeBloodGlucose
+Content-Type: application/json
+
+{
+  "fastingGlucose": 15,
+  "randomGlucose": 130,
+  "hba1c": 5.5
+}
+
+### Analyze C-Reactive Protein (CRP) Data
+POST http://localhost:9090/api/analyzeCRP
+Content-Type: application/json
+
+{
+  "crpLevel": 2.5
+}
+
+### Analyze Full Blood Count (FBC) Data
+POST http://localhost:9090/api/analyzeFBC
+Content-Type: application/json
+
+{
+  "whiteBloodCells": 5.0,
+  "redBloodCells": 4.5,
+  "hemoglobin": 15.0,
+  "platelets": 250
+}
+
+### Analyze Lipid Panel Data
+POST http://localhost:9090/api/analyzeLipidPanel
+Content-Type: application/json
+
+{
+  "cholesterol": 180,
+  "triglycerides": 140,
+  "hdl": 55,
+  "ldl": 120
+}
+
+### Analyze Liver Function Test Data
+POST http://localhost:9090/api/analyzeLFT
+Content-Type: application/json
+
+{
+  "alt": 35,
+  "ast": 30,
+  "alp": 100,
+  "bilirubin": 0.8
+}
+
+### Analyze Thyroid Function Test Data
+POST http://localhost:9090/api/analyzeTFT
+Content-Type: application/json
+
+{
+  "tsh": 2.5,
+  "t3": 1.5,
+  "t4": 10.5
+}
