@@ -34,6 +34,7 @@ import LiverFunctionTests from './ReportAnalyzer/LiverFunctionPage/LiverFunction
 import BloodGlucoseTest from './ReportAnalyzer/BloodGlucosePage/BloodGlucosePage';
 import ThyroidFunctionTests from './ReportAnalyzer/ThyroidFunctionPage/ThyroidFunctionPage';
 import CRPTestPage from './ReportAnalyzer/CRPPage/CRPPage';
+import BMICalculator from './BMI Calculator/BmiCalculator';
 
 function App() {
     return (
@@ -48,6 +49,8 @@ function App() {
                 <Route path="/c-reactive-protein-test" element={<CRPTestPage />} />
             </Routes>
         </Router>
+        // <BMICalculator />
+
     );
 }
 
