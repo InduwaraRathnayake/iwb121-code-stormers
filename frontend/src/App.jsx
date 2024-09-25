@@ -35,9 +35,12 @@ import BloodGlucoseTest from './ReportAnalyzer/BloodGlucosePage/BloodGlucosePage
 import ThyroidFunctionTests from './ReportAnalyzer/ThyroidFunctionPage/ThyroidFunctionPage';
 import CRPTestPage from './ReportAnalyzer/CRPPage/CRPPage';
 import BMICalculator from './BMI Calculator/BmiCalculator';
+import WHRCalculator from './WHR Calculator/WHRcalculator';
+import HealthTips from './Tips/tips';
 
 function App() {
     return (
+    
         <Router>
             <Routes>
                 <Route path="/" element={<ReportAnalyzer />} />
@@ -49,7 +52,7 @@ function App() {
                 <Route path="/c-reactive-protein-test" element={<CRPTestPage />} />
             </Routes>
         </Router>
-        // <BMICalculator />
+        
 
     );
 }
