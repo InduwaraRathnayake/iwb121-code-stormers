@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { TextField, Typography, Card, CardContent, Button } from '@mui/material';
-import backgroundImg from '../../assets/background.jpg';
+import { TextField, Typography, Card, CardContent } from '@mui/material';
 import { BackgroundBox, ContentContainer, TitleBox, FormContainer, CardButton } from '../../components/Card';
 
 const LipidPanelPage = () => {
@@ -13,13 +12,23 @@ const LipidPanelPage = () => {
 
   const [report, setReport] = useState(null);
   const [history, setHistory] = useState([]);
+  const [error, setError] = useState(''); // State to manage error messages
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+
+    // Regex to allow only numbers and decimal points
+    const regex = /^[0-9]*\.?[0-9]*$/;
+
+    if (regex.test(value) || value === '') {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+      setError(''); // Clear error if input is valid
+    } else {
+      setError('Invalid input! Please enter a valid number.');
+    }
   };
 
   const interpretResults = () => {
@@ -71,6 +80,10 @@ const LipidPanelPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (Object.values(formData).some(value => value === '')) {
+      setError('Please fill in all fields.'); // Set error if any field is empty
+      return;
+    }
     const interpretation = interpretResults();
     setReport(interpretation);
   };
@@ -99,7 +112,9 @@ const LipidPanelPage = () => {
               label="Total Cholesterol (mg/dL)"
               value={formData.cholesterol}
               onChange={handleChange}
-              sx={{ marginBottom: '16px' }} // Add spacing between fields
+              error={!!error} // Set error state to show error styling
+              helperText={error} // Display error message
+              sx={{ marginBottom: '16px' }}
             />
             <TextField
               required
@@ -110,6 +125,8 @@ const LipidPanelPage = () => {
               label="Triglycerides (mg/dL)"
               value={formData.triglycerides}
               onChange={handleChange}
+              error={!!error}
+              helperText={error}
               sx={{ marginBottom: '16px' }}
             />
             <TextField
@@ -121,6 +138,8 @@ const LipidPanelPage = () => {
               label="HDL (Good Cholesterol) (mg/dL)"
               value={formData.hdl}
               onChange={handleChange}
+              error={!!error}
+              helperText={error}
               sx={{ marginBottom: '16px' }}
             />
             <TextField
@@ -132,6 +151,8 @@ const LipidPanelPage = () => {
               label="LDL (Bad Cholesterol) (mg/dL)"
               value={formData.ldl}
               onChange={handleChange}
+              error={!!error}
+              helperText={error}
               sx={{ marginBottom: '16px' }}
             />
             <CardButton type="submit">
@@ -184,11 +205,11 @@ const LipidPanelPage = () => {
                 </Typography>
               ))}
               <CardButton 
-              type="submit"
-              onClick={saveToHistory}
-            >
-              Save report details 
-            </CardButton>
+                type="button" // Changed type to button to prevent form submission
+                onClick={saveToHistory}
+              >
+                Save report details 
+              </CardButton>
             </CardContent>
           </Card>
         )}
