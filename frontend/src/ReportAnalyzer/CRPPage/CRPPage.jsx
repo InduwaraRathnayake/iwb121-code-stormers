@@ -1,46 +1,7 @@
-import React, { useState } from 'react';
-import { Box, TextField, Button, Typography } from '@mui/material';
-import { styled } from '@mui/system';
-import backgroundImg from '../../assets/background.jpg'; // Add your background image path
-
-const BackgroundBox = styled(Box)(() => ({
-  backgroundImage: `url(${backgroundImg})`,
-  backgroundSize: 'cover',
-  backgroundPosition: 'center',
-  height: '100vh',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  color: '#fff', // Change text color for better visibility
-}));
-
-const ContentContainer = styled(Box)(() => ({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  width: '100%',
-  padding: '20px',
-  textAlign: 'center',
-}));
-
-const TitleBox = styled(Box)(() => ({
-  marginBottom: '30px',
-}));
-
-const FormContainer = styled(Box)(() => ({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  padding: '40px',
-  borderRadius: '20px',
-  backgroundColor: 'rgba(255, 255, 255, 0.9)', // Semi-transparent background
-  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
-  width: '100%',
-  maxWidth: '600px',
-  border: '2px solid #1089D3', // Add border for definition
-  backdropFilter: 'blur(10px)', // Blur effect for a stylish look
-}));
+import { useState } from 'react';
+import {TextField, Typography } from '@mui/material';
+import backgroundImg from '../../assets/background.jpg';
+import {BackgroundBox, ContentContainer, TitleBox, FormContainer, CardButton} from '../../components/Card'
 
 const CRPTestPage = () => {
   const [formData, setFormData] = useState({
@@ -62,7 +23,7 @@ const CRPTestPage = () => {
   };
 
   return (
-    <BackgroundBox>
+    <BackgroundBox backgroundImg={backgroundImg}>
       <ContentContainer>
         <TitleBox>
           <Typography variant="h4" component="h1" sx={{ fontWeight: 900, fontSize: '50px', color: '#034c81' }}>
@@ -83,30 +44,9 @@ const CRPTestPage = () => {
               onChange={handleChange}
               sx={{ marginBottom: '16px' }} // Add spacing between fields
             />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{
-                background: 'linear-gradient(45deg, #1089D3 0%, #12B1D1 100%)',
-                color: 'white',
-                padding: '15px',
-                marginTop: '20px',
-                borderRadius: '20px',
-                boxShadow: 'rgba(133, 189, 215, 0.878) 0px 20px 10px -15px',
-                transition: 'all 0.2s ease-in-out',
-                '&:hover': {
-                  transform: 'scale(1.03)',
-                  boxShadow: 'rgba(133, 189, 215, 0.878) 0px 23px 10px -20px',
-                },
-                '&:active': {
-                  transform: 'scale(0.95)',
-                  boxShadow: 'rgba(133, 189, 215, 0.878) 0px 15px 10px -10px',
-                },
-              }}
-            >
+            <CardButton type="submit">
               Analyze
-            </Button>
+            </CardButton>
           </form>
         </FormContainer>
       </ContentContainer>
