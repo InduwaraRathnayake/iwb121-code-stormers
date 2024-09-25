@@ -26,40 +26,40 @@
 
 
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import ReportAnalyzer from './ReportAnalyzer/ReportAnalyzer';
-import FBCPage from './ReportAnalyzer/FBCPage/FBCPage';
-import LipidPanel from './ReportAnalyzer/LipidPanelPage/LipidPanelPage';
-import LiverFunctionTests from './ReportAnalyzer/LiverFunctionPage/LiverFunctionPage';
-import BloodGlucoseTest from './ReportAnalyzer/BloodGlucosePage/BloodGlucosePage';
-import ThyroidFunctionTests from './ReportAnalyzer/ThyroidFunctionPage/ThyroidFunctionPage';
-import CRPTestPage from './ReportAnalyzer/CRPPage/CRPPage';
-import BMICalculator from './BMI Calculator/BmiCalculator';
-import WHRCalculator from './WHR Calculator/WHRcalculator';
-import HealthTips from './Tips/tips';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+
+import Home from './pages/Home';
+import Services from './pages/Services';
+import About from './pages/About';
+import ContactUs from './pages/ContactUs';
+
 
 function App() {
     return (
-    
         <Router>
-            <Routes>
-                <Route path="/" element={<ReportAnalyzer />} />
-                <Route path="/fbc" element={<FBCPage />} />
-                <Route path="/lipid-panel" element={<LipidPanel />} />
-                <Route path="/liver-function-tests" element={<LiverFunctionTests />} />
-                <Route path="/blood-glucose-test" element={<BloodGlucoseTest />} />
-                <Route path="/thyroid-function-tests" element={<ThyroidFunctionTests />} />
-                <Route path="/c-reactive-protein-test" element={<CRPTestPage />} />
-            </Routes>
-        </Router>
-        
+            <div>
+                {/* Navigation Bar */}
+                <nav style={{ padding: '10px', backgroundColor: '#f0f0f0' }}>
+                    <ul style={{ listStyleType: 'none', padding: 0 }}>
+                        <li><Link to="/">Home</Link></li>
+                        <li><Link to="/services">Services</Link></li>
+                        <li><Link to="/about">About</Link></li>
+                        <li><Link to="/contact-us">Contact Us</Link></li>
+                    </ul>
+                </nav>
 
+                {/* Main Content Routes */}
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/services" element={<Services />} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/contact-us" element={<ContactUs />} />
+                </Routes>
+            </div>
+        </Router>
     );
 }
 
+
+
 export default App;
-
-
-
-
-

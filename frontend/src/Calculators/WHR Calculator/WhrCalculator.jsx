@@ -9,8 +9,8 @@ import {
   Radio,
   Card,
 } from "@mui/material";
-import whrImage from "../assets/whr.jpg"; 
-import { ContentContainer, TitleBox, CardButton } from "../components/Card";
+import whrImage from "../../assets/whr.jpg"; 
+import { ContentContainer, TitleBox, CardButton } from "../../components/Card";
 import GaugeChart from "react-gauge-chart";
 
 import "./WhrCalculator.css"; 
