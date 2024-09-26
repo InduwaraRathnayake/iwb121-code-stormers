@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { TextField, Typography, Card, CardContent } from '@mui/material';
 import { ContentContainer, TitleBox, FormContainer, CardButton } from '../../components/Card';
+import axios from 'axios';
 
 const FBCPage = () => {
   const [formData, setFormData] = useState({
@@ -16,104 +17,68 @@ const FBCPage = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    const regex = /^\d*\.?\d*$/; // regex to allow only numbers and decimal points
 
-    // Input validation to allow only numeric input (0-9) and decimal points
-    const regex = /^[0-9]*\.?[0-9]*$/;
+    // Only update state if the input value is valid according to the regex
     if (regex.test(value) || value === '') {
       setFormData({
         ...formData,
         [name]: value
       });
-      setError(''); // Clear error message
+      setError(''); // Clear error on valid input
     } else {
-      setError('Invalid input. Please enter numeric values only.');
+      setError(`${name} must be a valid number.`);
     }
   };
 
-  const interpretResults = () => {
-    const wbc = parseFloat(formData.whiteBloodCells);
-    const rbc = parseFloat(formData.redBloodCells);
-    const hgb = parseFloat(formData.hemoglobin);
-    const platelets = parseFloat(formData.platelets);
-
-    let interpretations = [];
-
-    // WBC Interpretation
-    if (wbc < 4.5) {
-      interpretations.push({
-        text: " White Blood Cell count is low, indicating potential issues such as:\n  - Bone marrow disorders\n  - Autoimmune diseases\n  - Certain infections\n  - Chronic fatigue",
-        color: 'blue'
-      });
-    } else if (wbc > 11) {
-      interpretations.push({
-        text: " White Blood Cell count is high, suggesting possible conditions like:\n  - Ongoing infections\n  - Inflammation\n  - Stress responses\n  - Allergic reactions",
-        color: 'red'
-      });
-    } else {
-      interpretations.push({ text: " White Blood Cell count is normal, indicating a healthy immune system.", color: 'green' });
+  const validateInput = () => {
+    // Check for empty fields
+    for (const key in formData) {
+      if (formData[key] === '') {
+        setError(`${key} cannot be empty.`);
+        return false; // Return false if any field is empty
+      }
     }
-
-    // RBC Interpretation
-    if (rbc < 4.1) {
-      interpretations.push({
-        text: "Red Blood Cell count is low, which could be due to:\n  - Anemia\n  - Blood loss\n  - Nutritional deficiencies\n  - Bone marrow issues",
-        color: 'blue'
-      });
-    } else if (rbc > 6.1) {
-      interpretations.push({
-        text: " Red Blood Cell count is high, often related to:\n  - Dehydration\n  - Increased production due to low oxygen levels\n  - Chronic lung diseases",
-        color: 'red'
-      });
-    } else {
-      interpretations.push({ text: " Red Blood Cell count is normal, suggesting a balanced oxygen transport capacity.", color: 'green' });
-    }
-
-    // Hemoglobin Interpretation
-    if (hgb < 13.8) {
-      interpretations.push({
-        text: " Hemoglobin level is low, which may lead to:\n  - Fatigue\n  - Weakness\n  - Paleness\n  - Symptoms related to iron deficiency",
-        color: 'blue'
-      });
-    } else if (hgb > 17.2) {
-      interpretations.push({
-        text: " Hemoglobin level is high, which can result from:\n  - Dehydration\n  - Lung diseases\n  - Heart diseases\n  - Increased physical training",
-        color: 'red'
-      });
-    } else {
-      interpretations.push({ text: "Hemoglobin level is normal, indicating effective oxygen transportation in the blood.", color: 'green' });
-    }
-
-    // Platelets Interpretation
-    if (platelets < 150) {
-      interpretations.push({
-        text: " Platelet count is low (Thrombocytopenia), possibly caused by:\n  - Bone marrow disorders\n  - Autoimmune diseases\n  - Certain medications\n  - Severe infections\n  - Symptoms may include easy bruising, prolonged bleeding, and petechiae.",
-        color: 'blue'
-      });
-    } else if (platelets > 400) {
-      interpretations.push({
-        text: "Platelet count is high (Thrombocytosis), which may indicate:\n  - Bone marrow disorders\n  - Chronic inflammatory conditions\n  - Iron deficiency\n  - Symptoms can include increased risk of blood clots and possible bleeding complications.",
-        color: 'red'
-      });
-    } else {
-      interpretations.push({ text: " Platelet count is normal, indicating a healthy coagulation process.", color: 'green' });
-    }
-
-    return interpretations;
+    return true; // Return true if all validations pass
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (error) {
-      alert(error); // Alert error message if present
-      return;
+    if (!validateInput()) {
+      return; // Prevent submission if validation fails
     }
-    const interpretations = interpretResults();
-    setReport(interpretations);
+  
+    // Convert the form data values to floats
+    const requestData = {
+      whiteBloodCells: parseFloat(formData.whiteBloodCells),
+      redBloodCells: parseFloat(formData.redBloodCells),
+      platelets: parseFloat(formData.platelets),
+      hemoglobin: parseFloat(formData.hemoglobin)
+    };
+  
+    try {
+      // Send the requestData object to the backend using axios
+      const response = await axios.post('http://localhost:9090/api/analyzeFBC', requestData);
+      console.log("🚀 ~ handleSubmit ~ response:", response)
+  
+      // Assuming you receive a JSON response with interpretations from the backend
+      const interpretations = response.data;
+      console.log("🚀 ~ handleSubmit ~ interpretations:", interpretations)
+      setReport(interpretations);
+      setError(''); // Clear any previous errors
+    } catch (error) {
+      console.error('Error submitting data to the backend:', error);
+      setError('Failed to send data to the backend.');
+    }
   };
 
   const saveToHistory = () => {
+    if (!validateInput()) {
+      return; // Prevent saving if validation fails
+    }
+    
     setHistory([...history, formData]);
-    alert("Report details saved successfully!");
+    alert('Report details saved successfully!');
   };
 
   return (
@@ -223,7 +188,7 @@ const FBCPage = () => {
                   lineHeight: '1.5',
                   listStyleType: 'disc',
                   paddingLeft: '20px',
-                  textAlign: 'left'
+                  textAlign: 'left',
                 }}
               >
                 {item.text}

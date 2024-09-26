@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { TextField, Typography, Card, CardContent } from '@mui/material';
-import { BackgroundBox, ContentContainer, TitleBox, FormContainer, CardButton } from '../../components/Card';
+import {ContentContainer, TitleBox, FormContainer, CardButton } from '../../components/Card';
+import axios from 'axios';
 
 const LiverFunctionTestsPage = () => {
   const [formData, setFormData] = useState({
@@ -16,71 +17,69 @@ const LiverFunctionTestsPage = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-    // Input validation to allow only numbers and decimal points
-    if (!/^\d*\.?\d*$/.test(value)) {
-      setError(`Invalid input for ${name}. Please enter a valid number.`);
+    const regex = /^\d*\.?\d*$/; // regex to allow only numbers and decimal points
+
+    // Only update state if the input value is valid according to the regex
+    if (regex.test(value) || value === '') {
+      setFormData({
+        ...formData,
+        [name]: value
+      });
+      setError(''); // Clear error on valid input
     } else {
-      setError('');
+      setError(`${name} must be a valid number.`);
     }
   };
 
-  const interpretResults = () => {
-    const { alt, ast, alp, bilirubin } = formData;
-    let interpretation = [];
-
-    // Interpret ALT level
-    if (alt < 40) {
-      interpretation.push("ALT is normal (Less than 40 U/L): Healthy liver function.");
-    } else {
-      interpretation.push("ALT is elevated (40 U/L and above): Possible liver damage or inflammation.");
+  const validateInput = () => {
+    // Check for empty fields
+    for (const key in formData) {
+      if (formData[key] === '') {
+        setError(`${key} cannot be empty.`);
+        return false; // Return false if any field is empty
+      }
     }
-
-    // Interpret AST level
-    if (ast < 40) {
-      interpretation.push("AST is normal (Less than 40 U/L): Healthy liver function.");
-    } else {
-      interpretation.push("AST is elevated (40 U/L and above): Possible liver damage or disease.");
-    }
-
-    // Interpret ALP level
-    if (alp < 120) {
-      interpretation.push("ALP is normal (Less than 120 U/L): Healthy liver and bone function.");
-    } else {
-      interpretation.push("ALP is elevated (120 U/L and above): Possible bile duct obstruction or liver disease.");
-    }
-
-    // Interpret Bilirubin level
-    if (bilirubin < 1.2) {
-      interpretation.push("Bilirubin is normal (Less than 1.2 mg/dL): Healthy liver function.");
-    } else {
-      interpretation.push("Bilirubin is elevated (1.2 mg/dL and above): Possible liver disease or bile duct obstruction.");
-    }
-
-    return interpretation;
+    return true; // Return true if all validations pass
   };
 
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (Object.values(formData).some(value => value === '')) {
-      setError("Please fill in all fields.");
-      return;
+    if (!validateInput()) {
+      return; // Prevent submission if validation fails
     }
-    const interpretation = interpretResults();
-    setReport(interpretation);
-    setError(''); // Clear error if submission is successful
+  
+    // Convert the form data values to floats
+    const requestData = {
+      alt: parseFloat(formData.alt),
+      ast: parseFloat(formData.ast),
+      alp: parseFloat(formData.alp),
+      bilirubin: parseFloat(formData.bilirubin)
+    };
+  
+    try {
+      // Send the requestData object to the backend using axios
+      const response = await axios.post('http://localhost:9090/api/analyzeLFT', requestData);
+      console.log("🚀 ~ handleSubmit ~ response:", response)
+  
+      // Assuming you receive a JSON response with interpretations from the backend
+      const interpretations = response.data;
+      console.log("🚀 ~ handleSubmit ~ interpretations:", interpretations)
+      setReport(interpretations);
+      setError(''); // Clear any previous errors
+    } catch (error) {
+      console.error('Error submitting data to the backend:', error);
+      setError('Failed to send data to the backend.');
+    }
   };
 
   const saveToHistory = () => {
-    if (Object.values(formData).some(value => value === '')) {
-      setError("Please fill in all fields before saving.");
-      return;
+    if (!validateInput()) {
+      return; // Prevent saving if validation fails
     }
+    
     setHistory([...history, formData]);
-    alert("Report details saved successfully!");
+    alert('Report details saved successfully!');
   };
 
   return (
@@ -179,7 +178,7 @@ const LiverFunctionTestsPage = () => {
             >
               Analyzation of Results
             </Typography>
-            {report.map((text, index) => (
+            {report.map((item, index) => (
               <Typography 
                 key={index} 
                 variant="body1" 
@@ -191,7 +190,7 @@ const LiverFunctionTestsPage = () => {
                   textAlign: 'left' 
                 }} 
               >
-                {text}
+                {item.text}
               </Typography>
             ))}
             <CardButton 

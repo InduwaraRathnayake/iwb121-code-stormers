@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { TextField, Typography, Card, CardContent } from '@mui/material';
 import { ContentContainer, TitleBox, FormContainer, CardButton } from '../../components/Card';
+import axios from 'axios';
 
 const BloodGlucoseTest = () => {
   const [formData, setFormData] = useState({
@@ -40,69 +41,33 @@ const BloodGlucoseTest = () => {
     return true; // Return true if all validations pass
   };
 
-  const interpretResults = () => {
-    const fasting = parseFloat(formData.fastingGlucose);
-    const random = parseFloat(formData.randomGlucose);
-    const hba1c = parseFloat(formData.hba1c);
-
-    let interpretations = [];
-
-    // Fasting Glucose Interpretation
-    if (fasting < 70) {
-      interpretations.push({
-        text: "Fasting glucose is low, which can indicate:\n- Hypoglycemia: A condition where blood sugar levels drop too low.\n- Insulinoma: A rare tumor of the pancreas that secretes insulin.",
-        color: 'blue'
-      });
-    } else if (fasting >= 70 && fasting <= 99) {
-      interpretations.push({ text: "Fasting glucose is normal, indicating healthy glucose metabolism.", color: 'green' });
-    } else if (fasting >= 100 && fasting <= 125) {
-      interpretations.push({
-        text: "Fasting glucose is elevated (Prediabetes): This condition is a warning sign for future diabetes, where glucose levels are higher than normal but not high enough for a diabetes diagnosis.",
-        color: 'orange'
-      });
-    } else {
-      interpretations.push({ text: "Fasting glucose is high (Diabetes): This indicates that you may have diabetes, requiring further testing and possibly medication.", color: 'red' });
-    }
-
-    // Random Glucose Interpretation
-    if (random < 140) {
-      interpretations.push({ text: "Random glucose is normal, suggesting good glucose regulation.", color: 'green' });
-    } else if (random >= 140 && random <= 199) {
-      interpretations.push({
-        text: "Random glucose indicates Prediabetes: Elevated glucose levels can increase the risk of developing type 2 diabetes.",
-        color: 'orange'
-      });
-    } else {
-      interpretations.push({ text: "Random glucose indicates Diabetes: Persistent high levels may require medical intervention.", color: 'red' });
-    }
-
-    // HbA1c Interpretation
-    if (hba1c < 5.7) {
-      interpretations.push({ text: "HbA1c is normal, indicating well-controlled blood sugar levels.", color: 'green' });
-    } else if (hba1c >= 5.7 && hba1c < 6.5) {
-      interpretations.push({
-        text: "HbA1c indicates Prediabetes: This is an important marker for long-term blood sugar control.",
-        color: 'orange'
-      });
-    } else {
-      interpretations.push({
-        text: "HbA1c indicates Diabetes: Levels above 6.5% suggest poor blood sugar control and potential complications.",
-        color: 'red'
-      });
-    }
-
-    return interpretations;
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateInput()) {
       return; // Prevent submission if validation fails
     }
-
-    const interpretations = interpretResults();
-    setReport(interpretations);
-    setError(''); // Clear any previous errors
+  
+    // Convert the form data values to floats
+    const requestData = {
+      fastingGlucose: parseFloat(formData.fastingGlucose),
+      randomGlucose: parseFloat(formData.randomGlucose),
+      hba1c: parseFloat(formData.hba1c)
+    };
+  
+    try {
+      // Send the requestData object to the backend using axios
+      const response = await axios.post('http://localhost:9090/api/analyzeBloodGlucose', requestData);
+      console.log("🚀 ~ handleSubmit ~ response:", response)
+  
+      // Assuming you receive a JSON response with interpretations from the backend
+      const interpretations = response.data;
+      console.log("🚀 ~ handleSubmit ~ interpretations:", interpretations)
+      setReport(interpretations);
+      setError(''); // Clear any previous errors
+    } catch (error) {
+      console.error('Error submitting data to the backend:', error);
+      setError('Failed to send data to the backend.');
+    }
   };
 
   const saveToHistory = () => {
@@ -111,9 +76,8 @@ const BloodGlucoseTest = () => {
     }
     
     setHistory([...history, formData]);
-    alert("Report details saved successfully!");
+    alert('Report details saved successfully!');
   };
-
   return (
     <ContentContainer>
       <TitleBox>

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { TextField, Typography, Card, CardContent } from '@mui/material';
-import { BackgroundBox, ContentContainer, TitleBox, FormContainer, CardButton } from '../../components/Card';
+import { ContentContainer, TitleBox, FormContainer, CardButton } from '../../components/Card';
+import axios from 'axios';
 
 const LipidPanelPage = () => {
   const [formData, setFormData] = useState({
@@ -16,81 +17,69 @@ const LipidPanelPage = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    const regex = /^\d*\.?\d*$/; // regex to allow only numbers and decimal points
 
-    // Regex to allow only numbers and decimal points
-    const regex = /^[0-9]*\.?[0-9]*$/;
-
+    // Only update state if the input value is valid according to the regex
     if (regex.test(value) || value === '') {
       setFormData({
         ...formData,
-        [name]: value,
+        [name]: value
       });
-      setError(''); // Clear error if input is valid
+      setError(''); // Clear error on valid input
     } else {
-      setError('Invalid input! Please enter a valid number.');
+      setError(`${name} must be a valid number.`);
     }
   };
 
-  const interpretResults = () => {
-    const { cholesterol, triglycerides, hdl, ldl } = formData;
-    let interpretation = [];
-
-    // Interpret cholesterol level
-    if (cholesterol < 200) {
-      interpretation.push("Total Cholesterol is normal (Less than 200 mg/dL): Good heart health.");
-    } else if (cholesterol >= 200 && cholesterol <= 239) {
-      interpretation.push("Total Cholesterol is borderline high (200-239 mg/dL): Risk for heart disease may be present.");
-    } else {
-      interpretation.push("Total Cholesterol is high (240 mg/dL and above): Increased risk for heart disease.");
+  const validateInput = () => {
+    // Check for empty fields
+    for (const key in formData) {
+      if (formData[key] === '') {
+        setError(`${key} cannot be empty.`);
+        return false; // Return false if any field is empty
+      }
     }
-
-    // Interpret triglycerides level
-    if (triglycerides < 150) {
-      interpretation.push("Triglycerides are normal (Less than 150 mg/dL).");
-    } else if (triglycerides >= 150 && triglycerides < 199) {
-      interpretation.push("Triglycerides are borderline high (150-199 mg/dL).");
-    } else {
-      interpretation.push("Triglycerides are high (200 mg/dL and above).");
-    }
-
-    // Interpret HDL level
-    if (hdl < 40) {
-      interpretation.push("HDL (Good Cholesterol) is low (Less than 40 mg/dL): Risk factor for heart disease.");
-    } else if (hdl >= 40 && hdl < 60) {
-      interpretation.push("HDL (Good Cholesterol) is acceptable (40-60 mg/dL).");
-    } else {
-      interpretation.push("HDL (Good Cholesterol) is high (60 mg/dL and above): Protective against heart disease.");
-    }
-
-    // Interpret LDL level
-    if (ldl < 100) {
-      interpretation.push("LDL (Bad Cholesterol) is optimal (Less than 100 mg/dL).");
-    } else if (ldl >= 100 && ldl < 129) {
-      interpretation.push("LDL (Bad Cholesterol) is near optimal (100-129 mg/dL).");
-    } else if (ldl >= 130 && ldl < 159) {
-      interpretation.push("LDL (Bad Cholesterol) is borderline high (130-159 mg/dL).");
-    } else if (ldl >= 160 && ldl < 189) {
-      interpretation.push("LDL (Bad Cholesterol) is high (160-189 mg/dL).");
-    } else {
-      interpretation.push("LDL (Bad Cholesterol) is very high (190 mg/dL and above): High risk for heart disease.");
-    }
-
-    return interpretation;
+    return true; // Return true if all validations pass
   };
 
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (Object.values(formData).some(value => value === '')) {
-      setError('Please fill in all fields.'); // Set error if any field is empty
-      return;
+    if (!validateInput()) {
+      return; // Prevent submission if validation fails
     }
-    const interpretation = interpretResults();
-    setReport(interpretation);
+  
+    // Convert the form data values to floats
+    const requestData = {
+      cholesterol: parseFloat(formData.cholesterol),
+      triglycerides: parseFloat(formData.triglycerides),
+      hdl: parseFloat(formData.hdl),
+      ldl: parseFloat(formData.ldl)
+    };
+  
+    try {
+      // Send the requestData object to the backend using axios
+      const response = await axios.post('http://localhost:9090/api/analyzeLipidPanel', requestData);
+      console.log("🚀 ~ handleSubmit ~ response:", response)
+  
+      // Assuming you receive a JSON response with interpretations from the backend
+      const interpretations = response.data;
+      console.log("🚀 ~ handleSubmit ~ interpretations:", interpretations)
+      setReport(interpretations);
+      setError(''); // Clear any previous errors
+    } catch (error) {
+      console.error('Error submitting data to the backend:', error);
+      setError('Failed to send data to the backend.');
+    }
   };
 
   const saveToHistory = () => {
+    if (!validateInput()) {
+      return; // Prevent saving if validation fails
+    }
+    
     setHistory([...history, formData]);
-    alert("Report details saved successfully!");
+    alert('Report details saved successfully!');
   };
 
   return (
@@ -189,7 +178,7 @@ const LipidPanelPage = () => {
               >
                 Analyzation of Results
               </Typography>
-              {report.map((text, index) => (
+              {report.map((item, index) => (
                 <Typography 
                   key={index} 
                   variant="body1" 
@@ -201,7 +190,7 @@ const LipidPanelPage = () => {
                     textAlign: 'left' 
                   }} 
                 >
-                  {text}
+                  {item.text}
                 </Typography>
               ))}
               <CardButton 

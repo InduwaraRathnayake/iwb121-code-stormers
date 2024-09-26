@@ -67,7 +67,7 @@ service /api on new http:Listener(9090) {
         check caller->respond(res);
     }
 
-        // Resource to analyze TFT data
+    // Resource to analyze TFT data
     resource function post analyzeTFT(http:Caller caller, TFTData data) returns error? {
         // Call the analyzeTFT function to get the interpretations
         AnalysisResult[] interpretations = check analyzeTFT(data);
