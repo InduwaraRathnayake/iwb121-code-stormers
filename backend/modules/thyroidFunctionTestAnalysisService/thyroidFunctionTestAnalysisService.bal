@@ -1,4 +1,16 @@
-function analyzeTFT(TFTData data) returns AnalysisResult[]|error {
+public // Define the data model for TFT input
+type TFTData record {
+    float tsh; // Thyroid Stimulating Hormone
+    float t3;  // Triiodothyronine
+    float t4;  // Thyroxine
+};
+
+type AnalysisResult record {
+    string text;
+    string color;
+};
+
+public function analyzeTFT(TFTData data) returns AnalysisResult[]|error {
     AnalysisResult[] interpretations = [];
 
     // TSH Interpretation

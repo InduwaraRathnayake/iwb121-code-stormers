@@ -1,4 +1,17 @@
-function analyzeLFT(LFTData data) returns AnalysisResult[]|error {
+// Define the data model for LFT input
+public type LFTData record {
+    float alt;      // Alanine Aminotransferase
+    float ast;      // Aspartate Aminotransferase
+    float alp;      // Alkaline Phosphatase
+    float bilirubin; // Total Bilirubin
+};
+
+type AnalysisResult record {
+    string text;
+    string color;
+};
+
+public function analyzeLFT(LFTData data) returns AnalysisResult[]|error {
     AnalysisResult[] interpretations = [];
 
     // ALT Interpretation

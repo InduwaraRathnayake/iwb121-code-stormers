@@ -1,6 +1,17 @@
 // backend/services/bloodGlucoseService.bal
 
-function analyzeBloodGlucose(BloodGlucoseData data) returns AnalysisResult[]|error  {
+public type BloodGlucoseData record {
+    float fastingGlucose;
+    float randomGlucose;
+    float hba1c;
+};
+
+type AnalysisResult record {
+    string text;
+    string color;
+};
+
+public function analyzeBloodGlucose(BloodGlucoseData data) returns AnalysisResult[]|error  {
     AnalysisResult[] interpretations = [];
     
     // Fasting Glucose Interpretation
