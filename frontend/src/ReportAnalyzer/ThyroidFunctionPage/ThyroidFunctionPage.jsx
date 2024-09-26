@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { TextField, Typography, Card, CardContent } from '@mui/material';
-import { BackgroundBox, ContentContainer, TitleBox, FormContainer, CardButton } from '../../components/Card';
+import { ContentContainer, TitleBox, FormContainer, CardButton } from '../../components/Card';
+import axios from 'axios';
 
 const ThyroidFunctionTests = () => {
   const [formData, setFormData] = useState({
@@ -15,70 +16,67 @@ const ThyroidFunctionTests = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    const regex = /^\d*\.?\d*$/; // regex to allow only numbers and decimal points
 
-    // Regex to allow only numbers and decimal points
-    const regex = /^[0-9]*\.?[0-9]*$/;
-
-    // Validate input
-    if (value === '' || regex.test(value)) {
+    // Only update state if the input value is valid according to the regex
+    if (regex.test(value) || value === '') {
       setFormData({
         ...formData,
-        [name]: value,
+        [name]: value
       });
-      setError(''); // Clear error message
+      setError(''); // Clear error on valid input
     } else {
-      setError('Please enter a valid number');
+      setError(`${name} must be a valid number.`);
     }
   };
 
-  const interpretResults = () => {
-    const { tsh, t3, t4 } = formData;
-    let interpretation = [];
-
-    // Interpret TSH level
-    if (tsh < 4.0) {
-      interpretation.push("TSH is low (Less than 4.0 mIU/L): Possible hyperthyroidism.");
-    } else if (tsh >= 4.0 && tsh <= 5.0) {
-      interpretation.push("TSH is normal (4.0 - 5.0 mIU/L): Healthy thyroid function.");
-    } else {
-      interpretation.push("TSH is high (More than 5.0 mIU/L): Possible hypothyroidism.");
+  const validateInput = () => {
+    // Check for empty fields
+    for (const key in formData) {
+      if (formData[key] === '') {
+        setError(`${key} cannot be empty.`);
+        return false; // Return false if any field is empty
+      }
     }
-
-    // Interpret T3 level
-    if (t3 < 0.8) {
-      interpretation.push("T3 is low (Less than 0.8 ng/mL): Possible hypothyroidism.");
-    } else if (t3 >= 0.8 && t3 <= 2.0) {
-      interpretation.push("T3 is normal (0.8 - 2.0 ng/mL): Healthy thyroid function.");
-    } else {
-      interpretation.push("T3 is high (More than 2.0 ng/mL): Possible hyperthyroidism.");
-    }
-
-    // Interpret T4 level
-    if (t4 < 4.5) {
-      interpretation.push("T4 is low (Less than 4.5 µg/dL): Possible hypothyroidism.");
-    } else if (t4 >= 4.5 && t4 <= 12.0) {
-      interpretation.push("T4 is normal (4.5 - 12.0 µg/dL): Healthy thyroid function.");
-    } else {
-      interpretation.push("T4 is high (More than 12.0 µg/dL): Possible hyperthyroidism.");
-    }
-
-    return interpretation;
+    return true; // Return true if all validations pass
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Check for empty inputs
-    if (!formData.tsh || !formData.t3 || !formData.t4) {
-      setError('All fields are required.');
-      return;
+    if (!validateInput()) {
+      return; // Prevent submission if validation fails
     }
-    const interpretation = interpretResults();
-    setReport(interpretation);
+  
+    // Convert the form data values to floats
+    const requestData = {
+      tsh: parseFloat(formData.tsh),
+      t3: parseFloat(formData.t3),
+      t4: parseFloat(formData.t4)
+    };
+  
+    try {
+      // Send the requestData object to the backend using axios
+      const response = await axios.post('http://localhost:9090/api/analyzeTFT', requestData);
+      console.log("🚀 ~ handleSubmit ~ response:", response)
+  
+      // Assuming you receive a JSON response with interpretations from the backend
+      const interpretations = response.data;
+      console.log("🚀 ~ handleSubmit ~ interpretations:", interpretations)
+      setReport(interpretations);
+      setError(''); // Clear any previous errors
+    } catch (error) {
+      console.error('Error submitting data to the backend:', error);
+      setError('Failed to send data to the backend.');
+    }
   };
 
   const saveToHistory = () => {
+    if (!validateInput()) {
+      return; // Prevent saving if validation fails
+    }
+    
     setHistory([...history, formData]);
-    alert("Report details saved successfully!");
+    alert('Report details saved successfully!');
   };
 
   return (
@@ -164,7 +162,7 @@ const ThyroidFunctionTests = () => {
             >
               Analyzation of Results
             </Typography>
-            {report.map((text, index) => (
+            {report.map((item, index) => (
               <Typography 
                 key={index} 
                 variant="body1" 
@@ -176,7 +174,7 @@ const ThyroidFunctionTests = () => {
                   textAlign: 'left' 
                 }} 
               >
-                {text}
+                {item.text}
               </Typography>
             ))}
             <CardButton 
