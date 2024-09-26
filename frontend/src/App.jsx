@@ -31,6 +31,8 @@ import Home from "./pages/Home";
 import Services from "./pages/Services";
 import About from "./pages/About";
 import ContactUs from "./pages/ContactUs";
+import Login from "./pages/Login";
+import SignUp from "./pages/SignUp";
 import ReportAnalyzer from "./ReportAnalyzer/ReportAnalyzer"; // Importing ReportAnalyzer
 import FBCPage from "./ReportAnalyzer/FBCPage/FBCPage"; // Importing specific test pages
 import LipidPanel from "./ReportAnalyzer/LipidPanelPage/LipidPanelPage";
@@ -58,6 +60,12 @@ function App() {
             <li>
               <Link to="/contact-us">Contact Us</Link>
             </li>
+            <li>
+              <Link to="/login">Login</Link>
+            </li>
+            <li>
+              <Link to="/signup">Sign Up</Link>
+            </li>
           </ul>
         </nav>
 
@@ -67,6 +75,8 @@ function App() {
             <Route path="/services" element={<Services />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact-us" element={<ContactUs />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<SignUp />} />
             <Route path="/report-analyzer" element={<ReportAnalyzer />}/>
             <Route path="/fbc" element={<FBCPage />} />
             <Route path="/lipid-panel" element={<LipidPanel />} />
