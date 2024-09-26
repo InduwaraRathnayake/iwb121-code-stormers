@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { TextField, Typography, Card, CardContent } from "@mui/material";
-import backgroundImg from "../../assets/background.jpg";
 import {
   BackgroundBox,
   ContentContainer,
@@ -83,7 +82,6 @@ const CRPTestPage = () => {
   };
 
   return (
-    <BackgroundBox backgroundImg={backgroundImg}>
       <ContentContainer>
         <TitleBox>
           <Typography
@@ -174,7 +172,6 @@ const CRPTestPage = () => {
           </Card>
         )}
       </ContentContainer>
-    </BackgroundBox>
   );
 };
 

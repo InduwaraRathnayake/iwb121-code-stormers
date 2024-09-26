@@ -13,9 +13,7 @@ import bmiImage from "../../assets/bmi.jpg";
 import { ContentContainer, TitleBox, CardButton } from "../../components/Card";
 import GaugeChart from "react-gauge-chart";
 
-import "./BmiCalculator.css";
-
-const BMICalculator = () => {
+export default function BMICalculator() {
   const [formData, setFormData] = useState({
     height: "",
     weight: "",
@@ -261,5 +259,3 @@ const BMICalculator = () => {
     </Container>
   );
 };
-
-export default BMICalculator;

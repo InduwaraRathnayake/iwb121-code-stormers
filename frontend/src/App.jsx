@@ -43,6 +43,8 @@ import LiverFunctionTests from "./ReportAnalyzer/LiverFunctionPage/LiverFunction
 import BloodGlucoseTest from "./ReportAnalyzer/BloodGlucosePage/BloodGlucosePage";
 import ThyroidFunctionTests from "./ReportAnalyzer/ThyroidFunctionPage/ThyroidFunctionPage";
 import CRPTestPage from "./ReportAnalyzer/CRPPage/CRPPage";
+import BMICalculator from "./Calculators/BMI Calculator/BmiCalculator";
+import WHRCalculator from "./Calculators/WHR Calculator/WhrCalculator";
 
 function App() {
   return (
@@ -87,6 +89,8 @@ function App() {
             <Route path="/blood-glucose-test" element={<BloodGlucoseTest />} />
             <Route path="/thyroid-function-tests" element={<ThyroidFunctionTests />} />
             <Route path="/c-reactive-protein-test" element={<CRPTestPage />} />
+            <Route path="/bmi-calculator" element={<BMICalculator />} />
+            <Route path="/whr-calculator" element={<WHRCalculator />} />
         </Routes>
       </div>
     </Router>
