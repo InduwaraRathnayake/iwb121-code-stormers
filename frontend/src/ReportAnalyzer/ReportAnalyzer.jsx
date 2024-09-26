@@ -26,7 +26,7 @@ const tests = [
   },
   
   {
-    title: "C-Reactive Protein (CRP) Test",
+    title: "C-Reactive Protein Test",
     description:
       "The C-Reactive Protein test measures the level of CRP in the blood, which increases in response to inflammation. ",
     image: crpTestImage,
@@ -121,11 +121,10 @@ export default function ReportAnalyzer() {
               image={test.image}
               alt={test.title}
               sx={{ 
-                width: '100%', 
                 objectFit: 'cover', 
-                borderTopLeftRadius: '20px', 
-                borderTopRightRadius: '20px' 
-              }}
+                width: '100%', 
+                height: '230px', 
+            }}
             />
             <CardContent>
               <Typography gutterBottom variant="h5" component="div" sx={{ color: '#1089D3', fontWeight: 'bold' }}>
