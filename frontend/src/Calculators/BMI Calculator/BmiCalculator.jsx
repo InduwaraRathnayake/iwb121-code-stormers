@@ -23,45 +23,53 @@ const BMICalculator = () => {
   });
   const [bmi, setBmi] = useState(null);
   const [bmiCategory, setBmiCategory] = useState("");
-  const [error, setError] = useState("");
+
+  // Separate error states for height and weight
+  const [heightError, setHeightError] = useState("");
+  const [weightError, setWeightError] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    // Reset error messages when user starts typing
+    if (name === "height") {
+      setHeightError("");
+    } else if (name === "weight") {
+      setWeightError("");
+    }
+
     setFormData({
       ...formData,
       [name]: value,
     });
-    setError(""); // Clear error message on input change
   };
 
   const handleKeyPress = (e) => {
-    // Allow only numeric input (0-9) and decimal point
     const char = String.fromCharCode(e.which);
     if (!/^[0-9.]+$/.test(char)) {
       e.preventDefault();
-      setError("Please enter numbers only."); // Set error message for invalid input
+      setWeightError("Please enter numbers only."); // Set error message for invalid input
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const { height, weight } = formData;
+    let valid = true; // Flag to check if inputs are valid
 
-    // Validate input values
-    if (!height || !weight) {
-      setError("Please enter both height and weight.");
-      return;
+    // Validate height input
+    if (!height || isNaN(height) || height <= 0) {
+      setHeightError("Please enter a valid positive number for height."); // Set height error message
+      valid = false; // Mark as invalid
     }
 
-    if (isNaN(height) || isNaN(weight)) {
-      setError("Height and weight must be numeric values.");
-      return;
+    // Validate weight input
+    if (!weight || isNaN(weight) || weight <= 0) {
+      setWeightError("Please enter a valid positive number for weight."); // Set weight error message
+      valid = false; // Mark as invalid
     }
 
-    if (height <= 0 || weight <= 0) {
-      setError("Height and weight must be positive numbers.");
-      return;
-    }
+    if (!valid) return; // Prevent submission if inputs are invalid
 
     const bmiValue = (weight / (height / 100) ** 2).toFixed(2);
     setBmi(bmiValue);
@@ -139,10 +147,10 @@ const BMICalculator = () => {
                 label="Height (cm)"
                 value={formData.height}
                 onChange={handleChange}
-                onKeyPress={handleKeyPress} // Validate input on key press
+                error={!!heightError} // Display error state if there's a height error
+                helperText={heightError} // Display height error message
                 sx={{ marginBottom: "16px" }}
                 type="text" // Set input type to text to allow onKeyPress event
-                error={!!error} // Display error state if there's an error
               />
               <TextField
                 required
@@ -153,20 +161,11 @@ const BMICalculator = () => {
                 label="Weight (kg)"
                 value={formData.weight}
                 onChange={handleChange}
-                onKeyPress={handleKeyPress} // Validate input on key press
+                error={!!weightError} // Display error state if there's a weight error
+                helperText={weightError} // Display weight error message
                 sx={{ marginBottom: "16px" }}
                 type="text" // Set input type to text to allow onKeyPress event
-                error={!!error} // Display error state if there's an error
               />
-              {error && (
-                <Typography
-                  variant="body2"
-                  color="red" // Changed to red for error message
-                  sx={{ marginBottom: "16px" }}
-                >
-                  {error}
-                </Typography>
-              )}
               <RadioGroup
                 name="gender"
                 value={formData.gender}
