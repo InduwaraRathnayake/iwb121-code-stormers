@@ -1,4 +1,14 @@
-function analyzeCRP(CRPData data) returns AnalysisResult[]|error {
+public type CRPData record {
+    float crpLevel;
+};
+
+type AnalysisResult record {
+    string text;
+    string color;
+};
+
+
+public function analyzeCRP(CRPData data) returns AnalysisResult[]|error {
     AnalysisResult[] interpretations = [];
 
     // Interpret CRP levels

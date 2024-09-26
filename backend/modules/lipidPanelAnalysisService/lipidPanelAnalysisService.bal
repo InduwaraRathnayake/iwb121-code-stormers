@@ -1,4 +1,17 @@
-function analyzeLipidPanel(LipidPanelData data) returns AnalysisResult[]|error {
+// Define the data model for Lipid Panel input
+public type LipidPanelData record {
+    float cholesterol;
+    float triglycerides;
+    float hdl; // High-Density Lipoprotein
+    float ldl; // Low-Density Lipoprotein
+};
+
+type AnalysisResult record {
+    string text;
+    string color;
+};
+
+public function analyzeLipidPanel(LipidPanelData data) returns AnalysisResult[]|error {
     AnalysisResult[] interpretations = [];
 
     // Cholesterol Interpretation

@@ -1,5 +1,3 @@
-// backend/models/bloodGlucoseModel.bal
-
 type BloodGlucoseData record {
     float fastingGlucose;
     float randomGlucose;

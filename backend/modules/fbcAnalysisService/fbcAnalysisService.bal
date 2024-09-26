@@ -1,4 +1,18 @@
-function analyzeFBC(FBCData data) returns AnalysisResult[]|error {
+
+// Define the data model for FBC input
+public type FBCData record {
+    float whiteBloodCells;
+    float redBloodCells;
+    float platelets;
+    float hemoglobin;
+};
+
+type AnalysisResult record {
+    string text;
+    string color;
+};
+
+public function analyzeFBC(FBCData data) returns AnalysisResult[]|error {
     AnalysisResult[] interpretations = [];
 
     // WBC Interpretation
