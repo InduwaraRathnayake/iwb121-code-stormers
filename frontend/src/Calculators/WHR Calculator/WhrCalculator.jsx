@@ -13,8 +13,6 @@ import whrImage from "../../assets/whr.jpg";
 import { ContentContainer, TitleBox, CardButton } from "../../components/Card";
 import GaugeChart from "react-gauge-chart";
 
-import "./WhrCalculator.css"; 
-
 const WHRCalculator = () => {
   const [formData, setFormData] = useState({
     waist: "",

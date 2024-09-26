@@ -70,3 +70,7 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 } */
+body {
+  background: linear-gradient(to right, #37ace9, #e9f6fc); /* Gradient from left to right */
+}
+
