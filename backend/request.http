@@ -58,3 +58,21 @@ Content-Type: application/json
   "t3": 1.5,
   "t4": 10.5
 }
+
+### Get all users
+GET http://localhost:9090/api/users
+Accept: application/json
+
+###
+
+### Add a new user
+POST http://localhost:9090/api/addUser
+Content-Type: application/json
+
+{
+  "username": "newuser5",
+  "first_name": "John",
+  "last_name": "Doe",
+  "email": "john.doe@example3.com",
+  "password": "password123"
+}
