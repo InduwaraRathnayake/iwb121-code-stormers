@@ -136,6 +136,7 @@ const WHRCalculator = () => {
             bgcolor: "white",
             boxShadow: 3,
             borderRadius: 3,
+            height: "450px",
             overflow: "hidden",
           }}
         >

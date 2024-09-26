@@ -58,34 +58,38 @@ const healthTips = [
 
 export default function HealthTips() {
     // Slider settings
-    const settings = {
-        dots: true,
-        infinite: true,
-        speed: 500,
-        slidesToShow: 3, // Number of cards to show at once
-        slidesToScroll: 1,
-        centerMode: true, // Enable center mode to show the current card prominently
-        centerPadding: '20px', // Adds padding to the left and right of the center card
-        responsive: [
-            {
-                breakpoint: 1024,
-                settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 1,
-                    infinite: true,
-                    dots: true,
-                }
-            },
-            {
-                breakpoint: 600,
-                settings: {
-                    slidesToShow: 1,
-                    slidesToScroll: 1,
-                    initialSlide: 1
-                }
+    // Slider settings
+const settings = {
+    dots: true,
+    infinite: true,
+    speed: 1000,
+    slidesToShow: 3, // Number of cards to show at once
+    slidesToScroll: 1,
+    centerMode: true, // Enable center mode to show the current card prominently
+    centerPadding: '20px', // Adds padding to the left and right of the center card
+    autoplay: true, // Enable autoplay
+    autoplaySpeed: 3000, // Duration to wait before switching to the next slide (in milliseconds)
+    responsive: [
+        {
+            breakpoint: 1024,
+            settings: {
+                slidesToShow: 2,
+                slidesToScroll: 1,
+                infinite: true,
+                dots: true,
             }
-        ]
-    };
+        },
+        {
+            breakpoint: 600,
+            settings: {
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                initialSlide: 1
+            }
+        }
+    ]
+};
+
 
     return (
         <Box
