@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   Container,
   Box,
@@ -6,15 +6,18 @@ import {
   Typography,
   Card,
   CardContent,
+  Grid,
   Link,
 } from '@mui/material';
 import { CardButton } from '../components/Card';
-import { Link as RouterLink } from 'react-router-dom'; // Import RouterLink
-import backgroundImage from '../assets/login-image.jpg';
+import { Link as RouterLink } from 'react-router-dom';
+import backgroundImage from '../assets/signUp-image.jpeg';
 
 const Signup = () => {
   const [formData, setFormData] = useState({
     username: '',
+    firstName: '',
+    lastName: '',
     email: '',
     password: '',
     confirmPassword: '',
@@ -33,18 +36,11 @@ const Signup = () => {
   const validateInput = () => {
     const newErrors = {};
 
-    if (!formData.username) {
-      newErrors.username = 'Username cannot be empty.';
-    }
-
-    if (!formData.email) {
-      newErrors.email = 'Email cannot be empty.';
-    }
-
-    if (!formData.password) {
-      newErrors.password = 'Password cannot be empty.';
-    }
-
+    if (!formData.username) newErrors.username = 'Username cannot be empty.';
+    if (!formData.firstName) newErrors.firstName = 'First Name cannot be empty.';
+    if (!formData.lastName) newErrors.lastName = 'Last Name cannot be empty.';
+    if (!formData.email) newErrors.email = 'Email cannot be empty.';
+    if (!formData.password) newErrors.password = 'Password cannot be empty.';
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = 'Passwords do not match.';
     }
@@ -76,8 +72,8 @@ const Signup = () => {
           borderRadius: '20px',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
           overflow: 'hidden',
-          height: '600px',
-          width: '1000px',
+          height: '600px', // Adjust height as needed
+          width: '1000px', // Adjust width as needed
         }}
       >
         <Box
@@ -89,90 +85,132 @@ const Signup = () => {
             height: '100%',
           }}
         />
+        {/* Right section with the signup form */}
         <Card
           sx={{
             padding: '40px',
-            width: '400px',
+            width: '450px', // Adjust width as needed
             backgroundColor: 'rgba(255, 255, 255, 0.9)',
           }}
         >
           <CardContent>
             <Typography
-              variant="h3"
+              variant="h4"
               component="h1"
               sx={{
                 fontWeight: 900,
                 fontSize: '30px',
                 color: '#034c81',
                 textAlign: 'center',
-                marginBottom: '10px',
+                marginBottom: '20px',
               }}
             >
               Create Account
             </Typography>
-            <form onSubmit={handleSubmit}>
-              <TextField
-                required
-                fullWidth
-                variant="outlined"
-                margin="normal"
-                name="username"
-                label="Username"
-                value={formData.username}
-                onChange={handleChange}
-                error={!!errors.username}
-                helperText={errors.username}
-                sx={{ marginBottom: '16px' }}
-              />
-              <TextField
-                required
-                fullWidth
-                variant="outlined"
-                margin="normal"
-                name="email"
-                label="Email"
-                type="email"
-                value={formData.email}
-                onChange={handleChange}
-                error={!!errors.email}
-                helperText={errors.email}
-                sx={{ marginBottom: '16px' }}
-              />
-              <TextField
-                required
-                fullWidth
-                variant="outlined"
-                margin="normal"
-                name="password"
-                label="Password"
-                type="password"
-                value={formData.password}
-                onChange={handleChange}
-                error={!!errors.password}
-                helperText={errors.password}
-                sx={{ marginBottom: '16px' }}
-              />
-              <TextField
-                required
-                fullWidth
-                variant="outlined"
-                margin="normal"
-                name="confirmPassword"
-                label="Confirm Password"
-                type="password"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                error={!!errors.confirmPassword}
-                helperText={errors.confirmPassword}
-                sx={{ marginBottom: '16px' }}
-              />
-              <CardButton type="submit">Sign Up</CardButton>
-            </form>
-            <Box
+            <Typography
+              variant="h1"
+              component="h3"
               sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                marginTop: '20px',
+                fontWeight: 900,
+                fontSize: '20px',
+                color: '#2ca3fa',
+                textAlign: 'center',
+                marginBottom: '20px',
+              }}
+            >
+              Please enter your details
+            </Typography>
+            <form onSubmit={handleSubmit}>
+              <Grid container spacing={2}>
+                <Grid item xs={6}>
+                  <TextField
+                    required
+                    fullWidth
+                    variant="outlined"
+                    name="firstName"
+                    label="First Name"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    error={!!errors.firstName}
+                    helperText={errors.firstName}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    required
+                    fullWidth
+                    variant="outlined"
+                    name="lastName"
+                    label="Last Name"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    error={!!errors.lastName}
+                    helperText={errors.lastName}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    variant="outlined"
+                    name="username"
+                    label="Username"
+                    value={formData.username}
+                    onChange={handleChange}
+                    error={!!errors.username}
+                    helperText={errors.username}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    variant="outlined"
+                    name="email"
+                    label="Email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    error={!!errors.email}
+                    helperText={errors.email}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    required
+                    fullWidth
+                    variant="outlined"
+                    name="password"
+                    label="Password"
+                    type="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    error={!!errors.password}
+                    helperText={errors.password}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    required
+                    fullWidth
+                    variant="outlined"
+                    name="confirmPassword"
+                    label="Confirm Password"
+                    type="password"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    error={!!errors.confirmPassword}
+                    helperText={errors.confirmPassword}
+                  />
+                </Grid>
+              </Grid>
+              <CardButton type="submit"> Sign Up </CardButton>
+            </form>
+            <Box 
+              sx={{ 
+                display: 'flex', 
+                justifyContent: 'center', 
+                marginTop: '20px' 
               }}
             >
               <Typography variant="body2" sx={{ marginRight: '8px' }}>
@@ -188,4 +226,5 @@ const Signup = () => {
     </Container>
   );
 };
+
 export default Signup;

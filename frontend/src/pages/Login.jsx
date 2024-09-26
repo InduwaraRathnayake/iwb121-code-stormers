@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   Container,
   Box,
@@ -82,7 +82,7 @@ const Login = () => {
         <Card
           sx={{
             padding: '40px',
-            width: '400px', // Adjust width as needed
+            width: '450px', // Adjust width as needed
             backgroundColor: 'rgba(255, 255, 255, 0.9)',
           }}
         >
@@ -151,7 +151,7 @@ const Login = () => {
               }}
             >
               <Typography variant="body2" sx={{ marginRight: '8px' }}>
-                Don't have an account?
+                Don&apos;t have an account?
               </Typography>
               <Link component={RouterLink} to="/signup" variant="body2">
                 Sign up
