@@ -16,6 +16,7 @@ const WHRCard = () => {
             height: 600, // Adjusted height for better aspect ratio
             boxShadow: 5,
             borderRadius: '20px',
+            backgroundColor: "rgba(255, 255, 255, 0.7)",
             overflow: 'hidden',
           }}
         >

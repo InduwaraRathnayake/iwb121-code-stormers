@@ -16,6 +16,7 @@ const BloodReportCard = () => {
             height: 500, // Adjusted height for better aspect ratio
             boxShadow: 5,
             borderRadius: '20px',
+            backgroundColor: "rgba(255, 255, 255, 0.7)",
             overflow: 'hidden',
             marginBottom: '-100px', // Added margin bottom for spacing
             marginTop: '-100px', // Added margin top for spacing

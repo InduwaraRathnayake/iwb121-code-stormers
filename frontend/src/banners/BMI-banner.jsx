@@ -15,6 +15,7 @@ const BmiBannerCard = () => {
             maxWidth: 500,
             height: 600,
             boxShadow: 5,
+            backgroundColor: "rgba(255, 255, 255, 0.5)",
             borderRadius: '20px',
             overflow: 'hidden',
           }}
@@ -37,7 +38,7 @@ const BmiBannerCard = () => {
                   fontSize: '24px',
                   color: '#034c81',
                   textAlign: 'center',
-                  marginBottom: '15px',
+                  marginBottom: '30px',
                 }}
               >
                 Discover Your Ideal Self!
@@ -48,6 +49,7 @@ const BmiBannerCard = () => {
                   textAlign: 'center',
                   color: '#666',
                   fontSize: '16px',
+                  marginBottom: '30px',
                 }}
               >
                 Ever wondered what your perfect BMI is? Click the button below and start your journey towards a healthier you!
@@ -67,10 +69,11 @@ const BmiBannerCard = () => {
                   src={bmiBanner}
                   alt="BMI Banner"
                   sx={{
-                    width: '80%',
+                    width: '90%',
                     height: 'auto',
                     borderRadius: '10px',
                     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                    marginBottom: '20px',
                   }}
                 />
               </Box>
