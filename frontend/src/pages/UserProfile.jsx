@@ -4,10 +4,11 @@ import {
   Box,
   TextField,
   Typography,
-  Button,
   Card,
+  Avatar,
+  CardContent,
 } from "@mui/material";
-import { CardButton } from "../components/Card"; // Assuming CardButton is a custom component
+import { CardButton, TitleBox} from "../components/Card"; 
 
 const UserProfile = () => {
   const [userData, setUserData] = useState({
@@ -51,152 +52,135 @@ const UserProfile = () => {
     setIsEditing(false);
   };
 
-  const handlePasswordChange = (e) => {
-    e.preventDefault();
-    
-    // Here you would typically validate the current password
-    if (currentPassword === "correct_password") { // Replace with actual validation
-      // Update password logic here
-      console.log("Password changed successfully!");
-      alert("Password changed successfully!");
-      setCurrentPassword("");
-      setNewPassword("");
-    } else {
-      alert("Current password is incorrect.");
-    }
-  };
-
   return (
-    <Container maxWidth="sm" sx={{ marginTop: 5 }}>
-      <Typography
-        variant="h4"
-        component="h1"
-        sx={{
-          fontWeight: 900,
-          fontSize: "50px",
-          color: "#034c81",
-          textAlign: "center",
-          marginBottom: "20px",
-        }}
-      >
-        User Profile
-      </Typography>
+    <Container maxWidth="sm" sx={{ marginTop: 5}}>
+      <TitleBox>
+          <Typography variant="h4" component="h1" sx={{ fontWeight: 900, fontSize: '50px',textAlign: 'center', color: '#034c81' }}>
+            User Profile
+          </Typography>
+        </TitleBox>
       
       <Card variant="outlined" sx={{ padding: 3 }}>
-        {isEditing ? (
-          <form onSubmit={handleSubmit}>
-            <Box mb={3}>
-              <TextField
-                label="Username"
-                name="username"
-                value={formData.username}
-                onChange={handleChange}
-                fullWidth
-                required
-              />
-            </Box>
-            <Box mb={3}>
-              <TextField
-                label="First Name"
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleChange}
-                fullWidth
-                required
-              />
-            </Box>
-            <Box mb={3}>
-              <TextField
-                label="Last Name"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleChange}
-                fullWidth
-                required
-              />
-            </Box>
-            <Box mb={3}>
-              <TextField
-                label="Email"
-                name="email"
-                type="email"
-                value={formData.email}
-                onChange={handleChange}
-                fullWidth
-                required
-              />
-            </Box>
-
-            {/* Checkbox to toggle password change fields */}
-            <Box mb={2}>
-              <label>
-                <input 
-                  type="checkbox" 
-                  checked={changePassword} 
-                  onChange={() => setChangePassword(!changePassword)} 
+        <CardContent>
+          {isEditing ? (
+            <form onSubmit={handleSubmit}>
+              <Box mb={3}>
+                <TextField
+                  label="Username"
+                  name="username"
+                  value={formData.username}
+                  onChange={handleChange}
+                  fullWidth
+                  required
                 />
-                Change Password
-              </label>
-            </Box>
+              </Box>
+              <Box mb={3}>
+                <TextField
+                  label="First Name"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  fullWidth
+                  required
+                />
+              </Box>
+              <Box mb={3}>
+                <TextField
+                  label="Last Name"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  fullWidth
+                  required
+                />
+              </Box>
+              <Box mb={3}>
+                <TextField
+                  label="Email"
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  fullWidth
+                  required
+                />
+              </Box>
 
-            {changePassword && (
-              <>
-                <Typography variant="h6" gutterBottom>
-                  Change Password:
-                </Typography>
-                <Box mb={3}>
-                  <TextField
-                    label="Current Password"
-                    type="password"
-                    value={currentPassword}
-                    onChange={(e) => setCurrentPassword(e.target.value)}
-                    fullWidth
-                    required
+              {/* Checkbox to toggle password change fields */}
+              <Box mb={2}>
+                <label>
+                  <input 
+                    type="checkbox" 
+                    checked={changePassword} 
+                    onChange={() => setChangePassword(!changePassword)} 
                   />
-                </Box>
-                <Box mb={3}>
-                  <TextField
-                    label="New Password"
-                    type="password"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    fullWidth
-                    required
-                  />
-                </Box>
-              </>
-            )}
+                  Change Password
+                </label>
+              </Box>
 
-            <Box display="flex" justifyContent="center">
-              <Button type="submit" variant="contained" color="primary" sx={{ marginRight: 1 }}>
-                Save Changes
-              </Button>
-              <Button type="button" variant="outlined" onClick={handleEditToggle}>
-                Cancel
-              </Button>
-            </Box>
-          </form>
-        ) : (
-          <div style={{ textAlign: 'center' }}>
-            <Typography variant="h6" gutterBottom sx={{ lineHeight: '2' }}>
-              <strong>Username:</strong> {userData.username}
-            </Typography>
-            <Typography variant="h6" gutterBottom sx={{ lineHeight: '2' }}>
-              <strong>First Name:</strong> {userData.firstName}
-            </Typography>
-            <Typography variant="h6" gutterBottom sx={{ lineHeight: '2' }}>
-              <strong>Last Name:</strong> {userData.lastName}
-            </Typography>
-            <Typography variant="h6" gutterBottom sx={{ lineHeight: '2' }}>
-              <strong>Email:</strong> {userData.email}
-            </Typography>
-            
-            {/* Add space after Edit Profile button */}
-            <CardButton variant="contained" color="primary" onClick={handleEditToggle} sx={{ marginTop: 2, marginBottom: 2 }}>
-              Edit Profile
-            </CardButton>
-          </div>
-        )}
+              {changePassword && (
+                <>
+                  <Typography variant="h6" gutterBottom>
+                    Change Password:
+                  </Typography>
+                  <Box mb={3}>
+                    <TextField
+                      label="Current Password"
+                      type="password"
+                      value={currentPassword}
+                      onChange={(e) => setCurrentPassword(e.target.value)}
+                      fullWidth
+                      required
+                    />
+                  </Box>
+                  <Box mb={3}>
+                    <TextField
+                      label="New Password"
+                      type="password"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      fullWidth
+                      required
+                    />
+                  </Box>
+                </>
+              )}
+
+              <Box display="flex" justifyContent="center">
+                <CardButton type="button" onClick={handleEditToggle} >
+                  Save Changes
+                </CardButton>
+                <CardButton type="button" onClick={handleEditToggle}>
+                  Cancel
+                </CardButton>
+              </Box>
+            </form>
+          ) : (
+            <div style={{ textAlign: 'center' }}>
+              {/* Avatar showing the first letter of the username */}
+              <Avatar sx={{ background: "linear-gradient(45deg, #1089D3 0%, #12B1D1 100%)", color: "white", margin: '0 auto', width: 120, height: 120 }}>
+                {userData.username.charAt(0).toUpperCase()}
+              </Avatar>
+              <Typography variant="h6" gutterBottom sx={{ lineHeight: '2', marginTop: '10px' }}>
+                <strong>Username:</strong> {userData.username}
+              </Typography>
+              <Typography variant="h6" gutterBottom sx={{ lineHeight: '2' }}>
+                <strong>First Name:</strong> {userData.firstName}
+              </Typography>
+              <Typography variant="h6" gutterBottom sx={{ lineHeight: '2' }}>
+                <strong>Last Name:</strong> {userData.lastName}
+              </Typography>
+              <Typography variant="h6" gutterBottom sx={{ lineHeight: '2' }}>
+                <strong>Email:</strong> {userData.email}
+              </Typography>
+
+              {/* Add space after Edit Profile button */}
+              <CardButton type="submit" onClick={handleEditToggle}>
+                Edit Profile
+              </CardButton>
+            </div>
+          )}
+        </CardContent>
       </Card>
     </Container>
   );
