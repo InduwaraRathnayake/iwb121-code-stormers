@@ -71,6 +71,12 @@ button:focus-visible {
   }
 } */
 body {
-  background: linear-gradient(to right, #37ace9, #e9f6fc); /* Gradient from left to right */
+  background-image: url('https://img.freepik.com/premium-vector/health-care-science-icon-pattern-medical-innovation-concept-background-vector-designx9_258787-6409.jpg?w=1380');
+  background-repeat: repeat-y;
+  background-size: 100% auto;
+  background-position: top;
+  background-attachment: scroll; /* Allows the background to scroll with the content */
+  margin: 0; /* Removes any default margin on the body */
+  height: 100vh; /* Ensures the body height covers the viewport height */
 }
 

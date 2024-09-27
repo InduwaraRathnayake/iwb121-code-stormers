@@ -119,7 +119,7 @@ export default function HealthTips() {
           marginBottom: "40px",
         }}
       >
-        General Health Tips
+        Self-Care Tips for a Healthy Life
       </Typography>
 
       <Box sx={{ width: "100%", maxWidth: "100%" }}>
