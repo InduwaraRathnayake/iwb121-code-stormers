@@ -10,26 +10,25 @@ const BloodReportCard = () => {
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
         <Card
           sx={{
-            display: 'flex',
-            flexDirection: 'row', // Changed to row for side-by-side layout
-            maxWidth: 1100, // Increased maximum width for a wider banner
-            height: 500, // Adjusted height for better aspect ratio
+            maxWidth: { xs: '90%', md: 1100 }, // Full width on small screens, max width on medium and up
+            height: 'auto', // Set height to auto for responsive behavior
+            minHeight: '500px', // Set a minimum height for the card
             boxShadow: 5,
             borderRadius: '20px',
             backgroundColor: "rgba(255, 255, 255, 0.7)",
             overflow: 'hidden',
-            marginBottom: '-100px', // Added margin bottom for spacing
-            marginTop: '-100px', // Added margin top for spacing
+            display: { xs: 'block', md: 'flex' }, // Block on small screens, flex on medium and up
           }}
         >
+          {/* Content Box */}
           <Box
             sx={{
               flex: 1,
+              p: 2,
               display: 'flex',
-              alignItems: 'center',
+              flexDirection: 'column',
               justifyContent: 'center',
-              p: 2, // Adjusted padding
-              pt: 1, // Reduced upper padding
+              alignItems: 'center',
             }}
           >
             <CardContent>
@@ -38,20 +37,20 @@ const BloodReportCard = () => {
                 component="h1"
                 sx={{
                   fontWeight: 900,
-                  fontSize: '24px', // Font size
+                  fontSize: '24px',
                   color: '#034c81',
                   textAlign: 'center',
-                  marginBottom: '20px', // Reduced margin bottom
+                  marginBottom: '20px',
                 }}
               >
                 Analyze Your Blood Report!
               </Typography>
               <Typography
                 sx={{
-                  mb: 2, // Margin bottom
+                  mb: 2,
                   textAlign: 'center',
                   color: '#666',
-                  fontSize: '16px', // Font size for readability
+                  fontSize: '16px',
                 }}
               >
                 Understanding your blood report is crucial for monitoring your health. 

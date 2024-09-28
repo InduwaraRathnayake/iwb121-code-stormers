@@ -10,7 +10,6 @@ const CalculatorsCard = () => {
         display="flex"
         justifyContent="space-between"
         alignItems="center"
-        marginTop={-10}
         minHeight="100vh"
         sx={{ flexDirection: { xs: 'column', md: 'row' } }} // Stack vertically on small screens
       >
