@@ -117,6 +117,7 @@ export default function HealthTips() {
           textTransform: "uppercase",
           letterSpacing: "0.1em",
           marginBottom: "40px",
+          marginTop: "40px",
         }}
       >
         Self-Care Tips for a Healthy Life

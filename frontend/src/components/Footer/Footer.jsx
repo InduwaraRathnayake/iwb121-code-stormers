@@ -4,62 +4,60 @@ const Footer = () => {
   return (
     <footer style={footerStyle}>
       <div style={containerStyle}>
-          <div style={leftSectionStyle}>
-            <h2 style={logoStyle}>NAMEEEEEE</h2>
-            <p>
-              Get instant clarity on your blood test results. Expert analysis,
-              easy tracking, all in one app. Start now!
-            </p>
-            <div style={socialIconsStyle}>
+        <div style={leftSectionStyle}>
+          <h2 style={logoStyle}>WELLNESS 360</h2>
+          <p>
+            Get instant clarity on your blood test results. Expert analysis,
+            easy tracking, all in one app. Start now!
+          </p>
+          <div style={socialIconsStyle}>
               <Link to="#" style={iconStyle}>
                 <img src="/fb.png" alt="Facebook" style={iconImageStyle} />
-              </Link>
-              <Link to="#" style={iconStyle}>
-                <img src="/tw.png" alt="Twitter" style={iconImageStyle} />
               </Link>
               <Link to="#" style={iconStyle}>
                 <img src="/in.png" alt="Instagram" style={iconImageStyle} />
               </Link>
             </div>
-          </div>
-          <div style={centerSectionStyle}>
-            <h3 style={logoStyle1}>NAMEEEEEE</h3>
-            <ul style={listStyle}>
-              <li>
-                <Link to="/" style={linkStyle}>
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link to="/services" style={linkStyle}>
-                  Services
-                </Link>
-              </li>
-              <li>
-                <Link to="/contact-us" style={linkStyle}>
-                  Contact
-                </Link>
-              </li>
-              <li>
-                <Link to="/about" style={linkStyle}>
-                  About Us
-                </Link>
-              </li>
-            </ul>
-          </div>
-          <div style={rightSectionStyle}>
-            <h3 style={logoStyle1}>YOU ARE ALWAYS OUR PRIORITY</h3>
-            <p>+94 123456789</p>
-            <p>
-              <a href="mailto:Abcd@gmail.com" style={linkStyle}>
-                Abcd@gmail.com
-              </a>
-            </p>
-          </div>
+        </div>
+        <div style={centerSectionStyle}>
+          <h3 style={logoStyle1}>WELLNESS 360</h3>
+          <ul style={listStyle}>
+            <li>
+              <Link to="/" style={linkStyle}>
+                Home
+              </Link>
+            </li>
+            <li>
+              <Link to="/services" style={linkStyle}>
+                Services
+              </Link>
+            </li>
+            <li>
+              <Link to="/contact-us" style={linkStyle}>
+                Contact
+              </Link>
+            </li>
+            <li>
+              <Link to="/about" style={linkStyle}>
+                About Us
+              </Link>
+            </li>
+          </ul>
+        </div>
+        <div style={rightSectionStyle}>
+          <h3 style={logoStyle1}>YOU ARE ALWAYS OUR PRIORITY</h3>
+          <p>University of Moratuwa</p>
+          <p>+94 123456789</p>
+          <p>
+            <a href="mailto:Abcd@gmail.com" style={linkStyle}>
+              wellness360@gmail.com
+            </a>
+          </p>
+        </div>
       </div>
 
       <div style={bottomSectionStyle}>
-        <p>2024 © Abcd.com - All rights reserved.</p>
+        <p>2024 © WELLNESS 360.com - All rights reserved.</p>
       </div>
     </footer>
   );
@@ -68,7 +66,7 @@ const Footer = () => {
 // Styles
 
 const logoStyle1 = {
-  color: "#f77f00",
+  color: "#1E90FF", // Light blue color
 };
 const footerStyle = {
   backgroundColor: "#125488",
@@ -95,7 +93,7 @@ const sectionStyle = {
 const logoStyle = {
   fontSize: "20px",
   fontWeight: "bold",
-  color: "#f77f00",
+  color: "#1E90FF", // Light blue color
 };
 
 const socialIconsStyle = {
@@ -123,7 +121,7 @@ const listStyle = {
 };
 
 const linkStyle = {
-  color: "#fff", // Change link color to white
+  color: "#fff", // Keep link color white
   textDecoration: "none",
 };
 
