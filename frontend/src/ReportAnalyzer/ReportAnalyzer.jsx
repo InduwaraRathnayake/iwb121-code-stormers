@@ -72,7 +72,7 @@ export default function ReportAnalyzer() {
         flexDirection: "column",
         alignItems: "center",
         padding: 3,
-        backgroundColor: "#e3f2fd",
+        //backgroundColor: "#e3f2fd",
       }}
     >
       <Typography
@@ -81,7 +81,7 @@ export default function ReportAnalyzer() {
         gutterBottom
         sx={{
           fontSize: "3rem",
-          color: "#4A90E2", // A shade of blue
+          color: "#034c81",
           fontWeight: "bold",
           textAlign: "center",
           textTransform: "uppercase",
