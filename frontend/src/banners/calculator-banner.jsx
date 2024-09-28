@@ -1,4 +1,3 @@
-import React from 'react';
 import { Container, Box } from '@mui/material';
 import BmiBannerCard from './bmi-banner'; // Importing the existing BMI card
 import WHRCard from './WHR-banner'; // Importing the existing WHR card
