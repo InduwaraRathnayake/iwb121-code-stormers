@@ -1,34 +1,6 @@
-// import { useEffect, useState } from 'react';
-// import axios from 'axios';
-
-// function App() {
-//   const [message, setMessage] = useState('');
-
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       try {
-//         const response = await axios.get('http://localhost:8080/api/greeting');
-//         setMessage(response.data.message); // Assuming the JSON has a 'message' field
-//       } catch (error) {
-//         console.error('Error fetching the data', error);
-//       }
-//     };
-
-//     fetchData();
-//   }, []);
-
-//   return (
-//     <div>
-//       <h1>{message}</h1>
-//     </div>
-//   );
-// }
-
-import React from "react";
-import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
-import "slick-carousel/slick/slick.css"; 
-import "slick-carousel/slick/slick-theme.css"; 
-
+import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 import Home from "./pages/Home";
 import Services from "./pages/Services";
@@ -45,56 +17,65 @@ import ThyroidFunctionTests from "./ReportAnalyzer/ThyroidFunctionPage/ThyroidFu
 import CRPTestPage from "./ReportAnalyzer/CRPPage/CRPPage";
 import BMICalculator from "./Calculators/BMI Calculator/BmiCalculator";
 import WHRCalculator from "./Calculators/WHR Calculator/WhrCalculator";
+import UserProfile from "./pages/UserProfile";
+import Footer from "./components/Footer/Footer";
+import Navbar from "./components/Navbar/Navbar";
+import Calculator from "./Calculators/Calculator";
+
+// Hide the Navbar and Footer on certain routes
+const Layout = () => {
+  const location = useLocation();
+  const shouldHideNavbarFooter = location.pathname === "/login" || location.pathname === "/signup";
+
+  return (
+    <>
+    <div style={layoutStyle}>
+      {!shouldHideNavbarFooter && <Navbar />}
+      <div style={contentStyle}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact-us" element={<ContactUs />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/reports" element={<ReportAnalyzer />} />
+          <Route path="/fbc" element={<FBCPage />} />
+          <Route path="/lipid-panel" element={<LipidPanel />} />
+          <Route path="/liver-function-tests" element={<LiverFunctionTests />} />
+          <Route path="/blood-glucose-test" element={<BloodGlucoseTest />} />
+          <Route path="/thyroid-function-tests" element={<ThyroidFunctionTests />} />
+          <Route path="/c-reactive-protein-test" element={<CRPTestPage />} />
+          <Route path="/bmi-calculator" element={<BMICalculator />} />
+          <Route path="/whr-calculator" element={<WHRCalculator />} />
+          <Route path="/user-profile" element={<UserProfile />} />
+          <Route path="/calculators" element={<Calculator />} />
+        </Routes>
+      </div>
+      {!shouldHideNavbarFooter && <Footer />}
+      </div>
+    </>
+  );
+};
 
 function App() {
   return (
     <Router>
-      <div>
-        {/* Navigation Bar */}
-        <nav style={{ padding: "10px", backgroundColor: "#f0f0f0" }}>
-          <ul style={{ listStyleType: "none", padding: 0 }}>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to="/services">Services</Link>
-            </li>
-            <li>
-              <Link to="/about">About</Link>
-            </li>
-            <li>
-              <Link to="/contact-us">Contact Us</Link>
-            </li>
-            <li>
-              <Link to="/login">Login</Link>
-            </li>
-            <li>
-              <Link to="/signup">Sign Up</Link>
-            </li>
-          </ul>
-        </nav>
-
-        {/* Main Content Routes */}
-        <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact-us" element={<ContactUs />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/report-analyzer" element={<ReportAnalyzer />}/>
-            <Route path="/fbc" element={<FBCPage />} />
-            <Route path="/lipid-panel" element={<LipidPanel />} />
-            <Route path="/liver-function-tests" element={<LiverFunctionTests />} />
-            <Route path="/blood-glucose-test" element={<BloodGlucoseTest />} />
-            <Route path="/thyroid-function-tests" element={<ThyroidFunctionTests />} />
-            <Route path="/c-reactive-protein-test" element={<CRPTestPage />} />
-            <Route path="/bmi-calculator" element={<BMICalculator />} />
-            <Route path="/whr-calculator" element={<WHRCalculator />} />
-        </Routes>
-      </div>
+      <Layout />
     </Router>
   );
 }
 
 export default App;
+
+const layoutStyle = {
+  display: "flex",
+  flexDirection: "column",
+  minHeight: "100vh", // Ensures the layout takes up the full height of the viewport
+};
+
+const contentStyle = {
+  flex: "1", // Takes up the remaining space between navbar and footer
+  padding: "20px", // Optional: you can adjust this padding as needed
+};

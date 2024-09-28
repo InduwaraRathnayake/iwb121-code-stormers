@@ -67,7 +67,7 @@ const BloodReportCard = () => {
                   variant="contained"
                   color="primary"
                   component={RouterLink}
-                  to="/report-analyzer" // Update with the actual route
+                  to="/reports" // Update with the actual route
                 >
                   Start Analyzing Your Report Now
                 </CardButton>

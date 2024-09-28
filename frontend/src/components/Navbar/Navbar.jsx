@@ -1,19 +1,19 @@
-import React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import Button from '@mui/material/Button';
-import MenuItem from '@mui/material/MenuItem';
-import Avatar from '@mui/material/Avatar';
-import Tooltip from '@mui/material/Tooltip';
+import React from "react";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import Menu from "@mui/material/Menu";
+import MenuIcon from "@mui/icons-material/Menu";
+import Button from "@mui/material/Button";
+import MenuItem from "@mui/material/MenuItem";
+import Avatar from "@mui/material/Avatar";
+import Tooltip from "@mui/material/Tooltip";
+import { Link } from "react-router-dom";
 
-const pages = ['Home', 'Services', 'About Us', 'Contact'];
-const settings = ['Profile', 'Account', 'Logout'];
-const reportsOptions = ['Reports', 'Calculators'];
+const pages = ["Home", "Services", "About", "Contact us"];
+const settings = ["User Profile", "Account", "Logout"];
+const reportsOptions = ["Reports", "Calculators"];
 
 function Navbar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -44,22 +44,30 @@ function Navbar() {
     setAnchorElReports(null);
   };
 
+  //handling logout
+  const handleLogout = () => {
+    localStorage.clear();
+    window.location.href = "/login"
+  };
+
   return (
-    <AppBar position="static" sx={{ backgroundColor: '#125488' }}> {/* Set the background color */}
+    <AppBar position="static" sx={{ backgroundColor: "#125488" }}>
+      {" "}
+      {/* Set the background color */}
       <Toolbar>
         {/* Logo */}
-        <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-          <a href="/">
-            <img 
-              src="/Health.png" 
-              alt="MyWebsite Logo" 
-              style={{ height: '50px', width: 'auto' }}
+        <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+          <Link to="/">
+            <img
+              src="/logo.png"
+              alt="MyWebsite Logo"
+              style={{ height: "50px", width: "auto" }}
             />
-          </a>
+          </Link>
         </Box>
 
         {/* Responsive Menu for smaller screens */}
-        <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+        <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
           <IconButton
             size="large"
             aria-label="menu"
@@ -72,21 +80,21 @@ function Navbar() {
             id="menu-appbar"
             anchorEl={anchorElNav}
             anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'left',
+              vertical: "bottom",
+              horizontal: "left",
             }}
             keepMounted
             transformOrigin={{
-              vertical: 'top',
-              horizontal: 'left',
+              vertical: "top",
+              horizontal: "left",
             }}
             open={Boolean(anchorElNav)}
             onClose={handleCloseNavMenu}
-            sx={{ display: { xs: 'block', md: 'none' } }}
+            sx={{ display: { xs: "block", md: "none" } }}
           >
             {pages.map((page) => (
               <MenuItem key={page} onClick={handleCloseNavMenu}>
-                <Button href={`/${page.toLowerCase().replace(' ', '')}`}>
+                <Button href={`/${page.toLowerCase().replace(" ", "-")}`}>
                   {page}
                 </Button>
               </MenuItem>
@@ -95,25 +103,25 @@ function Navbar() {
         </Box>
 
         {/* Menu items for larger screens */}
-        <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-          {pages.map((page) => (
-            page === 'Services' ? (
+        <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+          {pages.map((page) =>
+            page === "Services" ? (
               <Box
                 key={page}
                 onMouseEnter={handleOpenReportsMenu}
                 onMouseLeave={handleCloseReportsMenu}
               >
                 <Button
-                  href="#"
+                  href="/services"
                   sx={{
                     my: 2,
-                    color: 'white',
-                    display: 'block',
-                    transition: 'transform 0.1s ease',
-                    '&:hover': {
-                      transform: 'scale(1.05)',
-                      backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                    }
+                    color: "white",
+                    display: "block",
+                    transition: "transform 0.1s ease",
+                    "&:hover": {
+                      transform: "scale(1.05)",
+                      backgroundColor: "rgba(255, 255, 255, 0.1)",
+                    },
                   }}
                 >
                   {page}
@@ -122,20 +130,22 @@ function Navbar() {
                   id="reports-menu"
                   anchorEl={anchorElReports}
                   anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
+                    vertical: "bottom",
+                    horizontal: "left",
                   }}
                   keepMounted
                   transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'left',
+                    vertical: "top",
+                    horizontal: "left",
                   }}
                   open={Boolean(anchorElReports)}
                   onClose={handleCloseReportsMenu}
                 >
                   {reportsOptions.map((report) => (
                     <MenuItem key={report} onClick={handleCloseReportsMenu}>
-                      <Button href={`/${report.toLowerCase().replace(' ', '')}`}>
+                      <Button
+                        href={`/${report.toLowerCase().replace(" ", "-")}`}
+                      >
                         {report}
                       </Button>
                     </MenuItem>
@@ -145,22 +155,22 @@ function Navbar() {
             ) : (
               <Button
                 key={page}
-                href={`/${page.toLowerCase().replace(' ', '')}`}
+                href={`/${page.toLowerCase().replace(" ", "-")}`}
                 sx={{
                   my: 2,
-                  color: 'white',
-                  display: 'block',
-                  transition: 'transform 0.1s ease',
-                  '&:hover': {
-                    transform: 'scale(1.05)',
-                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                  }
+                  color: "white",
+                  display: "block",
+                  transition: "transform 0.1s ease",
+                  "&:hover": {
+                    transform: "scale(1.05)",
+                    backgroundColor: "rgba(255, 255, 255, 0.1)",
+                  },
                 }}
               >
                 {page}
               </Button>
             )
-          ))}
+          )}
         </Box>
 
         {/* User Avatar and Settings Menu */}
@@ -171,26 +181,34 @@ function Navbar() {
             </IconButton>
           </Tooltip>
           <Menu
-            sx={{ mt: '45px' }}
+            sx={{ mt: "45px" }}
             id="menu-appbar"
             anchorEl={anchorElUser}
             anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
+              vertical: "top",
+              horizontal: "right",
             }}
             keepMounted
             transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
+              vertical: "top",
+              horizontal: "right",
             }}
             open={Boolean(anchorElUser)}
             onClose={handleCloseUserMenu}
           >
-            {settings.map((setting) => (
-              <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                <Typography textAlign="center">{setting}</Typography>
-              </MenuItem>
-            ))}
+            {settings.map((setting) =>
+              setting === "Logout" ? (
+                <MenuItem key={setting} onClick={handleLogout}>
+                  <Button>{setting}</Button>
+                </MenuItem>
+              ) : (
+                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                  <Button href={`/${setting.toLowerCase().replace(" ", "-")}`}>
+                    {setting}
+                  </Button>
+                </MenuItem>
+              )
+            )}
           </Menu>
         </Box>
       </Toolbar>
