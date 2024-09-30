@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ContactUs = () => {
+const ContactUsComp = () => {
   return (
     <div style={containerStyle}>
       <div style={leftSectionStyle}>
@@ -140,4 +140,4 @@ const buttonStyle = {
   margin: '4px',
 };
 
-export default ContactUs;
+export default ContactUsComp;

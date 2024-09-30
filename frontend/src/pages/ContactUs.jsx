@@ -1,9 +1,12 @@
 // Contact Us Component
+import ContactUsComp from "../components/ContactUs/ContactUs";
 const ContactUs = () => {
     return (
         <div>
             <h2>Contact Us</h2>
-            <p>You can reach us at contact@example.com.</p>
+            <p>Need to change.</p>
+            <ContactUsComp />
+
         </div>
     );
 };

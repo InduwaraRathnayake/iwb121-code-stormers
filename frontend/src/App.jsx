@@ -77,5 +77,4 @@ const layoutStyle = {
 
 const contentStyle = {
   flex: "1", // Takes up the remaining space between navbar and footer
-  padding: "20px", // Optional: you can adjust this padding as needed
 };
