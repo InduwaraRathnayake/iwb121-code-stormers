@@ -4,13 +4,13 @@ import BloodReportCard from "../banners/ReportAnalyzer-banner";
 import { Link } from "react-router-dom";
 import FAQSection from "../components/FAQ/FAQ";
 import OurVision from "../banners/our-vision";
-import bannerImage from "../assets/banner1.png";
+import Banner from "../banners/Banner";
 
 // Home Component
 const Home = () => {
   return (
     <div>
-      <img src={bannerImage} width="100%" height="auto"></img>
+     <Banner />
       <HealthTips />
       <BloodReportCard />
       <CalculatorsCard />
