@@ -57,7 +57,7 @@ const Footer = () => {
       </div>
 
       <div style={bottomSectionStyle}>
-        <p>2024 © WELLNESS 360.com - All rights reserved.</p>
+        <p>2024 © WELLNESS 360.lk - All rights reserved.</p>
       </div>
     </footer>
   );
