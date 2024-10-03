@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import {
   Container,
   Box,
@@ -8,28 +9,51 @@ import {
   Avatar,
   CardContent,
 } from "@mui/material";
-import { CardButton, TitleBox} from "../components/Card"; 
+import { CardButton, TitleBox } from "../components/Card";
+import GetCookie from "../hooks/getcookie"; // Utility to get the email from cookies
+import decryptHash from "../helpers/decrypting";
+import { SECRET_KEY } from "../helpers/constants";
 
 const UserProfile = () => {
-  const [userData, setUserData] = useState({
-    firstName: "John",
-    lastName: "Doe",
-    username: "johndoe",
-    email: "john.doe@example.com",
-    currentPassword: "",
-    newPassword: "",
+  const [userData, setUserData] = useState(null); // Updated state for user data
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    username: '',
+    email: '',
+    currentPassword: '',
+    newPassword: '',
   });
   
   const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState(userData);
-  
-  // Password fields state
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  
-  // State to control password change option
   const [changePassword, setChangePassword] = useState(false);
-  
+
+  // Fetch user data on component mount
+  useEffect(() => {
+    const hashedemail = GetCookie("userEmail"); // Get email from cookies
+    const email = decryptHash(hashedemail, SECRET_KEY);
+    console.log("🚀 ~ useEffect ~ email:", email);
+    if (email) {
+      axios
+        .post("http://localhost:9090/api/userByEmail", { email })
+        .then((response) => {
+          const { data } = response;
+          setUserData(data);
+          setFormData({
+            firstName: data.firstName,
+            lastName: data.lastName,
+            username: data.username,
+            email: data.email,
+          });
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+        });
+    }
+  }, []);
+
   const handleEditToggle = () => {
     setIsEditing(!isEditing);
     if (isEditing) {
@@ -47,19 +71,50 @@ const UserProfile = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Validate and update user data
-    setUserData(formData);
-    setIsEditing(false);
+    
+    if (changePassword && currentPassword && newPassword) {
+      // Handle password change
+      axios
+        .post("http://localhost:9090/api/forgotPassword", {
+          email: userData.email,
+          password: newPassword,
+        })
+        .then(() => {
+          alert("Password changed successfully.");
+          setCurrentPassword(""); // Reset password fields
+          setNewPassword("");
+          setChangePassword(false);
+        })
+        .catch((error) => {
+          console.error("Error changing password:", error);
+        });
+    } else {
+      // Handle profile update
+      axios
+        .put("http://localhost:9090/api/changeName", {
+          email: userData.email,
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+        })
+        .then(() => {
+          alert("Profile updated successfully.");
+          setUserData(formData); // Update the local state with the new data
+          setIsEditing(false); // Exit editing mode
+        })
+        .catch((error) => {
+          console.error("Error updating profile:", error);
+        });
+    }
   };
 
   return (
-    <Container maxWidth="sm" sx={{ marginTop: 5}}>
+    <Container maxWidth="sm" sx={{ marginTop: 5, marginBottom: 5 }}>
       <TitleBox>
-          <Typography variant="h4" component="h1" sx={{ fontWeight: 900, fontSize: '50px',textAlign: 'center', color: '#034c81' }}>
-            User Profile
-          </Typography>
-        </TitleBox>
-      
+        <Typography variant="h4" component="h1" sx={{ fontWeight: 900, fontSize: '50px', textAlign: 'center', color: '#034c81' }}>
+          User Profile
+        </Typography>
+      </TitleBox>
+
       <Card variant="outlined" sx={{ padding: 3 }}>
         <CardContent>
           {isEditing ? (
@@ -71,7 +126,7 @@ const UserProfile = () => {
                   value={formData.username}
                   onChange={handleChange}
                   fullWidth
-                  required
+                  disabled
                 />
               </Box>
               <Box mb={3}>
@@ -100,13 +155,11 @@ const UserProfile = () => {
                   name="email"
                   type="email"
                   value={formData.email}
-                  onChange={handleChange}
                   fullWidth
-                  required
+                  disabled // Prevent editing email
                 />
               </Box>
 
-              {/* Checkbox to toggle password change fields */}
               <Box mb={2}>
                 <label>
                   <input 
@@ -146,8 +199,8 @@ const UserProfile = () => {
                 </>
               )}
 
-              <Box display="flex" justifyContent="center">
-                <CardButton type="button" onClick={handleEditToggle} >
+              <Box display="flex" justifyContent="center" gap={1}>
+                <CardButton type="submit">
                   Save Changes
                 </CardButton>
                 <CardButton type="button" onClick={handleEditToggle}>
@@ -157,24 +210,22 @@ const UserProfile = () => {
             </form>
           ) : (
             <div style={{ textAlign: 'center' }}>
-              {/* Avatar showing the first letter of the username */}
               <Avatar sx={{ background: "linear-gradient(45deg, #1089D3 0%, #12B1D1 100%)", color: "white", margin: '0 auto', width: 120, height: 120 }}>
-                {userData.username.charAt(0).toUpperCase()}
+                {userData?.username.charAt(0).toUpperCase()}
               </Avatar>
               <Typography variant="h6" gutterBottom sx={{ lineHeight: '2', marginTop: '10px' }}>
-                <strong>Username:</strong> {userData.username}
+                <strong>Username:</strong> {userData?.username}
               </Typography>
               <Typography variant="h6" gutterBottom sx={{ lineHeight: '2' }}>
-                <strong>First Name:</strong> {userData.firstName}
+                <strong>First Name:</strong> {userData?.firstName}
               </Typography>
               <Typography variant="h6" gutterBottom sx={{ lineHeight: '2' }}>
-                <strong>Last Name:</strong> {userData.lastName}
+                <strong>Last Name:</strong> {userData?.lastName}
               </Typography>
               <Typography variant="h6" gutterBottom sx={{ lineHeight: '2' }}>
-                <strong>Email:</strong> {userData.email}
+                <strong>Email:</strong> {userData?.email}
               </Typography>
 
-              {/* Add space after Edit Profile button */}
               <CardButton type="submit" onClick={handleEditToggle}>
                 Edit Profile
               </CardButton>

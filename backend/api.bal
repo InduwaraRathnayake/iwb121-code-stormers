@@ -14,9 +14,11 @@ mysql:Client wellnessDB = check new (...databaseConfig);
 
 @http:ServiceConfig {
     cors: {
-        allowOrigins: ["*"],
-        allowHeaders: ["Content-Type"],
-        allowMethods: ["GET", "POST", "OPTIONS"]
+        allowOrigins: ["http://localhost:5173"], // Your frontend's origin
+        allowHeaders: ["Content-Type", "Authorization"], // Allow specific headers like Authorization if needed
+        allowMethods: ["GET", "POST", "OPTIONS", "PUT"], // Add other methods you may use
+        allowCredentials: true, // Enable if you are using cookies or other credentials
+        maxAge: 3600 // Cache preflight response for 1 hour
     }
 }
 
@@ -172,7 +174,9 @@ service /api on new http:Listener(9090) {
     }
 
     //get user details by email
-    resource function get userByEmail(http:Caller caller, string email) returns error? {
+    resource function post userByEmail(http:Caller caller, http:Request req) returns error? {
+        json requestBody = check req.getJsonPayload();
+        string email = (check requestBody.email).toString();
         stream<User, sql:Error?> userStream = wellnessDB->query(
         `SELECT * FROM users WHERE email = ${email}`
         );
@@ -185,8 +189,8 @@ service /api on new http:Listener(9090) {
             res.setPayload(
                 {
                     "username": user.username,
-                    "first_name": user.first_name,
-                    "last_name": user.last_name,
+                    "firstName": user.first_name,
+                    "lastName": user.last_name,
                     "email": user.email
                 }
             );
@@ -224,6 +228,25 @@ service /api on new http:Listener(9090) {
             } else {
                 check sendJsonResponse(caller, STATUS_INTERNAL_SERVER_ERROR, MSG_PASSWORD_RESET_FAILED);
             }
+        }
+    }
+
+    //change first name and last name
+    resource function put changeName(http:Caller caller, http:Request req) returns error? {
+        json requestBody = check req.getJsonPayload();
+        string email = (check requestBody.email).toString();
+        string firstName = (check requestBody.first_name).toString();
+        string lastName = (check requestBody.last_name).toString();
+
+        // Update the user's first name and last name
+        var updateName = check wellnessDB->execute(
+        `UPDATE users SET first_name = ${firstName}, last_name = ${lastName} WHERE email = ${email}`
+        );
+
+        if (updateName.affectedRowCount > 0) {
+            check sendJsonResponse(caller, STATUS_OK, MSG_NAME_CHANGE_SUCCESS);
+        } else {
+            check sendJsonResponse(caller, STATUS_INTERNAL_SERVER_ERROR, MSG_NAME_CHANGE_FAILED);
         }
     }
 
