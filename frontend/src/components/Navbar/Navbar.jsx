@@ -11,9 +11,12 @@ import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import { Link } from "react-router-dom";
 
+import RemoveCookie from "../../hooks/removecookie";
+
 const pages = ["Home", "Services", "About", "Contact us"];
-const settings = ["User Profile", "Account", "Logout"];
+const settings = ["User Profile", "Report History", "Logout"];
 const reportsOptions = ["Reports", "Calculators"];
+
 
 function Navbar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -46,8 +49,9 @@ function Navbar() {
 
   //handling logout
   const handleLogout = () => {
+    RemoveCookie("userEmail");
     localStorage.clear();
-    window.location.href = "/login"
+    window.location.href = "/login";
   };
 
   return (
