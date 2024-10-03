@@ -40,3 +40,5 @@ const string MSG_LOGIN_FAILED = "Login failed : Invalid email or password";
 const string MSG_USER_NOT_FOUND = "User not found";
 const string MSG_PASSWORD_RESET_SUCCESS = "Password reset successful";
 const string MSG_PASSWORD_RESET_FAILED = "Password reset failed";
+const string MSG_NAME_CHANGE_SUCCESS = "Name changed successfully";
+const string MSG_NAME_CHANGE_FAILED = "Failed to change name";

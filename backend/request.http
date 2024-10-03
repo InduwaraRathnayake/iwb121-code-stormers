@@ -87,4 +87,18 @@ Content-Type: application/json
 }
 
 ### Get User by Email Request
-GET http://localhost:9090/api/userByEmail?email=testuser@example.com
+POST http://localhost:9090/api/userByEmail
+Content-Type: application/json
+
+{
+    "email": "testuser@example.com"
+}
+
+### Forgot Password Request
+POST http://localhost:9090/api/forgotPassword
+Content-Type: application/json
+
+{
+    "email": "testuser@example.com",
+    "password": "newpassword123"
+}

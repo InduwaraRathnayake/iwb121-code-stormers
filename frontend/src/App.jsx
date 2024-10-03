@@ -1,4 +1,3 @@
-import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
@@ -22,42 +21,82 @@ import Footer from "./components/Footer/Footer";
 import Navbar from "./components/Navbar/Navbar";
 import Calculator from "./Calculators/Calculator";
 
-// Hide the Navbar and Footer on certain routes
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
+import PropTypes from "prop-types";
+
+const PrivateRoute = ({ isLoggedIn, children }) => {
+  return isLoggedIn ? children : <Navigate to="/login" />;
+};
+PrivateRoute.propTypes = {
+  isLoggedIn: PropTypes.bool.isRequired,
+  children: PropTypes.node.isRequired,
+};
+const ProtectedRoutes = () => {
+  return (
+    <Routes>
+      <Route path="/" element={<Navigate to="/home" />} />
+      <Route path="/home" element={<Home />} />
+      <Route path="/services" element={<Services />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/contact-us" element={<ContactUs />} />
+      <Route path="/reports" element={<ReportAnalyzer />} />
+      <Route path="/fbc" element={<FBCPage />} />
+      <Route path="/lipid-panel" element={<LipidPanel />} />
+      <Route path="/liver-function-tests" element={<LiverFunctionTests />} />
+      <Route path="/blood-glucose-test" element={<BloodGlucoseTest />} />
+      <Route path="/thyroid-function-tests" element={<ThyroidFunctionTests />} />
+      <Route path="/c-reactive-protein-test" element={<CRPTestPage />} />
+      <Route path="/bmi-calculator" element={<BMICalculator />} />
+      <Route path="/whr-calculator" element={<WHRCalculator />} />
+      <Route path="/user-profile" element={<UserProfile />} />
+      <Route path="/calculators" element={<Calculator />} />
+    </Routes>
+  );
+};
+
 const Layout = () => {
   const location = useLocation();
   const shouldHideNavbarFooter = location.pathname === "/login" || location.pathname === "/signup";
 
+  // Get isLoggedIn from localStorage or initialize as false
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    return localStorage.getItem('isLoggedIn') === 'true';
+  });
+
+  // Keep isLoggedIn synced with localStorage
+  useEffect(() => {
+    localStorage.setItem('isLoggedIn', isLoggedIn);
+  }, [isLoggedIn]);
+
   return (
     <>
-    <div style={layoutStyle}>
-      {!shouldHideNavbarFooter && <Navbar />}
-      <div style={contentStyle}>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/services" element={<Services />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact-us" element={<ContactUs />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/reports" element={<ReportAnalyzer />} />
-          <Route path="/fbc" element={<FBCPage />} />
-          <Route path="/lipid-panel" element={<LipidPanel />} />
-          <Route path="/liver-function-tests" element={<LiverFunctionTests />} />
-          <Route path="/blood-glucose-test" element={<BloodGlucoseTest />} />
-          <Route path="/thyroid-function-tests" element={<ThyroidFunctionTests />} />
-          <Route path="/c-reactive-protein-test" element={<CRPTestPage />} />
-          <Route path="/bmi-calculator" element={<BMICalculator />} />
-          <Route path="/whr-calculator" element={<WHRCalculator />} />
-          <Route path="/user-profile" element={<UserProfile />} />
-          <Route path="/calculators" element={<Calculator />} />
-        </Routes>
-      </div>
-      {!shouldHideNavbarFooter && <Footer />}
+      <div style={layoutStyle}>
+        {!shouldHideNavbarFooter && <Navbar />}
+        <div style={contentStyle}>
+          <Routes>
+            {/* Public routes */}
+            <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
+            <Route path="/signup" element={<SignUp />} />
+            
+            {/* Protect all other routes */}
+            <Route
+              path="/*"
+              element={
+                <PrivateRoute isLoggedIn={isLoggedIn}>
+                  <ProtectedRoutes />
+                </PrivateRoute>
+              }
+            />
+          </Routes>
+        </div>
+        {!shouldHideNavbarFooter && <Footer />}
       </div>
     </>
   );
 };
+
+
 
 function App() {
   return (
@@ -69,6 +108,7 @@ function App() {
 
 export default App;
 
+
 const layoutStyle = {
   display: "flex",
   flexDirection: "column",
@@ -78,3 +118,4 @@ const layoutStyle = {
 const contentStyle = {
   flex: "1", // Takes up the remaining space between navbar and footer
 };
+

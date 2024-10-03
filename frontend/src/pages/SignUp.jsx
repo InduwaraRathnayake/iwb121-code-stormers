@@ -10,7 +10,8 @@ import {
   Link,
 } from '@mui/material';
 import { CardButton } from '../components/Card';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
+import axios from 'axios'; // Import Axios
 import backgroundImage from '../assets/signUp-image.jpeg';
 
 const Signup = () => {
@@ -23,6 +24,8 @@ const Signup = () => {
     confirmPassword: '',
   });
   const [errors, setErrors] = useState({});
+  const [message, setMessage] = useState(''); // For showing success/error messages
+  const navigate = useNavigate(); // Use useNavigate to redirect after signup
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -49,11 +52,31 @@ const Signup = () => {
     return Object.keys(newErrors).length === 0; // returns true if no errors
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateInput()) {
-      // Handle signup logic here
-      console.log('Form Submitted:', formData);
+      try {
+        // Send the signup data to the backend
+        const response = await axios.post('http://localhost:9090/api/signup', {
+          username: formData.username,
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+          email: formData.email,
+          password: formData.password,
+        });
+        console.log("🚀 ~ handleSubmit ~ response:", response)
+
+        // Handle success (e.g., navigate to the login page)
+        setMessage('Signup successful! Redirecting to login...');
+        setTimeout(() => navigate('/login'), 2000); // Redirect after 2 seconds
+      } catch (error) {
+        // Handle error (e.g., display an error message)
+        if (error.response && error.response.data) {
+          setMessage(`Signup failed: ${error.response.data.message}`);
+        } else {
+          setMessage('Signup failed: An unexpected error occurred.');
+        }
+      }
     }
   };
 
@@ -72,8 +95,8 @@ const Signup = () => {
           borderRadius: '20px',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
           overflow: 'hidden',
-          height: '600px', // Adjust height as needed
-          width: '1000px', // Adjust width as needed
+          height: '600px',
+          width: '1000px',
         }}
       >
         <Box
@@ -85,11 +108,10 @@ const Signup = () => {
             height: '100%',
           }}
         />
-        {/* Right section with the signup form */}
         <Card
           sx={{
             padding: '40px',
-            width: '450px', // Adjust width as needed
+            width: '450px',
             backgroundColor: 'rgba(255, 255, 255, 0.9)',
           }}
         >
@@ -206,11 +228,14 @@ const Signup = () => {
               </Grid>
               <CardButton type="submit"> Sign Up </CardButton>
             </form>
-            <Box 
-              sx={{ 
-                display: 'flex', 
-                justifyContent: 'center', 
-                marginTop: '20px' 
+            <Typography variant="body2" color="error" sx={{ marginTop: '20px' }}>
+              {message}
+            </Typography>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                marginTop: '20px',
               }}
             >
               <Typography variant="body2" sx={{ marginRight: '8px' }}>

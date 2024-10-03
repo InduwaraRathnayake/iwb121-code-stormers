@@ -9,9 +9,9 @@
 
 import CryptoJS from 'crypto-js';
 
-const decryptString = (ciphertext, secretKey) => {
+const decryptHash = (ciphertext, secretKey) => {
     const bytes = CryptoJS.AES.decrypt(ciphertext, secretKey);
     return bytes.toString(CryptoJS.enc.Utf8); // Convert bytes to string
 };
 
-export default decryptString;
+export default decryptHash;
