@@ -27,7 +27,7 @@ const Banner = () => {
           left: 0,
           right: 0,
           bottom: 0,
-          background: 'rgba(0, 0, 0, 0.6)', // Darker overlay for better text visibility
+          background: 'rgba(0, 0, 0, 0.2)', // Darker overlay for better text visibility
           zIndex: 1,
         },
         overflow: 'hidden', // Prevents any overflow issues with animations
@@ -39,10 +39,10 @@ const Banner = () => {
         src={logo} 
         alt="Logo" 
         sx={{
-          width: '300px',
-          mb: 17, // Reduced margin below the logo to lift it higher
+          width: '330px',
+          mb: 16, // Reduced margin below the logo to lift it higher
           zIndex: 2,
-          opacity: 0.6, // Adjust the opacity for transparency
+          opacity: 0.8, // Adjust the opacity for transparency
           transition: 'transform 0.3s ease, opacity 0.3s ease', // Smooth hover effect
           '&:hover': {
             transform: 'scale(1.05)', // Slightly scale up on hover
