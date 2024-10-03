@@ -16,7 +16,7 @@ type User record {|
     string first_name;
     string last_name;
     string email;
-    string password;
+    byte[] password;
 |};
 
 type NewUser record {|

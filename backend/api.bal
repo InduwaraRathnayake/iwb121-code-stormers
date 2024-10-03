@@ -10,10 +10,8 @@ import ballerina/sql;
 import ballerinax/mysql;
 import ballerinax/mysql.driver as _;
 
-mysql:Client wellnessDB = check new(...databaseConfig);
+mysql:Client wellnessDB = check new (...databaseConfig);
 
-
-// Define the CORS configuration
 @http:ServiceConfig {
     cors: {
         allowOrigins: ["*"],
@@ -97,7 +95,16 @@ service /api on new http:Listener(9090) {
             select user;
     }
 
-    resource function post addUser(http:Caller caller, NewUser user) returns error? {
+    resource function post signup(http:Caller caller, http:Request req) returns error? {
+        json requestBody = check req.getJsonPayload();
+        NewUser user = {
+            username: (check requestBody.username).toString(),
+            first_name: (check requestBody.first_name).toString(),
+            last_name: (check requestBody.last_name).toString(),
+            email: (check requestBody.email).toString(),
+            password: (check requestBody.password).toString()
+        };
+
         // Check if the username or email already exists
         stream<User, sql:Error?> userStream = wellnessDB->query(
         `SELECT * FROM users WHERE username = ${user.username} OR email = ${user.email}`
@@ -114,10 +121,14 @@ service /api on new http:Listener(9090) {
                 check sendJsonResponse(caller, STATUS_BAD_REQUEST, MSG_EMAIL_EXISTS);
             }
         } else {
+
+            byte[] hashedPassword = check hashPassword(user.password);
+            byte[] encryptedPasswordHash = check encryptPasswordHash(hashedPassword);
+
             // Proceed with adding the new user
             var insertUser = check wellnessDB->execute(
             `INSERT INTO users(username, first_name, last_name, email, password) 
-             VALUES (${user.username}, ${user.first_name}, ${user.last_name}, ${user.email}, ${user.password})`
+             VALUES (${user.username}, ${user.first_name}, ${user.last_name}, ${user.email}, ${encryptedPasswordHash})`
             );
 
             if (insertUser.affectedRowCount > 0) {
@@ -128,4 +139,93 @@ service /api on new http:Listener(9090) {
         }
     }
 
+    resource function post login(http:Caller caller, http:Request req) returns error? {
+        json requestBody = check req.getJsonPayload();
+        string email = (check requestBody.email).toString();
+        string password = (check requestBody.password).toString(); // Check if the user exists
+
+        stream<User, sql:Error?> userStream = wellnessDB->query(
+        `SELECT * FROM users WHERE email = ${email}`
+        );
+        var userResult = check userStream.next();
+        User? user = userResult is record {|User value;|} ? userResult.value : ();
+        // Hash the entered password
+        byte[] enteredPasswordHash = check hashPassword(password);
+
+        if user is User {
+            // Decrypt the password hash
+
+            byte[] decryptedHash = check decryptPasswordHash(user.password);
+
+            // Compare the entered password hash with the decrypted password hash
+            if (enteredPasswordHash.toBase64() == decryptedHash.toBase64()) {
+                // If the passwords match, return a success message
+                check sendJsonResponse(caller, STATUS_OK, MSG_LOGIN_SUCCESS);
+            } else {
+                // If the passwords do not match, return an error message
+                check sendJsonResponse(caller, STATUS_UNAUTHORIZED, MSG_LOGIN_FAILED);
+            }
+        } else {
+            // If the user does not exist, return an error message
+            check sendJsonResponse(caller, STATUS_UNAUTHORIZED, MSG_LOGIN_FAILED);
+        }
+    }
+
+    //get user details by email
+    resource function get userByEmail(http:Caller caller, string email) returns error? {
+        stream<User, sql:Error?> userStream = wellnessDB->query(
+        `SELECT * FROM users WHERE email = ${email}`
+        );
+        var userResult = check userStream.next();
+        User? user = userResult is record {|User value;|} ? userResult.value : ();
+        if (user is ()) {
+            check sendJsonResponse(caller, http:STATUS_NOT_FOUND, MSG_USER_NOT_FOUND);
+        } else {
+            http:Response res = new;
+            res.setPayload(
+                {
+                    "username": user.username,
+                    "first_name": user.first_name,
+                    "last_name": user.last_name,
+                    "email": user.email
+                }
+            );
+            check caller->respond(res);
+        }
+    }
+
+    //forgot password
+    resource function post forgotPassword(http:Caller caller, http:Request req) returns error? {
+        json requestBody = check req.getJsonPayload();
+        string email = (check requestBody.email).toString();
+        string newPassword = (check requestBody.password).toString();
+
+        stream<User, sql:Error?> userStream = wellnessDB->query(
+        `SELECT * FROM users WHERE email = ${email}`
+        );
+        var userResult = check userStream.next();
+        User? user = userResult is record {|User value;|} ? userResult.value : ();
+        if (user is ()) {
+            check sendJsonResponse(caller, http:STATUS_NOT_FOUND, MSG_USER_NOT_FOUND);
+        } else {
+            // Generate a new password
+            byte[] hashedPassword = check hashPassword(newPassword);
+            byte[] encryptedPasswordHash = check encryptPasswordHash(hashedPassword);
+
+            // Update the user's password
+            var updatePassword = check wellnessDB->execute(
+            `UPDATE users SET password = ${encryptedPasswordHash} WHERE email = ${email}`
+            );
+
+            if (updatePassword.affectedRowCount > 0) {
+                // Send the new password to the user's email
+
+                check sendJsonResponse(caller, STATUS_OK, MSG_PASSWORD_RESET_SUCCESS);
+            } else {
+                check sendJsonResponse(caller, STATUS_INTERNAL_SERVER_ERROR, MSG_PASSWORD_RESET_FAILED);
+            }
+        }
+    }
+
 }
+

@@ -65,14 +65,26 @@ Accept: application/json
 
 ###
 
-### Add a new user
-POST http://localhost:9090/api/addUser
+### Signup Request
+POST http://localhost:9090/api/signup
 Content-Type: application/json
 
 {
-  "username": "newuser5",
-  "first_name": "John",
-  "last_name": "Doe",
-  "email": "john.doe@example3.com",
-  "password": "password123"
+    "username": "testuser",
+    "first_name": "Test",
+    "last_name": "User",
+    "email": "testuser@example.com",
+    "password": "password123"
 }
+
+### Login Request
+POST http://localhost:9090/api/login
+Content-Type: application/json
+
+{
+    "email": "testuser@example.com",
+    "password": "password123"
+}
+
+### Get User by Email Request
+GET http://localhost:9090/api/userByEmail?email=testuser@example.com
