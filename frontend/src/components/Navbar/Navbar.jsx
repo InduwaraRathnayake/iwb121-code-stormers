@@ -14,7 +14,7 @@ import { Link } from "react-router-dom";
 import RemoveCookie from "../../hooks/removecookie";
 
 const pages = ["Home", "Services", "About", "Contact us"];
-const settings = ["User Profile", "Report History", "Logout"];
+const settings = ["User Profile", "Logout"];
 const reportsOptions = ["Reports", "Calculators"];
 
 
