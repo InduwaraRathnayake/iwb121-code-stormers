@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { TextField, Typography, Card, CardContent } from '@mui/material';
 import { ContentContainer, TitleBox, FormContainer, CardButton } from '../../components/Card';
 import axios from 'axios';
@@ -12,7 +12,8 @@ const BloodGlucoseTest = () => {
 
   const [report, setReport] = useState(null);
   const [history, setHistory] = useState([]);
-  const [error, setError] = useState(''); // Single error state
+  const [errors, setErrors] = useState({}); // Individual error states for each field
+  const reportRef = useRef(null); // Reference for the report card
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,21 +25,22 @@ const BloodGlucoseTest = () => {
         ...formData,
         [name]: value
       });
-      setError(''); // Clear error on valid input
+      setErrors((prevErrors) => ({ ...prevErrors, [name]: '' })); // Clear error for specific input
     } else {
-      setError(`${name} must be a valid number.`);
+      setErrors((prevErrors) => ({ ...prevErrors, [name]: `${name} must be a valid number.` }));
     }
   };
 
   const validateInput = () => {
-    // Check for empty fields
+    const newErrors = {};
+    // Check for empty fields and add to newErrors object
     for (const key in formData) {
       if (formData[key] === '') {
-        setError(`${key} cannot be empty.`);
-        return false; // Return false if any field is empty
+        newErrors[key] = `${key} cannot be empty.`;
       }
     }
-    return true; // Return true if all validations pass
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0; // Return true if there are no errors
   };
 
   const handleSubmit = async (e) => {
@@ -46,27 +48,27 @@ const BloodGlucoseTest = () => {
     if (!validateInput()) {
       return; // Prevent submission if validation fails
     }
-  
+
     // Convert the form data values to floats
     const requestData = {
       fastingGlucose: parseFloat(formData.fastingGlucose),
       randomGlucose: parseFloat(formData.randomGlucose),
       hba1c: parseFloat(formData.hba1c)
     };
-  
+
     try {
       // Send the requestData object to the backend using axios
       const response = await axios.post('http://localhost:9090/api/analyzeBloodGlucose', requestData);
       console.log("🚀 ~ handleSubmit ~ response:", response)
-  
+
       // Assuming you receive a JSON response with interpretations from the backend
       const interpretations = response.data;
       console.log("🚀 ~ handleSubmit ~ interpretations:", interpretations)
       setReport(interpretations);
-      setError(''); // Clear any previous errors
+      setErrors({}); // Clear any previous errors
     } catch (error) {
       console.error('Error submitting data to the backend:', error);
-      setError('Failed to send data to the backend.');
+      setErrors({ submit: 'Failed to send data to the backend.' });
     }
   };
 
@@ -74,10 +76,18 @@ const BloodGlucoseTest = () => {
     if (!validateInput()) {
       return; // Prevent saving if validation fails
     }
-    
+
     setHistory([...history, formData]);
     alert('Report details saved successfully!');
   };
+
+  // Scroll to the report card when the report is updated
+  useEffect(() => {
+    if (report && reportRef.current) {
+      reportRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [report]);
+
   return (
     <ContentContainer>
       <TitleBox>
@@ -97,8 +107,8 @@ const BloodGlucoseTest = () => {
             label="Fasting Glucose (mg/dL)"
             value={formData.fastingGlucose}
             onChange={handleChange}
-            error={!!error}
-            helperText={error}
+            error={!!errors.fastingGlucose}
+            helperText={errors.fastingGlucose}
             sx={{ marginBottom: '16px' }}
           />
           <TextField
@@ -110,8 +120,8 @@ const BloodGlucoseTest = () => {
             label="Random Glucose (mg/dL)"
             value={formData.randomGlucose}
             onChange={handleChange}
-            error={!!error}
-            helperText={error}
+            error={!!errors.randomGlucose}
+            helperText={errors.randomGlucose}
             sx={{ marginBottom: '16px' }}
           />
           <TextField
@@ -123,8 +133,8 @@ const BloodGlucoseTest = () => {
             label="HbA1c (%)"
             value={formData.hba1c}
             onChange={handleChange}
-            error={!!error}
-            helperText={error}
+            error={!!errors.hba1c}
+            helperText={errors.hba1c}
             sx={{ marginBottom: '16px' }}
           />
           <CardButton type="submit">
@@ -136,6 +146,7 @@ const BloodGlucoseTest = () => {
       {/* Report Card Section */}
       {report && (
         <Card
+          ref={reportRef} // Reference to the report card
           sx={{
             marginTop: '40px',
             padding: '20px',
@@ -167,7 +178,7 @@ const BloodGlucoseTest = () => {
                 variant="body1"
                 sx={{
                   marginTop: '16px',
-                  color: item.color === 'red' ? 'red' : '#0A2472', // Set color based on interpretation
+                  color: item.color, // Set color based on interpretation
                   fontSize: '16px',
                   lineHeight: '1.5',
                   listStyleType: 'disc',
@@ -178,12 +189,7 @@ const BloodGlucoseTest = () => {
                 {item.text}
               </Typography>
             ))}
-            <CardButton
-              type="button" // Changed to prevent form submission
-              onClick={saveToHistory}
-            >
-              Save Report Details
-            </CardButton>
+            
           </CardContent>
         </Card>
       )}

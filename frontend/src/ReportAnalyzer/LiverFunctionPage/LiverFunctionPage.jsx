@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { TextField, Typography, Card, CardContent } from '@mui/material';
-import {ContentContainer, TitleBox, FormContainer, CardButton } from '../../components/Card';
+import { ContentContainer, TitleBox, FormContainer, CardButton } from '../../components/Card';
 import axios from 'axios';
 
 const LiverFunctionTestsPage = () => {
@@ -13,7 +13,8 @@ const LiverFunctionTestsPage = () => {
 
   const [report, setReport] = useState(null);
   const [history, setHistory] = useState([]);
-  const [error, setError] = useState('');
+  const [error, setError] = useState({}); // Updated to hold specific errors
+  const reportRef = useRef(null); // Reference for the report card
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,30 +26,34 @@ const LiverFunctionTestsPage = () => {
         ...formData,
         [name]: value
       });
-      setError(''); // Clear error on valid input
+      setError((prev) => ({ ...prev, [name]: '' })); // Clear error for the specific field
     } else {
-      setError(`${name} must be a valid number.`);
+      setError((prev) => ({ ...prev, [name]: `${name} must be a valid number.` })); // Set specific error
     }
   };
 
   const validateInput = () => {
+    const newError = {}; // Create a new error object
+    let isValid = true;
+
     // Check for empty fields
     for (const key in formData) {
       if (formData[key] === '') {
-        setError(`${key} cannot be empty.`);
-        return false; // Return false if any field is empty
+        newError[key] = `${key} cannot be empty.`;
+        isValid = false; // Mark as invalid if any field is empty
       }
     }
-    return true; // Return true if all validations pass
-  };
 
+    setError(newError); // Set the new error state
+    return isValid; // Return true if all validations pass
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateInput()) {
       return; // Prevent submission if validation fails
     }
-  
+
     // Convert the form data values to floats
     const requestData = {
       alt: parseFloat(formData.alt),
@@ -56,20 +61,20 @@ const LiverFunctionTestsPage = () => {
       alp: parseFloat(formData.alp),
       bilirubin: parseFloat(formData.bilirubin)
     };
-  
+
     try {
       // Send the requestData object to the backend using axios
       const response = await axios.post('http://localhost:9090/api/analyzeLFT', requestData);
-      console.log("🚀 ~ handleSubmit ~ response:", response)
-  
+      console.log("🚀 ~ handleSubmit ~ response:", response);
+
       // Assuming you receive a JSON response with interpretations from the backend
       const interpretations = response.data;
-      console.log("🚀 ~ handleSubmit ~ interpretations:", interpretations)
+      console.log("🚀 ~ handleSubmit ~ interpretations:", interpretations);
       setReport(interpretations);
-      setError(''); // Clear any previous errors
+      setError({}); // Clear any previous errors
     } catch (error) {
       console.error('Error submitting data to the backend:', error);
-      setError('Failed to send data to the backend.');
+      setError({ general: 'Failed to send data to the backend.' });
     }
   };
 
@@ -77,10 +82,17 @@ const LiverFunctionTestsPage = () => {
     if (!validateInput()) {
       return; // Prevent saving if validation fails
     }
-    
+
     setHistory([...history, formData]);
     alert('Report details saved successfully!');
   };
+
+  // Scroll to the report card when the report is updated
+  useEffect(() => {
+    if (report && reportRef.current) {
+      reportRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [report]);
 
   return (
     <ContentContainer>
@@ -102,8 +114,8 @@ const LiverFunctionTestsPage = () => {
             value={formData.alt}
             onChange={handleChange}
             sx={{ marginBottom: '16px' }}
-            error={!!error} // Display error state
-            helperText={error} // Show error message
+            error={!!error.alt} // Check for specific error
+            helperText={error.alt} // Show specific error message
           />
           <TextField
             required
@@ -115,8 +127,8 @@ const LiverFunctionTestsPage = () => {
             value={formData.ast}
             onChange={handleChange}
             sx={{ marginBottom: '16px' }}
-            error={!!error}
-            helperText={error}
+            error={!!error.ast}
+            helperText={error.ast}
           />
           <TextField
             required
@@ -128,8 +140,8 @@ const LiverFunctionTestsPage = () => {
             value={formData.alp}
             onChange={handleChange}
             sx={{ marginBottom: '16px' }}
-            error={!!error}
-            helperText={error}
+            error={!!error.alp}
+            helperText={error.alp}
           />
           <TextField
             required
@@ -141,8 +153,8 @@ const LiverFunctionTestsPage = () => {
             value={formData.bilirubin}
             onChange={handleChange}
             sx={{ marginBottom: '16px' }}
-            error={!!error}
-            helperText={error}
+            error={!!error.bilirubin}
+            helperText={error.bilirubin}
           />
           <CardButton type="submit">
             Analyze
@@ -153,6 +165,7 @@ const LiverFunctionTestsPage = () => {
       {/* Report Card Section */}
       {report && (
         <Card 
+          ref={reportRef} // Reference to the report card
           sx={{ 
             marginTop: '40px', 
             padding: '20px', 
@@ -184,7 +197,7 @@ const LiverFunctionTestsPage = () => {
                 variant="body1" 
                 sx={{ 
                   marginTop: '16px', 
-                  color: '#0A2472',
+                  color:  item.color,
                   fontSize: '16px', 
                   lineHeight: '1.5', 
                   textAlign: 'left' 
@@ -193,12 +206,7 @@ const LiverFunctionTestsPage = () => {
                 {item.text}
               </Typography>
             ))}
-            <CardButton 
-              type="button" // Changed to "button" to prevent form submission
-              onClick={saveToHistory}
-            >
-              Save report details 
-            </CardButton>
+            
           </CardContent>
         </Card>
       )}

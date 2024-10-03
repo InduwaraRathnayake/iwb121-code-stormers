@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { TextField, Typography, Card, CardContent } from '@mui/material';
 import { ContentContainer, TitleBox, FormContainer, CardButton } from '../../components/Card';
 import axios from 'axios';
@@ -12,7 +12,12 @@ const ThyroidFunctionTests = () => {
 
   const [report, setReport] = useState(null);
   const [history, setHistory] = useState([]);
-  const [error, setError] = useState('');
+  const [error, setError] = useState({
+    tsh: '',
+    t3: '',
+    t4: '',
+  });
+  const reportRef = useRef(null); // Reference for the report card
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,21 +29,36 @@ const ThyroidFunctionTests = () => {
         ...formData,
         [name]: value
       });
-      setError(''); // Clear error on valid input
+      setError((prevError) => ({
+        ...prevError,
+        [name]: '' // Clear error for the specific field on valid input
+      }));
     } else {
-      setError(`${name} must be a valid number.`);
+      setError((prevError) => ({
+        ...prevError,
+        [name]: `${name} must be a valid number.`
+      }));
     }
   };
 
   const validateInput = () => {
-    // Check for empty fields
+    let isValid = true;
+    const newError = {
+      tsh: '',
+      t3: '',
+      t4: '',
+    };
+
+    // Check for empty fields and update error state
     for (const key in formData) {
       if (formData[key] === '') {
-        setError(`${key} cannot be empty.`);
-        return false; // Return false if any field is empty
+        newError[key] = `${key} cannot be empty.`;
+        isValid = false;
       }
     }
-    return true; // Return true if all validations pass
+
+    setError(newError); // Update the error state
+    return isValid; // Return whether the validation passed
   };
 
   const handleSubmit = async (e) => {
@@ -63,10 +83,10 @@ const ThyroidFunctionTests = () => {
       const interpretations = response.data;
       console.log("🚀 ~ handleSubmit ~ interpretations:", interpretations)
       setReport(interpretations);
-      setError(''); // Clear any previous errors
+      setError({ tsh: '', t3: '', t4: '' }); // Clear any previous errors
     } catch (error) {
       console.error('Error submitting data to the backend:', error);
-      setError('Failed to send data to the backend.');
+      setError({ tsh: '', t3: '', t4: 'Failed to send data to the backend.' });
     }
   };
 
@@ -78,6 +98,13 @@ const ThyroidFunctionTests = () => {
     setHistory([...history, formData]);
     alert('Report details saved successfully!');
   };
+
+  // Scroll to the report card when the report is updated
+  useEffect(() => {
+    if (report && reportRef.current) {
+      reportRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [report]);
 
   return (
     <ContentContainer>
@@ -99,8 +126,8 @@ const ThyroidFunctionTests = () => {
             value={formData.tsh}
             onChange={handleChange}
             sx={{ marginBottom: '16px' }} // Add spacing between fields
-            error={!!error} // Display error state
-            helperText={error} // Show error message
+            error={!!error.tsh} // Display error state for TSH
+            helperText={error.tsh} // Show error message for TSH
           />
           <TextField
             required
@@ -112,8 +139,8 @@ const ThyroidFunctionTests = () => {
             value={formData.t3}
             onChange={handleChange}
             sx={{ marginBottom: '16px' }}
-            error={!!error}
-            helperText={error}
+            error={!!error.t3} // Display error state for T3
+            helperText={error.t3} // Show error message for T3
           />
           <TextField
             required
@@ -125,8 +152,8 @@ const ThyroidFunctionTests = () => {
             value={formData.t4}
             onChange={handleChange}
             sx={{ marginBottom: '16px' }}
-            error={!!error}
-            helperText={error}
+            error={!!error.t4} // Display error state for T4
+            helperText={error.t4} // Show error message for T4
           />
           <CardButton type="submit">
             Analyze
@@ -137,6 +164,7 @@ const ThyroidFunctionTests = () => {
       {/* Report Card Section */}
       {report && (
         <Card 
+          ref={reportRef} // Reference to the report card
           sx={{ 
             marginTop: '40px', 
             padding: '20px', 
@@ -168,7 +196,7 @@ const ThyroidFunctionTests = () => {
                 variant="body1" 
                 sx={{ 
                   marginTop: '16px', 
-                  color: '#0A2472',
+                  color:  item.color,
                   fontSize: '16px', 
                   lineHeight: '1.5', 
                   textAlign: 'left' 
@@ -177,12 +205,7 @@ const ThyroidFunctionTests = () => {
                 {item.text}
               </Typography>
             ))}
-            <CardButton 
-              type="button" // Change button type to prevent form submission
-              onClick={saveToHistory}
-            >
-              Save report details 
-            </CardButton>
+            
           </CardContent>
         </Card>
       )}
