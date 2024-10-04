@@ -6,7 +6,6 @@ import ReportAnalyzer from '../ReportAnalyzer/ReportAnalyzer';
 const Services = () => {
     return (
         <div>
-            <h2>Our Services</h2>
             <ReportAnalyzer />
             <BMICalculator />
             <WHRCalculator />

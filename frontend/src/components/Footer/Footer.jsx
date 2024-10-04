@@ -2,149 +2,72 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <footer style={footerStyle}>
-      <div style={containerStyle}>
-        <div style={leftSectionStyle}>
-          <h2 style={logoStyle}>WELLNESS 360</h2>
-          <p>
+    <footer className="bg-[#125488] text-white py-5 w-full">
+      <div className="flex flex-col md:flex-row justify-between items-start max-w-screen-xl mx-auto px-5">
+        {/* Left Section */}
+        <div className="mb-8 md:mb-0">
+          <h2 className="text-lg font-bold text-[#1E90FF]">WELLNESS 360</h2>
+          <p className="mt-4">
             Get instant clarity on your blood test results. Expert analysis,
             easy tracking, all in one app. Start now!
           </p>
-          <div style={socialIconsStyle}>
-              <Link to="#" style={iconStyle}>
-                <img src="/fb.png" alt="Facebook" style={iconImageStyle} />
-              </Link>
-              <Link to="#" style={iconStyle}>
-                <img src="/in.png" alt="Instagram" style={iconImageStyle} />
-              </Link>
-            </div>
+          <div className="flex gap-4 mt-4">
+            <Link to="#">
+              <img src="/fb.png" alt="Facebook" className="w-10 h-10" />
+            </Link>
+            <Link to="#">
+              <img src="/in.png" alt="Instagram" className="w-10 h-10" />
+            </Link>
+          </div>
         </div>
-        <div style={centerSectionStyle}>
-          <h3 style={logoStyle1}>WELLNESS 360</h3>
-          <ul style={listStyle}>
+
+        {/* Center Section */}
+        <div className="mb-8 md:mb-0">
+          <h3 className="text-lg font-bold text-[#1E90FF]">WELLNESS 360</h3>
+          <ul className="mt-4 space-y-2">
             <li>
-              <Link to="/" style={linkStyle}>
+              <Link to="/" className="text-white no-underline hover:underline">
                 Home
               </Link>
             </li>
             <li>
-              <Link to="/services" style={linkStyle}>
+              <Link to="/services" className="text-white no-underline hover:underline">
                 Services
               </Link>
             </li>
             <li>
-              <Link to="/contact-us" style={linkStyle}>
+              <Link to="/contact-us" className="text-white no-underline hover:underline">
                 Contact
               </Link>
             </li>
             <li>
-              <Link to="/about" style={linkStyle}>
+              <Link to="/about" className="text-white no-underline hover:underline">
                 About Us
               </Link>
             </li>
           </ul>
         </div>
-        <div style={rightSectionStyle}>
-          <h3 style={logoStyle1}>YOU ARE ALWAYS OUR PRIORITY</h3>
-          <p>University of Moratuwa</p>
-          <p>+94 123456789</p>
-          <p>
-            <a href="mailto:Abcd@gmail.com" style={linkStyle}>
+
+        {/* Right Section */}
+        <div className="mb-8 md:mb-0">
+          <h3 className="text-lg font-bold text-[#1E90FF]">
+            YOU ARE ALWAYS OUR PRIORITY
+          </h3>
+          <p className="mt-4">University of Moratuwa</p>
+          <p className="mt-2">+94 123456789</p>
+          <p className="mt-2">
+            <a href="mailto:wellness360@gmail.com" className="text-white hover:underline">
               wellness360@gmail.com
             </a>
           </p>
         </div>
       </div>
 
-      <div style={bottomSectionStyle}>
+      <div className="text-center mt-5 border-t border-white pt-4">
         <p>2024 © WELLNESS 360.lk - All rights reserved.</p>
       </div>
     </footer>
   );
-};
-
-// Styles
-
-const logoStyle1 = {
-  color: "#1E90FF", // Light blue color
-};
-const footerStyle = {
-  backgroundColor: "#125488",
-  color: "#fff",
-  padding: "20px 0",
-  position: "relative",
-  width: "100%",
-};
-
-const containerStyle = {
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "flex-start",
-  maxWidth: "1200px",
-  margin: "0 auto",
-  padding: "0 20px",
-};
-
-const sectionStyle = {
-  textAlign: "center",
-  padding: "0 20px", // Add padding to create space between sections
-};
-
-const logoStyle = {
-  fontSize: "20px",
-  fontWeight: "bold",
-  color: "#1E90FF", // Light blue color
-};
-
-const socialIconsStyle = {
-  display: "flex",
-  gap: "10px",
-  marginTop: "10px",
-};
-
-const iconStyle = {
-  textDecoration: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-};
-
-const iconImageStyle = {
-  width: "40px",
-  height: "40px",
-};
-
-const listStyle = {
-  listStyleType: "none",
-  padding: 0,
-  margin: 0,
-};
-
-const linkStyle = {
-  color: "#fff", // Keep link color white
-  textDecoration: "none",
-};
-
-const bottomSectionStyle = {
-  textAlign: "center",
-  marginTop: "20px",
-  borderTop: "1px solid #fff",
-  paddingTop: "10px",
-};
-
-const leftSectionStyle = {
-  flex: "1",
-  textAlign: "left",
-};
-
-const centerSectionStyle = {
-  flex: "1",
-  textAlign: "center",
-};
-
-const rightSectionStyle = {
-  flex: "1",
-  textAlign: "right",
 };
 
 export default Footer;

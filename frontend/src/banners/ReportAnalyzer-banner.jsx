@@ -1,13 +1,40 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Box, Typography, Card, CardContent } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { CardButton } from '../components/Card';
 import bloodReportBanner from '../assets/blood-report-banner.jpg'; // Update with the actual image path
+import { useInView } from 'react-intersection-observer';
 
 const BloodReportCard = () => {
+  const { ref, inView } = useInView({
+    triggerOnce: false,
+    threshold: 0.1,
+  });
+
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    if (inView) {
+      setVisible(true);
+    } else {
+      setVisible(false);
+    }
+  }, [inView]);
+
   return (
     <Container>
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+      <Box
+        ref={ref}
+        sx={{
+          opacity: visible ? 1 : 0,
+          transform: visible ? 'translateY(0)' : 'translateY(100px)',
+          transition: 'opacity 0.6s ease-out, transform 0.6s ease-out',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          minHeight: '100vh',
+        }}
+      >
         <Card
           sx={{
             maxWidth: { xs: '90%', md: 1100 }, // Full width on small screens, max width on medium and up

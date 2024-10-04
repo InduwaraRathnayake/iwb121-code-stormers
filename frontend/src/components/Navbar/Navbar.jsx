@@ -1,27 +1,46 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
-import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
 import { Link } from "react-router-dom";
 
 import RemoveCookie from "../../hooks/removecookie";
 
-const pages = ["Home", "Services", "About", "Contact us"];
+const pages = ["Home", "About Us", "Our Services", "Contact us"];
 const settings = ["User Profile", "Logout"];
 const reportsOptions = ["Reports", "Calculators"];
 
-
 function Navbar() {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const [anchorElReports, setAnchorElReports] = React.useState(null); // State for Reports dropdown
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
+  const [anchorElReports, setAnchorElReports] = useState(null);
+  const [backgroundColor, setBackgroundColor] = useState("transparent");
+  const [fontColor, setFontColor] = useState("white");
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 100) {
+        setBackgroundColor("#125488");
+        setFontColor("white");
+      } else {
+        setBackgroundColor("transparent");
+        setFontColor("white");
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -47,7 +66,6 @@ function Navbar() {
     setAnchorElReports(null);
   };
 
-  //handling logout
   const handleLogout = () => {
     RemoveCookie("userEmail");
     localStorage.clear();
@@ -55,11 +73,8 @@ function Navbar() {
   };
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: "#125488" }}>
-      {" "}
-      {/* Set the background color */}
+    <AppBar position="fixed" sx={{ backgroundColor: backgroundColor, transition: "background-color 0.3s ease" }}>
       <Toolbar>
-        {/* Logo */}
         <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
           <Link to="/">
             <img
@@ -70,7 +85,6 @@ function Navbar() {
           </Link>
         </Box>
 
-        {/* Responsive Menu for smaller screens */}
         <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
           <IconButton
             size="large"
@@ -98,38 +112,59 @@ function Navbar() {
           >
             {pages.map((page) => (
               <MenuItem key={page} onClick={handleCloseNavMenu}>
-                <Button href={`/${page.toLowerCase().replace(" ", "-")}`}>
-                  {page}
-                </Button>
+                <Link
+                  to={`/${page.toLowerCase().replace(" ", "-")}`}
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      transition: "color 0.3s ease",
+                      "&:hover": {
+                        color: "lightblue",
+                      },
+                    }}
+                  >
+                    {page}
+                  </Typography>
+                </Link>
               </MenuItem>
             ))}
           </Menu>
         </Box>
 
-        {/* Menu items for larger screens */}
-        <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+        <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" }, alignItems: "center" }}>
           {pages.map((page) =>
-            page === "Services" ? (
+            page === "Our Services" ? (
               <Box
                 key={page}
                 onMouseEnter={handleOpenReportsMenu}
                 onMouseLeave={handleCloseReportsMenu}
+                sx={{ position: "relative", marginRight: 4 }} // Increased margin right
               >
-                <Button
-                  href="/services"
+                <Typography
                   sx={{
                     my: 2,
-                    color: "white",
+                    color: fontColor,
                     display: "block",
-                    transition: "transform 0.1s ease",
+                    transition: "color 0.3s ease",
                     "&:hover": {
-                      transform: "scale(1.05)",
-                      backgroundColor: "rgba(255, 255, 255, 0.1)",
+                      color: "lightblue",
                     },
                   }}
                 >
-                  {page}
-                </Button>
+                  <Link
+                    to="/services"
+                    style={{
+                      textDecoration: "none",
+                      color: "inherit",
+                    }}
+                  >
+                    {page}
+                  </Link>
+                </Typography>
                 <Menu
                   id="reports-menu"
                   anchorEl={anchorElReports}
@@ -147,37 +182,56 @@ function Navbar() {
                 >
                   {reportsOptions.map((report) => (
                     <MenuItem key={report} onClick={handleCloseReportsMenu}>
-                      <Button
-                        href={`/${report.toLowerCase().replace(" ", "-")}`}
+                      <Link
+                        to={`/${report.toLowerCase().replace(" ", "-")}`}
+                        style={{
+                          textDecoration: "none",
+                          color: "inherit",
+                        }}
                       >
-                        {report}
-                      </Button>
+                        <Typography
+                          sx={{
+                            transition: "color 0.3s ease",
+                            "&:hover": {
+                              color: "lightblue",
+                            },
+                          }}
+                        >
+                          {report}
+                        </Typography>
+                      </Link>
                     </MenuItem>
                   ))}
                 </Menu>
               </Box>
             ) : (
-              <Button
+              <Typography
                 key={page}
-                href={`/${page.toLowerCase().replace(" ", "-")}`}
                 sx={{
                   my: 2,
-                  color: "white",
+                  color: fontColor,
                   display: "block",
-                  transition: "transform 0.1s ease",
+                  transition: "color 0.3s ease",
                   "&:hover": {
-                    transform: "scale(1.05)",
-                    backgroundColor: "rgba(255, 255, 255, 0.1)",
+                    color: "lightblue",
                   },
+                  marginRight: 4, // Increased margin right
                 }}
               >
-                {page}
-              </Button>
+                <Link
+                  to={`/${page.toLowerCase().replace(" ", "-")}`}
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                  }}
+                >
+                  {page}
+                </Link>
+              </Typography>
             )
           )}
         </Box>
 
-        {/* User Avatar and Settings Menu */}
         <Box sx={{ flexGrow: 0 }}>
           <Tooltip title="Profile">
             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -203,13 +257,19 @@ function Navbar() {
             {settings.map((setting) =>
               setting === "Logout" ? (
                 <MenuItem key={setting} onClick={handleLogout}>
-                  <Button>{setting}</Button>
+                  <Typography>{setting}</Typography>
                 </MenuItem>
               ) : (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Button href={`/${setting.toLowerCase().replace(" ", "-")}`}>
-                    {setting}
-                  </Button>
+                  <Link
+                    to={`/${setting.toLowerCase().replace(" ", "-")}`}
+                    style={{
+                      textDecoration: "none",
+                      color: "inherit",
+                    }}
+                  >
+                    <Typography>{setting}</Typography>
+                  </Link>
                 </MenuItem>
               )
             )}
