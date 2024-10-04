@@ -5,7 +5,7 @@ const ContactUsComp = () => {
     <div style={containerStyle}>
       <div style={leftSectionStyle}>
         <div style={inputHafStyle2}>
-          <h2 >Contact Details</h2>
+          <h2 style={{ textAlign: 'center' }}>Contact Details</h2>
           <p><strong>Head Office :</strong> <br /> 160/16 Kirimandala Mawatha, Narahenpita, Colombo 5, Sri Lanka.</p>
         </div>
         <div style={inputHalStyle1}>
@@ -19,30 +19,34 @@ const ContactUsComp = () => {
           </div>
         </div>
         <div style={inputHafStyle2}>
-          <h3>Opening Hours</h3>
+          <h3 style={{ textAlign: 'center' }}>Opening Hours</h3>
           <p><strong>Monday-Friday :</strong> 08:30 - 17:30</p>
           <p><strong>Saturday :</strong> 08:30 - 17:30</p>
         </div>
       </div>
 
       <div style={rightSectionStyle}>
-        <h2>Contact Us</h2>
+        <h2 style={{ textAlign: 'center' }}>Contact Us</h2>
         <form style={formStyle}>
           <input style={inputStyle} type="text" placeholder="Subject *" />
           
           <div style={flexContainer}>
-            <input style={inputHalfStyle} type="text" placeholder="First Name *" />
-            <input style={inputHalfStyle} type="text" placeholder="Last Name *" />
+            <input style={inputHalfStyle1} type="text" placeholder="First Name *" />
+            <input style={inputHalfStyle2} type="text" placeholder="Last Name *" />
           </div>
           <div style={flexContainer}>
-            <input style={inputHalfStyle} type="text" placeholder="Mobile No *" />
-            <input style={inputHalfStyle} type="email" placeholder="Email Address *" />
+            <input style={inputHalfStyle1} type="text" placeholder="Mobile No *" />
+            <input style={inputHalfStyle2} type="email" placeholder="Email Address *" />
           </div>
           
           <textarea style={textareaStyle} placeholder="Your Message *"></textarea>
           <button type="submit" style={buttonStyle}>Submit</button>
         </form>
       </div>
+  
+
+
+
     </div>
   );
 };
@@ -50,94 +54,147 @@ const ContactUsComp = () => {
 // Styles
 const containerStyle = {
   display: 'flex',
+  flexWrap: 'wrap',
   justifyContent: 'space-between',
+  alignItems: 'flex-start',  
   padding: '20px',
-  backgroundColor: '#125488', // Updated background color
+  backgroundColor: '#125488', 
 };
 
 const leftSectionStyle = {
-  flex: 1,
+  flex: '1 1 45%', 
   padding: '20px',
-  textAlign: 'left',
-  color: 'white', // Changed font color to white
+  color: 'white',
+  minWidth: '300px', 
 };
 
 const rightSectionStyle = {
-  flex: 1,
+  flex: '1 1 45%', 
   padding: '20px',
-  color: 'white', // Changed font color to white
+  color: 'white',
+  minWidth: '300px',
+  maxWidth: '100%', 
+  overflow: 'hidden', 
+  wordWrap: 'break-word', 
+  boxSizing: 'border-box',
 };
+
 
 const formStyle = {
   display: 'flex',
   flexDirection: 'column',
-  color: 'white', // Changed font color to white
+  color: 'white',
 };
+
+
 
 const inputStyle = {
-  padding: '10px',
-  margin: '4px',
   fontSize: '16px',
-  width: '96%',
+  width: '100%',
   borderRadius: '5px',
   border: '1px solid #ccc',
-  color: 'black', // Ensuring input text is readable
+  padding: '8px',
+  margin: '4px 0',  
+  color: 'black',
+  boxSizing: 'border-box', 
 };
 
-const inputHalfStyle = {
+const inputHalfStyle1 = {
   padding: '9px',
   marginBottom: '10px',
   fontSize: '16px',
-  width: '48%',
+  width: '50%',
   borderRadius: '5px',
   border: '1px solid #ccc',
-  margin: '4px',
-  color: 'black', // Ensuring input text is readable
+  margin:'0',
+  color: 'black',
+  display:'flex',
+  justifyContent:'center',
+  flex: 1, 
+  
+};
+const inputHalfStyle2 = {
+  padding: '9px',
+  marginBottom: '10px',
+  fontSize: '16px',
+  width: '50%', 
+  borderRadius: '5px',
+  border: '1px solid #ccc',
+ margin:'0',
+  color: 'black',
+  display:'flex',
+  justifyContent:'center',
+  flex: 1, 
 };
 
 const inputHalStyle1 = {
+  flex: '1 1 45%',
   fontSize: '16px',
   width: '100%',
   borderRadius: '5px',
   display: 'flex',
-  color: 'white', // Changed font color to white
+  flexWrap: 'wrap',
+  color: 'white',
 };
 
 const inputHafStyle2 = {
+  flex: '1 1 45%',
   marginBottom: '10px',
   fontSize: '16px',
   width: '100%',
   borderRadius: '5px',
-  color: 'white', // Changed font color to white
+  color: 'white',
 };
 
+
 const flexContainer = {
+  margin: '4px 0',  
   display: 'flex',
   justifyContent: 'space-between',
+  flexWrap: 'wrap',
+  width: '100%',  
+  boxSizing: 'border-box', 
 };
+
+
 
 const textareaStyle = {
   padding: '10px',
-  marginBottom: '10px',
-  margin: '4px',
+  margin: '4px 0',  
   fontSize: '16px',
-  width: '96%',
+  width: '100%',  
   borderRadius: '5px',
   border: '1px solid #ccc',
   height: '100px',
-  color: 'black', // Ensuring textarea text is readable
+  color: 'black',
+  boxSizing: 'border-box',  
 };
 
+
 const buttonStyle = {
-  backgroundColor: '#f77f00', // Updated submit button color
+  backgroundColor: '#f77f00',
   color: '#fff',
   padding: '10px',
   fontSize: '16px',
   border: 'none',
   borderRadius: '5px',
   cursor: 'pointer',
-  width: '99%',
-  margin: '4px',
+  width: '100%',  
+  margin: '4px 0',  
+  boxSizing: 'border-box', 
 };
+
+// Media query to handle layout for smaller screens
+const mediaQuery = `
+  @media (max-width: 768px) {
+    ${containerStyle} {
+      flex-direction: column; // Stack on smaller screens
+    }
+
+    ${leftSectionStyle}, ${rightSectionStyle} {
+      flex: 1 1 100%; // Full width for both sections
+    }
+  }
+`;
 
 export default ContactUsComp;
