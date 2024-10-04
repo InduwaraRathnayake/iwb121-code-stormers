@@ -167,8 +167,8 @@ const imageContainerStyleRight = {
 };
 
 const avatarStyle = {
-  width: "100px",
-  height: "100px",
+  width: "150px",
+  height: "150px",
   borderRadius: "50%", // Make the image round
   objectFit: "cover",
   border: "2px solid #0A74DA",
