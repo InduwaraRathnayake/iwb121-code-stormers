@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { TextField, Typography, Card, CardContent } from '@mui/material';
 import { ContentContainer, TitleBox, FormContainer, CardButton } from '../../components/Card';
 import axios from 'axios';
@@ -13,7 +13,8 @@ const FBCPage = () => {
 
   const [report, setReport] = useState(null);
   const [history, setHistory] = useState([]);
-  const [error, setError] = useState('');
+  const [error, setError] = useState({}); // Object to track errors for each field
+  const reportRef = useRef(null); // Reference for the report card
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,21 +26,28 @@ const FBCPage = () => {
         ...formData,
         [name]: value
       });
-      setError(''); // Clear error on valid input
+      setError((prevErrors) => ({
+        ...prevErrors,
+        [name]: '' // Clear error for this field on valid input
+      }));
     } else {
-      setError(`${name} must be a valid number.`);
+      setError((prevErrors) => ({
+        ...prevErrors,
+        [name]: `${name} must be a valid number.` // Set error for this field
+      }));
     }
   };
 
   const validateInput = () => {
+    const newErrors = {}; // Create a new error object
     // Check for empty fields
     for (const key in formData) {
       if (formData[key] === '') {
-        setError(`${key} cannot be empty.`);
-        return false; // Return false if any field is empty
+        newErrors[key] = `${key} cannot be empty.`; // Add error for this field
       }
     }
-    return true; // Return true if all validations pass
+    setError(newErrors); // Update the error state
+    return Object.keys(newErrors).length === 0; // Return true if no errors
   };
 
   const handleSubmit = async (e) => {
@@ -47,7 +55,7 @@ const FBCPage = () => {
     if (!validateInput()) {
       return; // Prevent submission if validation fails
     }
-  
+
     // Convert the form data values to floats
     const requestData = {
       whiteBloodCells: parseFloat(formData.whiteBloodCells),
@@ -55,20 +63,20 @@ const FBCPage = () => {
       platelets: parseFloat(formData.platelets),
       hemoglobin: parseFloat(formData.hemoglobin)
     };
-  
+
     try {
       // Send the requestData object to the backend using axios
       const response = await axios.post('http://localhost:9090/api/analyzeFBC', requestData);
       console.log("🚀 ~ handleSubmit ~ response:", response)
-  
+
       // Assuming you receive a JSON response with interpretations from the backend
       const interpretations = response.data;
       console.log("🚀 ~ handleSubmit ~ interpretations:", interpretations)
       setReport(interpretations);
-      setError(''); // Clear any previous errors
+      setError({}); // Clear any previous errors
     } catch (error) {
       console.error('Error submitting data to the backend:', error);
-      setError('Failed to send data to the backend.');
+      setError({ general: 'Failed to send data to the backend.' }); // Set general error
     }
   };
 
@@ -76,10 +84,17 @@ const FBCPage = () => {
     if (!validateInput()) {
       return; // Prevent saving if validation fails
     }
-    
+
     setHistory([...history, formData]);
     alert('Report details saved successfully!');
   };
+
+  // Scroll to the report card when the report is updated
+  useEffect(() => {
+    if (report && reportRef.current) {
+      reportRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [report]);
 
   return (
     <ContentContainer>
@@ -101,8 +116,8 @@ const FBCPage = () => {
             value={formData.whiteBloodCells}
             onChange={handleChange}
             sx={{ marginBottom: '16px' }}
-            error={!!error} // Show error state if there's an error
-            helperText={error} // Show error message
+            error={!!error.whiteBloodCells} // Show error state if this field has an error
+            helperText={error.whiteBloodCells} // Show error message for this field
           />
           <TextField
             required
@@ -114,8 +129,8 @@ const FBCPage = () => {
             value={formData.redBloodCells}
             onChange={handleChange}
             sx={{ marginBottom: '16px' }}
-            error={!!error} // Show error state if there's an error
-            helperText={error} // Show error message
+            error={!!error.redBloodCells} // Show error state if this field has an error
+            helperText={error.redBloodCells} // Show error message for this field
           />
           <TextField
             required
@@ -127,8 +142,8 @@ const FBCPage = () => {
             value={formData.hemoglobin}
             onChange={handleChange}
             sx={{ marginBottom: '16px' }}
-            error={!!error} // Show error state if there's an error
-            helperText={error} // Show error message
+            error={!!error.hemoglobin} // Show error state if this field has an error
+            helperText={error.hemoglobin} // Show error message for this field
           />
           <TextField
             required
@@ -140,8 +155,8 @@ const FBCPage = () => {
             value={formData.platelets}
             onChange={handleChange}
             sx={{ marginBottom: '16px' }}
-            error={!!error} // Show error state if there's an error
-            helperText={error} // Show error message
+            error={!!error.platelets} // Show error state if this field has an error
+            helperText={error.platelets} // Show error message for this field
           />
           <CardButton type="submit">
             Analyze
@@ -152,6 +167,7 @@ const FBCPage = () => {
       {/* Report Card Section */}
       {report && (
         <Card
+          ref={reportRef} // Reference to the report card
           sx={{
             marginTop: '40px',
             padding: '20px',
@@ -183,7 +199,7 @@ const FBCPage = () => {
                 variant="body1"
                 sx={{
                   marginTop: '16px',
-                  color: '#0A2472',
+                  color: item.color,
                   fontSize: '16px',
                   lineHeight: '1.5',
                   listStyleType: 'disc',
@@ -194,12 +210,7 @@ const FBCPage = () => {
                 {item.text}
               </Typography>
             ))}
-            <CardButton 
-              type="button" // Changed to type="button"
-              onClick={saveToHistory}
-            >
-              Save report details 
-            </CardButton>
+            
           </CardContent>
         </Card>
       )}

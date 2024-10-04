@@ -150,7 +150,7 @@ const CRPTestPage = () => {
                   variant="body1"
                   sx={{
                     marginTop: "16px",
-                    color: item.color === "red" ? "red" : "#0A2472", // Set color based on interpretation
+                    color:  item.color,
                     fontSize: "16px",
                     lineHeight: "1.5",
                     listStyleType: "disc",
@@ -161,13 +161,7 @@ const CRPTestPage = () => {
                   {item.text}
                 </Typography>
               ))}
-              <CardButton
-                type="button" // Changed to prevent form submission
-                onClick={saveToHistory}
-                sx={{ marginTop: "16px" }} // Add spacing above the button
-              >
-                Save report details
-              </CardButton>
+              
             </CardContent>
           </Card>
         )}

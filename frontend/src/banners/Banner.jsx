@@ -9,7 +9,7 @@ const Banner = () => {
       sx={{
         position: 'relative',
         height: '100vh', // Full viewport height
-        width: '100vw', // Full viewport width
+        width: '100%', // Full viewport width
         backgroundImage: `url(${bannerImage})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
@@ -39,7 +39,7 @@ const Banner = () => {
         src={logo} 
         alt="Logo" 
         sx={{
-          width: '330px',
+          width: '320px',
           mb: 16, // Reduced margin below the logo to lift it higher
           zIndex: 2,
           opacity: 0.8, // Adjust the opacity for transparency
@@ -55,6 +55,7 @@ const Banner = () => {
         variant="h3"
         sx={{
           fontWeight: 'bold',
+          fontFamily: 'Montserrat, sans-serif',
           textShadow: '2px 2px 6px rgba(0, 0, 0, 0.8)',
           mb: 5,
           zIndex: 2,
