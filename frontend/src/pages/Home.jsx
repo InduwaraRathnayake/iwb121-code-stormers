@@ -1,7 +1,6 @@
 import HealthTips from "../Tips/tips";
 import CalculatorsCard from "../banners/calculator-banner";
 import BloodReportCard from "../banners/ReportAnalyzer-banner";
-import { Link } from "react-router-dom";
 import FAQSection from "../components/FAQ/FAQ";
 import OurVision from "../banners/our-vision";
 import Banner from "../banners/Banner";
