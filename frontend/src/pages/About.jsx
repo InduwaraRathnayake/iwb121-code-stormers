@@ -5,8 +5,8 @@ import profile2 from "../assets/profile2.jpg";
 const teamMembers = [
   {
     name: "Induwara Rathnayake",
-    title: "Department of Computer Science & Engineering, Universty of Moratuwainduwarar.22@cse.mrt.ac.lk",
-    description: "+94 77 220 9691",
+    title: "Department of Computer Science & Engineering, Universty of Moratuwa",
+    description: "induwarar.22@cse.mrt.ac.lk",
     image: profile1,
   },
   {
