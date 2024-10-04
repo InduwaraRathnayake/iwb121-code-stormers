@@ -40,7 +40,7 @@ const Banner = () => {
         alt="Logo" 
         sx={{
           width: '320px',
-          mb: 16, // Reduced margin below the logo to lift it higher
+          mt: 25, // Reduced margin below the logo to lift it higher
           zIndex: 2,
           opacity: 0.8, // Adjust the opacity for transparency
           transition: 'transform 0.3s ease, opacity 0.3s ease', // Smooth hover effect
@@ -57,7 +57,7 @@ const Banner = () => {
           fontWeight: 'bold',
           fontFamily: 'Montserrat, sans-serif',
           textShadow: '2px 2px 6px rgba(0, 0, 0, 0.8)',
-          mb: 5,
+          mt: 12,
           zIndex: 2,
           animation: 'fadeIn 1s ease-in-out', // Fade-in animation
         }}
@@ -71,7 +71,7 @@ const Banner = () => {
           textShadow: '2px 2px 6px rgba(0, 0, 0, 0.8)',
           mb: 12,
           zIndex: 2,
-          animation: 'fadeIn 1.5s ease-in-out', // Fade-in animation
+          animation: 'fadeIn 2s ease-in-out', // Fade-in animation
         }}
       >
         Your journey to a healthier life starts here.
