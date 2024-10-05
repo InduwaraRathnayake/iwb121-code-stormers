@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   Container,
   Box,
@@ -25,6 +25,9 @@ export default function BMICalculator() {
   // Separate error states for height and weight
   const [heightError, setHeightError] = useState("");
   const [weightError, setWeightError] = useState("");
+
+  // Ref for the report section
+  const reportRef = useRef(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -72,6 +75,11 @@ export default function BMICalculator() {
     const bmiValue = (weight / (height / 100) ** 2).toFixed(2);
     setBmi(bmiValue);
     categorizeBMI(bmiValue);
+
+    // Scroll to the report section after form submission
+    if (reportRef.current) {
+      reportRef.current.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   const categorizeBMI = (bmi) => {
@@ -88,11 +96,11 @@ export default function BMICalculator() {
     } else if (bmi >= 23 && bmi <= 24.9) {
       category = "Risk to overweight";
       message =
-        "Your weight is within the normal recommended weight. Try to bring down it with more exercises and correct dietary practices.";
+        "Your weight is within the normal recommended weight. Try to bring it down with more exercises and correct dietary practices.";
     } else if (bmi >= 25 && bmi <= 29.9) {
       category = "Overweight";
       message =
-        "Your weight is more than the normal recommended weight. Bring down it with more exercises and correct dietary practices. ";
+        "Your weight is more than the normal recommended weight. Bring it down with more exercises and correct dietary practices. ";
     } else {
       category = "Obesity";
       message =
@@ -202,6 +210,7 @@ export default function BMICalculator() {
         </Box>
         {bmi && (
           <Card
+            ref={reportRef} // Reference to scroll into
             sx={{
               display: "flex",
               justifyContent: "center",
