@@ -1,6 +1,7 @@
 import { Typography } from "@mui/material";
 import profile1 from "../assets/profile1.jpg";
 import profile2 from "../assets/profile2.jpg";
+import profile4 from "../assets/profile4.jpg";
 
 const teamMembers = [
   {
@@ -25,7 +26,7 @@ const teamMembers = [
     name: "Shanthisha Jayathunga",
     title: "Department of Computer Science & Engineering, Universty of Moratuwa",
     description: "shanthisha.22@cse.mrt.ac.lk",
-    image: "/Unui.jpg",
+    image: profile4,
   },
 ];
 
