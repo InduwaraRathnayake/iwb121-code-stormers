@@ -32,7 +32,6 @@ const FBCPage = () => {
   });
 
   const [report, setReport] = useState(null);
-  const [history, setHistory] = useState([]);
   const [error, setError] = useState({}); 
   const reportRef = useRef(null);
 
@@ -59,7 +58,7 @@ const FBCPage = () => {
 
   const validateInput = () => {
     const newErrors = {}; 
-    // Check for empty fields
+   
     for (const key in formData) {
       if (formData[key] === "") {
         newErrors[key] = `${key} cannot be empty.`; 
@@ -107,14 +106,6 @@ const FBCPage = () => {
     }
   };
 
-  const saveToHistory = () => {
-    if (!validateInput()) {
-      return; 
-    }
-
-    setHistory([...history, formData]);
-    alert("Report details saved successfully!");
-  };
 
   useEffect(() => {
     if (report && reportRef.current) {
