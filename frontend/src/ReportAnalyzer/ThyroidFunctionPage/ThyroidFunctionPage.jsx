@@ -1,42 +1,61 @@
-import { useState, useRef, useEffect } from 'react';
-import { TextField, Typography, Card, CardContent } from '@mui/material';
-import { ContentContainer, TitleBox, FormContainer, CardButton } from '../../components/Card';
-import axios from 'axios';
+import { useState, useRef, useEffect } from "react";
+import {
+  TextField,
+  Typography,
+  Card,
+  CardContent,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Box,
+} from "@mui/material";
+import {
+  ContentContainer,
+  TitleBox,
+  FormContainer,
+  CardButton,
+} from "../../components/Card";
+import axios from "axios";
+import HospitalLogo from "../../assets/logo.png";
+import generatePDF from "../../helpers/generatePDF";
 
 const ThyroidFunctionTests = () => {
   const [formData, setFormData] = useState({
-    tsh: '',
-    t3: '',
-    t4: '',
+    tsh: "",
+    t3: "",
+    t4: "",
   });
-
   const [report, setReport] = useState(null);
-  const [history, setHistory] = useState([]);
   const [error, setError] = useState({
-    tsh: '',
-    t3: '',
-    t4: '',
+    tsh: "",
+    t3: "",
+    t4: "",
   });
-  const reportRef = useRef(null); // Reference for the report card
+  const reportRef = useRef(null);
+  
+  const currentDate = new Date().toLocaleDateString(); // Current date
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const regex = /^\d*\.?\d*$/; // regex to allow only numbers and decimal points
+    const regex = /^\d*\.?\d*$/;
 
-    // Only update state if the input value is valid according to the regex
-    if (regex.test(value) || value === '') {
+    if (regex.test(value) || value === "") {
       setFormData({
         ...formData,
-        [name]: value
+        [name]: value,
       });
       setError((prevError) => ({
         ...prevError,
-        [name]: '' // Clear error for the specific field on valid input
+        [name]: "",
       }));
     } else {
       setError((prevError) => ({
         ...prevError,
-        [name]: `${name} must be a valid number.`
+        [name]: `${name} must be a valid number.`,
       }));
     }
   };
@@ -44,78 +63,83 @@ const ThyroidFunctionTests = () => {
   const validateInput = () => {
     let isValid = true;
     const newError = {
-      tsh: '',
-      t3: '',
-      t4: '',
+      tsh: "",
+      t3: "",
+      t4: "",
     };
 
-    // Check for empty fields and update error state
     for (const key in formData) {
-      if (formData[key] === '') {
+      if (formData[key] === "") {
         newError[key] = `${key} cannot be empty.`;
         isValid = false;
       }
     }
 
-    setError(newError); // Update the error state
-    return isValid; // Return whether the validation passed
+    setError(newError); 
+    return isValid; 
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateInput()) {
-      return; // Prevent submission if validation fails
+      return; 
     }
-  
-    // Convert the form data values to floats
+
     const requestData = {
       tsh: parseFloat(formData.tsh),
       t3: parseFloat(formData.t3),
-      t4: parseFloat(formData.t4)
+      t4: parseFloat(formData.t4),
     };
-  
+
     try {
-      // Send the requestData object to the backend using axios
-      const response = await axios.post('http://localhost:9090/api/analyzeTFT', requestData);
-      console.log("🚀 ~ handleSubmit ~ response:", response)
-  
-      // Assuming you receive a JSON response with interpretations from the backend
+      const response = await axios.post(
+        "http://localhost:9090/api/analyzeTFT",
+        requestData
+      );
+
       const interpretations = response.data;
-      console.log("🚀 ~ handleSubmit ~ interpretations:", interpretations)
       setReport(interpretations);
-      setError({ tsh: '', t3: '', t4: '' }); // Clear any previous errors
+      setError({ tsh: "", t3: "", t4: "" }); // Clear any previous errors
     } catch (error) {
-      console.error('Error submitting data to the backend:', error);
-      setError({ tsh: '', t3: '', t4: 'Failed to send data to the backend.' });
+      console.error("Error submitting data to the backend:", error);
+      setError({ tsh: "", t3: "", t4: "Failed to send data to the backend." });
     }
   };
 
-  const saveToHistory = () => {
-    if (!validateInput()) {
-      return; // Prevent saving if validation fails
-    }
-    
-    setHistory([...history, formData]);
-    alert('Report details saved successfully!');
-  };
-
-  // Scroll to the report card when the report is updated
   useEffect(() => {
     if (report && reportRef.current) {
-      reportRef.current.scrollIntoView({ behavior: 'smooth' });
+      reportRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [report]);
+
+  const expectedRanges = {
+    tsh: "0.4 - 4.0 mIU/L",
+    t3: "2.3 - 4.2 ng/mL",
+    t4: "0.8 - 1.8 µg/dL",
+  };
+
+  const getPDF = () => {
+    generatePDF(reportRef);
+  };
 
   return (
     <ContentContainer>
       <TitleBox>
-        <Typography variant="h4" component="h1" sx={{ fontWeight: 900, fontSize: '50px', color: '#034c81' }}>
+        <Typography
+          variant="h4"
+          component="h1"
+          sx={{ fontWeight: 900, fontSize: "50px", color: "#034c81" }}
+        >
           Thyroid Function Tests Analyzer
         </Typography>
       </TitleBox>
 
       <FormContainer>
-        <form onSubmit={handleSubmit} className="form" style={{ width: '100%' }}>
+        <form
+          onSubmit={handleSubmit}
+          className="form"
+          style={{ width: "100%" }}
+        >
           <TextField
             required
             fullWidth
@@ -125,9 +149,9 @@ const ThyroidFunctionTests = () => {
             label="TSH (mIU/L)"
             value={formData.tsh}
             onChange={handleChange}
-            sx={{ marginBottom: '16px' }} // Add spacing between fields
-            error={!!error.tsh} // Display error state for TSH
-            helperText={error.tsh} // Show error message for TSH
+            sx={{ marginBottom: "16px" }}
+            error={!!error.tsh}
+            helperText={error.tsh}
           />
           <TextField
             required
@@ -138,9 +162,9 @@ const ThyroidFunctionTests = () => {
             label="T3 (ng/mL)"
             value={formData.t3}
             onChange={handleChange}
-            sx={{ marginBottom: '16px' }}
-            error={!!error.t3} // Display error state for T3
-            helperText={error.t3} // Show error message for T3
+            sx={{ marginBottom: "16px" }}
+            error={!!error.t3}
+            helperText={error.t3}
           />
           <TextField
             required
@@ -151,66 +175,281 @@ const ThyroidFunctionTests = () => {
             label="T4 (µg/dL)"
             value={formData.t4}
             onChange={handleChange}
-            sx={{ marginBottom: '16px' }}
-            error={!!error.t4} // Display error state for T4
-            helperText={error.t4} // Show error message for T4
+            sx={{ marginBottom: "16px" }}
+            error={!!error.t4}
+            helperText={error.t4}
           />
-          <CardButton type="submit">
-            Analyze
-          </CardButton>
+          <CardButton type="submit">Analyze</CardButton>
         </form>
       </FormContainer>
-
-      {/* Report Card Section */}
+<br></br>
       {report && (
-        <Card 
-          ref={reportRef} // Reference to the report card
-          sx={{ 
-            marginTop: '40px', 
-            padding: '20px', 
-            border: '1px solid #004c8c', 
-            borderRadius: '20px', 
-            width: '600px',
-            boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)', 
-            backgroundColor: 'rgba(255, 255, 255,0.9)', 
+        <Card
+          ref={reportRef}
+          sx={{
+            border: "1px solid #004c8c",
+            width: "100%",
+            maxWidth: "800px",
+            boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
+            backgroundColor: "rgba(255, 255, 255,0.9)",
           }}
         >
           <CardContent>
-            <Typography 
-              variant="h6" 
-              sx={{ 
-                fontWeight: 'bold', 
-                color: '#004c8c', 
-                fontSize: '30px', 
-                marginBottom: '30px', 
-                textAlign: 'center', 
-                padding: '8px', 
-                borderRadius: '4px' 
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: "20px",
+                backgroundColor: "#c6e6fb",
               }}
             >
-              Analyzation of Results
-            </Typography>
-            {report.map((item, index) => (
-              <Typography 
-                key={index} 
-                variant="body1" 
-                sx={{ 
-                  marginTop: '16px', 
-                  color:  item.color,
-                  fontSize: '16px', 
-                  lineHeight: '1.5', 
-                  textAlign: 'left' 
-                }} 
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginBottom: "20px",
+                  marginTop: "20px",
+                  marginLeft: "20px",
+                }}
               >
-                {item.text}
+                <img
+                  src={HospitalLogo}
+                  alt="Hospital Logo"
+                  style={{ width: "100px" }}
+                />
+                <div style={{ textAlign: "right", marginLeft: "40px" }}>
+                  <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                    WELLNESS 360
+                  </Typography>
+                  <Typography variant="body2">wellness360@gmail.com</Typography>
+                  <Typography variant="body2">
+                    University of Moratuwa
+                  </Typography>
+                  <Typography variant="body2">Phone: +94 123456789</Typography>
+                </div>
+                <div style={{ textAlign: "right" }}>
+                  <Typography
+                    variant="h6"
+                    sx={{ fontWeight: "bold", marginLeft: "220px" }}
+                  >
+                    Patient Information
+                  </Typography>
+                  <Typography variant="body1">Name: [Name]</Typography>
+                  <Typography variant="body1">Email: [Email]</Typography>
+                  <Typography variant="body1">Date: {currentDate}</Typography>
+                </div>
+              </div>
+            </div>
+
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: "600",
+                color: "#004c8c",
+                fontSize: "28px",
+                marginBottom: "20px",
+                textAlign: "center",
+              }}
+            >
+              Analysis of Thyroid Function Test Results
+            </Typography>
+
+            <TableContainer component={Paper}>
+              <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>
+                      <strong>Test</strong>
+                    </TableCell>
+                    <TableCell align="right" sx={{ width: "150px" }}>
+                      <strong>Expected Range</strong>
+                    </TableCell>
+                    <TableCell align="right" sx={{ width: "150px" }}>
+                      <strong>Your Result</strong>
+                    </TableCell>
+                    <TableCell align="right">
+                      <strong>Status</strong>
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <TableRow>
+                    <TableCell component="th" scope="row">
+                      TSH
+                    </TableCell>
+                    <TableCell align="right">{expectedRanges.tsh}</TableCell>
+                    <TableCell align="right">{formData.tsh}</TableCell>
+                    <TableCell
+                      align="right"
+                      style={{ color: report[0]?.color }}
+                    >
+                      {renderColoredCircle(report[0]?.color)}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell component="th" scope="row">
+                      T3
+                    </TableCell>
+                    <TableCell align="right">{expectedRanges.t3}</TableCell>
+                    <TableCell align="right">{formData.t3}</TableCell>
+                    <TableCell
+                      align="right"
+                      style={{ color: report[1]?.color }}
+                    >
+                      {renderColoredCircle(report[1]?.color)}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell component="th" scope="row">
+                      T4
+                    </TableCell>
+                    <TableCell align="right">{expectedRanges.t4}</TableCell>
+                    <TableCell align="right">{formData.t4}</TableCell>
+                    <TableCell
+                      align="right"
+                      style={{ color: report[2]?.color }}
+                    >
+                      {renderColoredCircle(report[2]?.color)}
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </TableContainer> 
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                marginTop: "20px",
+                marginBottom: "20px",
+              }}
+            >
+              <Box
+                sx={{ display: "flex", alignItems: "center", margin: "0 20px" }}
+              >
+                {ColoredCircle("red")}
+                <Typography variant="body1" sx={{ marginLeft: "8px" }}>
+                  High
+                </Typography>
+              </Box>
+              <Box
+                sx={{ display: "flex", alignItems: "center", margin: "0 20px" }}
+              >
+                {ColoredCircle("green")}
+                <Typography variant="body1" sx={{ marginLeft: "8px" }}>
+                  Normal
+                </Typography>
+              </Box>
+              <Box
+                sx={{ display: "flex", alignItems: "center", margin: "0 20px" }}
+              >
+                {ColoredCircle("blue")}
+                <Typography variant="body1" sx={{ marginLeft: "8px" }}>
+                  Low
+                </Typography>
+              </Box>
+            </Box>
+
+            <Box sx={{ marginTop: "30px", textAlign: "center" }}>
+              <Typography
+                variant="h6"
+                sx={{
+                  fontWeight: "bold",
+                  color: "#004c8c",
+                  fontSize: "24px",
+                  marginBottom: "16px",
+                }}
+              >
+                Analysis Summary
               </Typography>
-            ))}
-            
+
+              {report.map((item, index) => (
+                <Typography
+                  variant="body2"
+                  sx={{
+                   textAlign: "left",
+                    marginLeft: "8px",
+                    fontSize: "16px",
+                    lineHeight: "1.5",
+                  }}
+                >
+                  • {item.text}
+                </Typography>
+              ))}
+            </Box>
           </CardContent>
+
+          <Typography
+            variant="body1"
+            sx={{
+              color: "#004c8c", 
+              fontSize: "16px",
+              lineHeight: "1.5",
+              borderTop: "2px solid #004c8c",
+              margin: "20px",
+            }}
+          >
+        
+            We appreciate your trust in our services. If you have any questions
+            or require further assistance, please do not hesitate to contact us.
+            <br />
+            Explore our comprehensive range of offerings:{" "}
+            <a
+              href="http://localhost:5173/services"
+              style={{
+                color: "#004c8c",
+                textDecoration: "underline",
+                fontWeight: "bold",
+              }}
+            >
+              View Our Services
+            </a>
+          </Typography>
         </Card>
+      )}
+      {/* PDF Generation Button */}
+      {report && (
+        <div style={{ textAlign: "center" }}>
+          <CardButton onClick={getPDF} type="button">
+          Download Report as PDF
+          </CardButton>
+        </div>
+      )}
+
+      {/* Display error messages if there are any */}
+      {Object.keys(error).length > 0 && (
+        <div style={{ color: "red", marginTop: "20px" }}>
+          {Object.values(error).map((errMsg, index) => (
+            <div key={index}>{errMsg}</div>
+          ))}
+        </div>
       )}
     </ContentContainer>
   );
 };
 
+
 export default ThyroidFunctionTests;
+const renderColoredCircle = (color) => (
+  <span
+    style={{
+      display: "inline-block",
+      width: "30px",
+      height: "30px",
+      borderRadius: "50%",
+      backgroundColor: color,
+    }}
+  ></span>
+);
+
+const ColoredCircle = (color) => (
+  <span
+    style={{
+      display: "inline-block",
+      width: "20px",
+      height: "20px",
+      borderRadius: "50%",
+      backgroundColor: color,
+    }}
+  ></span>);

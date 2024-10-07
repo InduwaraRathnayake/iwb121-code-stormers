@@ -29,7 +29,6 @@ const CRPPage = () => {
   });
 
   const [report, setReport] = useState(null);
-  const [history, setHistory] = useState([]);
   const [error, setError] = useState({});
   const reportRef = useRef(null);
 
@@ -95,15 +94,6 @@ const CRPPage = () => {
       console.error("Error submitting data to the backend:", error);
       setError({ general: "Failed to send data to the backend." });
     }
-  };
-
-  const saveToHistory = () => {
-    if (!validateInput()) {
-      return;
-    }
-
-    setHistory([...history, formData]);
-    alert("Report details saved successfully!");
   };
 
   useEffect(() => {

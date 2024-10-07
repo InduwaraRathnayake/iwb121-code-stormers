@@ -1,7 +1,26 @@
-import { useState, useRef, useEffect } from 'react';
-import { TextField, Typography, Card, CardContent } from '@mui/material';
-import { ContentContainer, TitleBox, FormContainer, CardButton } from '../../components/Card';
-import axios from 'axios';
+import { useState, useRef, useEffect } from "react";
+import {
+  TextField,
+  Typography,
+  Card,
+  CardContent,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Box,
+} from "@mui/material";
+import {
+  ContentContainer,
+  TitleBox,
+  FormContainer,
+  CardButton,
+} from "../../components/Card";
+import axios from "axios";
+import HospitalLogo from "../../assets/logo.png";
 
 const LipidPanelPage = () => {
   const [formData, setFormData] = useState({
@@ -12,46 +31,43 @@ const LipidPanelPage = () => {
   });
 
   const [report, setReport] = useState(null);
-  const [history, setHistory] = useState([]);
-  const [error, setError] = useState({}); // State to manage error messages for each field
+  const [error, setError] = useState({});
   const reportRef = useRef(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     const regex = /^\d*\.?\d*$/;
 
-    // Update the state if the input value is valid according to the regex
     if (regex.test(value) || value === '') {
       setFormData({
         ...formData,
         [name]: value
       });
-      setError(prev => ({ ...prev, [name]: '' })); // Clear error for the specific field
+      setError(prev => ({ ...prev, [name]: '' }));
     } else {
-      setError(prev => ({ ...prev, [name]: `${name} must be a valid number.` })); // Set error for the specific field
+      setError(prev => ({ ...prev, [name]: `${name} must be a valid number.` }));
     }
   };
 
   const validateInput = () => {
     let isValid = true;
-    const newError = {}; // Create an object to hold error messages for each field
+    const newError = {};
 
-    // Check for empty fields
     for (const key in formData) {
       if (formData[key] === '') {
         newError[key] = `${key} cannot be empty.`;
-        isValid = false; // Set isValid to false if any field is empty
+        isValid = false;
       }
     }
 
-    setError(newError); // Update the error state with the new errors
-    return isValid; // Return true if all validations pass
+    setError(newError);
+    return isValid;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateInput()) {
-      return; // Prevent submission if validation fails
+      return;
     }
 
     const requestData = {
@@ -63,25 +79,13 @@ const LipidPanelPage = () => {
 
     try {
       const response = await axios.post('http://localhost:9090/api/analyzeLipidPanel', requestData);
-      console.log("🚀 ~ handleSubmit ~ response:", response);
-
       const interpretations = response.data;
-      console.log("🚀 ~ handleSubmit ~ interpretations:", interpretations);
       setReport(interpretations);
-      setError({}); // Clear all errors on successful submission
+      setError({});
     } catch (error) {
       console.error('Error submitting data to the backend:', error);
-      setError({ general: 'Failed to send data to the backend.' }); // Handle general error
+      setError({ general: 'Failed to send data to the backend.' });
     }
-  };
-
-  const saveToHistory = () => {
-    if (!validateInput()) {
-      return; // Prevent saving if validation fails
-    }
-
-    setHistory([...history, formData]);
-    alert('Report details saved successfully!');
   };
 
   useEffect(() => {
@@ -89,6 +93,14 @@ const LipidPanelPage = () => {
       reportRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [report]);
+
+  const expectedRanges = {
+    cholesterol: "Less than 200 mg/dL",
+    triglycerides: "Less than 150 mg/dL",
+    hdl: "60 mg/dL or higher",
+    ldl: "Less than 100 mg/dL",
+  };
+
 
   return (
     <ContentContainer>
@@ -111,8 +123,8 @@ const LipidPanelPage = () => {
               label={`${field.charAt(0).toUpperCase() + field.slice(1)} (mg/dL)`}
               value={formData[field]}
               onChange={handleChange}
-              error={!!error[field]} // Show error styling if there's an error for this field
-              helperText={error[field]} // Display specific error message for this field
+              error={!!error[field]}
+              helperText={error[field]}
               sx={{ marginBottom: '16px' }}
             />
           ))}
@@ -124,54 +136,175 @@ const LipidPanelPage = () => {
 
       {/* Report Card Section */}
       {report && (
-        <Card 
+        <Card
           ref={reportRef}
-          sx={{ 
-            marginTop: '40px', 
-            padding: '20px', 
-            border: '1px solid #004c8c', 
-            borderRadius: '20px', 
-            width: '600px',
-            boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)', 
-            backgroundColor: 'rgba(255, 255, 255,0.9)', 
+          sx={{
+            border: "1px solid #004c8c",
+            width: "100%",
+            maxWidth: "800px",
+            boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
+            backgroundColor: "rgba(255, 255, 255,0.9)",
           }}
         >
           <CardContent>
-            <Typography 
-              variant="h6" 
-              sx={{ 
-                fontWeight: 'bold', 
-                color: '#004c8c', 
-                fontSize: '30px', 
-                marginBottom: '30px', 
-                textAlign: 'center', 
-                padding: '8px', 
-                borderRadius: '4px' 
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px", backgroundColor: "#c6e6fb" }}>
+              <img src={HospitalLogo} alt="Hospital Logo" style={{ width: "100px" }} />
+              <div style={{ textAlign: "right", marginLeft: "40px" }}>
+                <Typography variant="h6" sx={{ fontWeight: "bold" }}>WELLNESS 360</Typography>
+                <Typography variant="body2">wellness360@gmail.com</Typography>
+                <Typography variant="body2">University of Moratuwa</Typography>
+                <Typography variant="body2">Phone: +94 123456789</Typography>
+              </div>
+              <div style={{ textAlign: "right" }}>
+                <Typography variant="h6" sx={{ fontWeight: "bold" }}>Patient Information</Typography>
+                <Typography variant="body1">Name: [Name]</Typography>
+                <Typography variant="body1">Email: [Email]</Typography>
+                <Typography variant="body1">Date: {new Date().toLocaleDateString()}</Typography>
+              </div>
+            </div>
+
+            <Typography variant="h6" sx={{ fontWeight: "600", color: "#004c8c", fontSize: "28px", marginBottom: "20px", textAlign: "center" }}>
+              Lipid Panel Test Results
+            </Typography>
+
+            <TableContainer component={Paper}>
+              <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell><strong>Test</strong></TableCell>
+                    <TableCell align="right" sx={{ width: "150px" }}><strong>Expected Range</strong></TableCell>
+                    <TableCell align="right" sx={{ width: "150px" }}><strong>Your Result</strong></TableCell>
+                    <TableCell align="right"><strong>Status</strong></TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {Object.keys(expectedRanges).map((key, index) => (
+                    <TableRow key={key}>
+                      <TableCell component="th" scope="row">{key.charAt(0).toUpperCase() + key.slice(1)}</TableCell>
+                      <TableCell align="right">{expectedRanges[key]}</TableCell>
+                      <TableCell align="right">{formData[key]}</TableCell>
+                      <TableCell align="right" style={{ color: report[index]?.color }}>
+                        {renderColoredCircle(report[index]?.color)}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                marginTop: "20px",
+                marginBottom: "20px",
               }}
             >
-              Analyzation of Results
-            </Typography>
-            {report.map((item, index) => (
-              <Typography 
-                key={index} 
-                variant="body1" 
-                sx={{ 
-                  marginTop: '16px', 
-                  color: item.color,
-                  fontSize: '16px', 
-                  lineHeight: '1.5', 
-                  textAlign: 'left' 
-                }} 
+              <Box
+                sx={{ display: "flex", alignItems: "center", margin: "0 20px" }}
               >
-                {item.text}
+                {ColoredCircle("red")}
+                <Typography variant="body1" sx={{ marginLeft: "8px" }}>
+                  High
+                </Typography>
+              </Box>
+              <Box
+                sx={{ display: "flex", alignItems: "center", margin: "0 20px" }}
+              >
+                {ColoredCircle("green")}
+                <Typography variant="body1" sx={{ marginLeft: "8px" }}>
+                  Normal
+                </Typography>
+              </Box>
+              <Box
+                sx={{ display: "flex", alignItems: "center", margin: "0 20px" }}
+              >
+                {ColoredCircle("blue")}
+                <Typography variant="body1" sx={{ marginLeft: "8px" }}>
+                  Low
+                </Typography>
+              </Box>
+            </Box>
+            <Box sx={{ marginTop: "30px", textAlign: "center" }}>
+              <Typography variant="h6" sx={{ fontWeight: "bold", color: "#004c8c", fontSize: "24px", marginBottom: "16px" }}>
+                Analysis Summary
               </Typography>
-            ))}
-            
-          </CardContent>
+              {report.map((item, index) => (
+                <Typography key={index} variant="body2" sx={{ textAlign: "left", marginLeft: "8px", fontSize: "16px", lineHeight: "1.5" }}>
+                  • {item.text}
+                </Typography>
+              ))}
+            </Box>
+            </CardContent>
+            <Typography
+            variant="body1"
+            sx={{
+              color: "#004c8c", 
+              fontSize: "16px",
+              lineHeight: "1.5",
+              borderTop: "2px solid #004c8c",
+              margin: "20px",
+            }}
+          >
+        
+            We appreciate your trust in our services. If you have any questions
+            or require further assistance, please do not hesitate to contact us.
+            <br />
+            Explore our comprehensive range of offerings:{" "}
+            <a
+              href="http://localhost:5173/services"
+              style={{
+                color: "#004c8c",
+                textDecoration: "underline",
+                fontWeight: "bold",
+              }}
+            >
+              View Our Services
+            </a>
+          </Typography>
+          
         </Card>
+      )}
+      {/* PDF Generation Button */}
+      {report && (
+        <div style={{ textAlign: "center" }}>
+          <CardButton onClick={getPDF} type="button">
+          Download Report as PDF
+          </CardButton>
+        </div>
+      )}
+
+      {/* Display error messages if there are any */}
+      {Object.keys(error).length > 0 && (
+        <div style={{ color: "red", marginTop: "20px" }}>
+          {Object.values(error).map((errMsg, index) => (
+            <div key={index}>{errMsg}</div>
+          ))}
+        </div>
       )}
     </ContentContainer>
   );
 };
 
 export default LipidPanelPage;
+const renderColoredCircle = (color) => (
+  <span
+    style={{
+      display: "inline-block",
+      width: "30px",
+      height: "30px",
+      borderRadius: "50%",
+      backgroundColor: color,
+    }}
+  ></span>
+);
+
+const ColoredCircle = (color) => (
+  <span
+    style={{
+      display: "inline-block",
+      width: "20px",
+      height: "20px",
+      borderRadius: "50%",
+      backgroundColor: color,
+    }}
+  ></span>);
