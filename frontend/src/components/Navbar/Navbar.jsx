@@ -47,7 +47,7 @@ function Navbar() {
 
   const handleLogout = () => {
     RemoveCookie("userEmail");
-    localStorage.clear();
+    localStorage.setItem("isLoggedIn", false);
     window.location.href = "/login";
   };
 
@@ -215,7 +215,7 @@ function Navbar() {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Profile">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="User Avatar" src="/164600.png" />
+                <Avatar alt="User Avatar" src="/user-icon.png" sx={{ width: 50, height: 50 }}  />
               </IconButton>
             </Tooltip>
             <Menu

@@ -61,7 +61,7 @@ const Layout = () => {
 
   // Get isLoggedIn from localStorage or initialize as false
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    return localStorage.getItem('isLoggedIn') === 'true';
+    return localStorage.getItem('isLoggedIn') === 'false' ? false : true;
   });
 
   // Keep isLoggedIn synced with localStorage
@@ -78,6 +78,10 @@ const Layout = () => {
             {/* Public routes */}
             <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
             <Route path="/signup" element={<SignUp />} />
+            {/* home */}
+            <Route path="/" element={<Navigate to="/home" />} />
+            <Route path="/home" element={<Home/>} />
+
             
             {/* Protect all other routes */}
             <Route
