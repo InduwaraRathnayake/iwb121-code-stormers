@@ -33,14 +33,13 @@ const FBCPage = () => {
 
   const [report, setReport] = useState(null);
   const [history, setHistory] = useState([]);
-  const [error, setError] = useState({}); // Object to track errors for each field
-  const reportRef = useRef(null); // Reference for the report card
+  const [error, setError] = useState({}); 
+  const reportRef = useRef(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const regex = /^\d*\.?\d*$/; // regex to allow only numbers and decimal points
+    const regex = /^\d*\.?\d*$/; 
 
-    // Only update state if the input value is valid according to the regex
     if (regex.test(value) || value === "") {
       setFormData({
         ...formData,
@@ -48,35 +47,34 @@ const FBCPage = () => {
       });
       setError((prevErrors) => ({
         ...prevErrors,
-        [name]: "", // Clear error for this field on valid input
+        [name]: "", 
       }));
     } else {
       setError((prevErrors) => ({
         ...prevErrors,
-        [name]: `${name} must be a valid number.`, // Set error for this field
+        [name]: `${name} must be a valid number.`, 
       }));
     }
   };
 
   const validateInput = () => {
-    const newErrors = {}; // Create a new error object
+    const newErrors = {}; 
     // Check for empty fields
     for (const key in formData) {
       if (formData[key] === "") {
-        newErrors[key] = `${key} cannot be empty.`; // Add error for this field
+        newErrors[key] = `${key} cannot be empty.`; 
       }
     }
-    setError(newErrors); // Update the error state
-    return Object.keys(newErrors).length === 0; // Return true if no errors
+    setError(newErrors); 
+    return Object.keys(newErrors).length === 0; 
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateInput()) {
-      return; // Prevent submission if validation fails
+      return; 
     }
 
-    // Convert the form data values to floats
     const requestData = {
       whiteBloodCells: parseFloat(formData.whiteBloodCells),
       redBloodCells: parseFloat(formData.redBloodCells),
@@ -85,14 +83,14 @@ const FBCPage = () => {
     };
 
     try {
-      // Send the requestData object to the backend using axios
+      
       const response = await axios.post(
         "http://localhost:9090/api/analyzeFBC",
         requestData
       );
       console.log("🚀 ~ handleSubmit ~ response:", response);
 
-      // Assuming you receive a JSON response with interpretations from the backend
+      
       const interpretations = response.data.map((item) => ({
         test: item.test,
         expectedRange: item.expectedRange,
@@ -102,32 +100,30 @@ const FBCPage = () => {
       }));
 
       setReport(interpretations);
-      setError({}); // Clear any previous errors
+      setError({}); 
     } catch (error) {
       console.error("Error submitting data to the backend:", error);
-      setError({ general: "Failed to send data to the backend." }); // Set general error
+      setError({ general: "Failed to send data to the backend." }); 
     }
   };
 
   const saveToHistory = () => {
     if (!validateInput()) {
-      return; // Prevent saving if validation fails
+      return; 
     }
 
     setHistory([...history, formData]);
     alert("Report details saved successfully!");
   };
 
-  // Scroll to the report card when the report is updated
   useEffect(() => {
     if (report && reportRef.current) {
       reportRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [report]);
 
-  const currentDate = new Date().toLocaleDateString(); // Get the current date
+  const currentDate = new Date().toLocaleDateString(); 
 
-  // Expected ranges for FBC tests
   const expectedRanges = {
     whiteBloodCells: "4.0-11.0 x 10⁹/L",
     redBloodCells: "4.5-5.9 x 10¹²/L",
@@ -167,8 +163,8 @@ const FBCPage = () => {
             value={formData.whiteBloodCells}
             onChange={handleChange}
             sx={{ marginBottom: "16px" }}
-            error={!!error.whiteBloodCells} // Show error state if this field has an error
-            helperText={error.whiteBloodCells} // Show error message for this field
+            error={!!error.whiteBloodCells} 
+            helperText={error.whiteBloodCells} 
           />
           <TextField
             required
@@ -180,8 +176,8 @@ const FBCPage = () => {
             value={formData.redBloodCells}
             onChange={handleChange}
             sx={{ marginBottom: "16px" }}
-            error={!!error.redBloodCells} // Show error state if this field has an error
-            helperText={error.redBloodCells} // Show error message for this field
+            error={!!error.redBloodCells} 
+            helperText={error.redBloodCells} 
           />
           <TextField
             required
@@ -193,8 +189,8 @@ const FBCPage = () => {
             value={formData.hemoglobin}
             onChange={handleChange}
             sx={{ marginBottom: "16px" }}
-            error={!!error.hemoglobin} // Show error state if this field has an error
-            helperText={error.hemoglobin} // Show error message for this field
+            error={!!error.hemoglobin} 
+            helperText={error.hemoglobin} 
           />
           <TextField
             required
