@@ -11,6 +11,7 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Box,
 } from "@mui/material";
 import {
   ContentContainer,
@@ -19,7 +20,7 @@ import {
   CardButton,
 } from "../../components/Card";
 import axios from "axios";
-import HospitalLogo from "../../assets/logo.png"; // Assuming you have a logo image in this path
+import HospitalLogo from "../../assets/logo.png"; 
 import generatePDF from "../../helpers/generatePDF";
 
 const FBCPage = () => {
@@ -128,10 +129,10 @@ const FBCPage = () => {
 
   // Expected ranges for FBC tests
   const expectedRanges = {
-    whiteBloodCells: "4.0-11.0 × 10⁹/L",
-    redBloodCells: "4.5-5.9 × 10¹²/L",
+    whiteBloodCells: "4.0-11.0 x 10⁹/L",
+    redBloodCells: "4.5-5.9 x 10¹²/L",
     hemoglobin: "130-180 g/L",
-    platelets: "150-450 × 10⁹/L",
+    platelets: "150-450 x 10⁹/L",
   };
 
   const getPDF = () => {
@@ -205,8 +206,8 @@ const FBCPage = () => {
             value={formData.platelets}
             onChange={handleChange}
             sx={{ marginBottom: "16px" }}
-            error={!!error.platelets} // Show error state if this field has an error
-            helperText={error.platelets} // Show error message for this field
+            error={!!error.platelets} 
+            helperText={error.platelets} 
           />
           <CardButton type="submit">Analyze</CardButton>
         </form>
@@ -215,15 +216,12 @@ const FBCPage = () => {
       {/* Report Card Section */}
       {report && (
         <Card
-          ref={reportRef} // Reference to the report card
+          ref={reportRef}
           sx={{
-            marginTop: "40px",
-            padding: "20px",
             border: "1px solid #004c8c",
-            borderRadius: "20px",
             width: "100%",
             maxWidth: "800px",
-            boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)", // Added shadow for depth
+            boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
             backgroundColor: "rgba(255, 255, 255,0.9)",
           }}
         >
@@ -234,32 +232,63 @@ const FBCPage = () => {
                 justifyContent: "space-between",
                 alignItems: "center",
                 marginBottom: "20px",
+                backgroundColor: "#c6e6fb", 
               }}
             >
-              <img
-                src={HospitalLogo}
-                alt="Hospital Logo"
-                style={{ width: "100px" }}
-              />
-              <div style={{ textAlign: "right" }}>
-                <Typography variant="body1">Username</Typography>
-                <Typography variant="body1">{currentDate}</Typography>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginBottom: "20px",
+                  marginTop: "20px",
+                  marginLeft: "20px",
+                  
+                }}
+              >
+                <img
+                  src={HospitalLogo}
+                  alt="Hospital Logo"
+                  style={{ width: "100px" }}
+                />
+                <div style={{ textAlign: "right", marginLeft: "40px" }}>
+                  <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                    WELLNESS 360
+                  </Typography>
+                  <Typography variant="body2">wellness360@gmail.com</Typography>
+                  <Typography variant="body2">
+                    University of Moratuwa
+                  </Typography>
+                  <Typography variant="body2">Phone: +94 123456789</Typography>
+                </div>
+
+                <div style={{ textAlign: "right" }}>
+                  <Typography
+                    variant="h6"
+                    sx={{ fontWeight: "bold", marginLeft: "220px" }}
+                  >
+                    Patient Information
+                  </Typography>
+                  <Typography variant="body1">Name: [Name]</Typography>
+                  <Typography variant="body1">Email: [Email]</Typography>
+                  <Typography variant="body1">Date: {currentDate}</Typography>
+                </div>
               </div>
             </div>
+           
             <Typography
-              variant="h6"
-              sx={{
-                fontWeight: "bold",
-                color: "#004c8c",
-                fontSize: "30px",
-                marginBottom: "30px",
-                textAlign: "center",
-                padding: "8px",
-                borderRadius: "4px",
-              }}
-            >
-              Analyzation of Results
-            </Typography>
+  variant="h6"
+  sx={{
+    fontWeight: "600",
+    color: "#004c8c",
+    fontSize: "28px",
+    marginBottom: "20px",
+    textAlign: "center",
+  }}
+>
+  Analysis of Full Blood Count (FBC) Test Results
+</Typography>
+
             <TableContainer component={Paper}>
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
@@ -287,7 +316,7 @@ const FBCPage = () => {
                       {expectedRanges.whiteBloodCells}
                     </TableCell>
                     <TableCell align="right">
-                      {formData.whiteBloodCells} × 10⁹/L{" "}
+                      {formData.whiteBloodCells} x 10⁹/L{" "}
                     </TableCell>
                     <TableCell
                       align="right"
@@ -304,7 +333,7 @@ const FBCPage = () => {
                       {expectedRanges.redBloodCells}
                     </TableCell>
                     <TableCell align="right">
-                      {formData.redBloodCells} × 10¹²/L
+                      {formData.redBloodCells} x 10¹²/L
                     </TableCell>
                     <TableCell
                       align="right"
@@ -338,7 +367,7 @@ const FBCPage = () => {
                       {expectedRanges.platelets}
                     </TableCell>
                     <TableCell align="right">
-                      {formData.platelets} × 10⁹/L
+                      {formData.platelets} x 10⁹/L
                     </TableCell>
                     <TableCell
                       align="right"
@@ -350,41 +379,96 @@ const FBCPage = () => {
                 </TableBody>
               </Table>
             </TableContainer>
-            <Typography
-              variant="body1"
-              sx={{ marginTop: "20px", fontWeight: "bold", color: "#004c8c" }}
+
+            {/* Status Legend Section */}
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                marginTop: "20px",
+                marginBottom: "20px",
+              }}
             >
-              Summary of Analysis:
-            </Typography>
-            {report.map((item, index) => (
-              <Typography
-                key={index}
-                variant="body2"
-                sx={{ color: item.color }}
+              <Box
+                sx={{ display: "flex", alignItems: "center", margin: "0 20px" }}
               >
-                {item.text}
+                {ColoredCircle("red")}
+                <Typography variant="body1" sx={{ marginLeft: "8px" }}>
+                  High
+                </Typography>
+              </Box>
+              <Box
+                sx={{ display: "flex", alignItems: "center", margin: "0 20px" }}
+              >
+                {ColoredCircle("green")}
+                <Typography variant="body1" sx={{ marginLeft: "8px" }}>
+                  Normal
+                </Typography>
+              </Box>
+              <Box
+                sx={{ display: "flex", alignItems: "center", margin: "0 20px" }}
+              >
+                {ColoredCircle("blue")}
+                <Typography variant="body1" sx={{ marginLeft: "8px" }}>
+                  Low
+                </Typography>
+              </Box>
+            </Box>
+
+            <Box sx={{ marginTop: "30px", textAlign: "center" }}>
+              <Typography
+                variant="h6"
+                sx={{
+                  fontWeight: "bold",
+                  color: "#004c8c",
+                  fontSize: "24px",
+                  marginBottom: "16px",
+                }}
+              >
+                Analysis Summary
               </Typography>
-            ))}
+
+              {report.map((item, index) => (
+                <Typography
+                  variant="body2"
+                  sx={{
+                   textAlign: "left",
+                    marginLeft: "8px",
+                    fontSize: "16px",
+                    lineHeight: "1.5",
+                  }}
+                >
+                  • {item.text}
+                </Typography>
+              ))}
+            </Box>
           </CardContent>
 
           <Typography
             variant="body1"
             sx={{
-              marginTop: "25px",
-              color: "#004c8c",
+              color: "#004c8c", 
               fontSize: "16px",
               lineHeight: "1.5",
-              textAlign: "center",
+              borderTop: "2px solid #004c8c",
+              margin: "20px",
             }}
           >
-            Thank you for using our service. Please contact us for more
-            information or visit our website for other services.{" "}
+        
+            We appreciate your trust in our services. If you have any questions
+            or require further assistance, please do not hesitate to contact us.
+            <br />
+            Explore our comprehensive range of offerings:{" "}
             <a
               href="http://localhost:5173/services"
-              style={{ color: "#004c8c", textDecoration: "underline" }}
+              style={{
+                color: "#004c8c",
+                textDecoration: "underline",
+                fontWeight: "bold",
+              }}
             >
-              other services
-            </a>.
+              View Our Services
+            </a>
           </Typography>
         </Card>
       )}
@@ -418,6 +502,18 @@ const renderColoredCircle = (color) => (
       display: "inline-block",
       width: "30px",
       height: "30px",
+      borderRadius: "50%",
+      backgroundColor: color,
+    }}
+  ></span>
+);
+
+const ColoredCircle = (color) => (
+  <span
+    style={{
+      display: "inline-block",
+      width: "20px",
+      height: "20px",
       borderRadius: "50%",
       backgroundColor: color,
     }}
