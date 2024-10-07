@@ -60,7 +60,7 @@ const Login = ({ setIsLoggedIn }) => {
           email: formData.useremail,
           password: formData.password,
         });
-        console.log("🚀 ~ handleSubmit ~ response:", response)
+        // console.log("🚀 ~ handleSubmit ~ response:", response)
 
         // Hash the useremail before storing it in the cookie
         const hashedUseremail = encryptString(formData.useremail, SECRET_KEY);
