@@ -100,7 +100,9 @@ const LipidPanelPage = () => {
     hdl: "60 mg/dL or higher",
     ldl: "Less than 100 mg/dL",
   };
-
+  const getPDF = () => {
+    generatePDF(reportRef);
+  };
 
   return (
     <ContentContainer>
@@ -133,7 +135,7 @@ const LipidPanelPage = () => {
           </CardButton>
         </form>
       </FormContainer>
-
+<br></br>
       {/* Report Card Section */}
       {report && (
         <Card

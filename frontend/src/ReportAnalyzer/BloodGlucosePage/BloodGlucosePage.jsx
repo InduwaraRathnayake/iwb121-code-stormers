@@ -4,7 +4,14 @@ import {
   Typography,
   Card,
   CardContent,
-  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Box,
 } from "@mui/material";
 import {
   ContentContainer,
@@ -13,7 +20,8 @@ import {
   CardButton,
 } from "../../components/Card";
 import axios from "axios";
-import html2pdf from "html2pdf.js";
+import HospitalLogo from "../../assets/logo.png";
+import generatePDF from "../../helpers/generatePDF";
 
 const BloodGlucoseTest = () => {
   const [formData, setFormData] = useState({
@@ -24,11 +32,13 @@ const BloodGlucoseTest = () => {
 
   const [report, setReport] = useState(null);
   const [errors, setErrors] = useState({});
-  const reportRef = useRef(null); // Reference for the report card
+  const reportRef = useRef(null);
+
+  const currentDate = new Date().toLocaleDateString();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const regex = /^\d*\.?\d*$/; // regex to allow only numbers and decimal points
+    const regex = /^\d*\.?\d*$/;
 
     if (regex.test(value) || value === "") {
       setFormData({
@@ -81,32 +91,33 @@ const BloodGlucoseTest = () => {
     }
   };
 
-  const generatePDF = () => {
-    const element = reportRef.current;
+  useEffect(() => {
+    if (report && reportRef.current) {
+      reportRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [report]);
 
-    const pdfOptions = {
-        margin:       0,
-        filename:     'report.pdf',
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2 },
-        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
-    };
+  const expectedRanges = {
+    fastingGlucose: "70-100 mg/dL",
+    randomGlucose: "70-140 mg/dL",
+    hba1c: "4-5.6%",
+  };
 
-    // Create a new div element with the same structure
-    const pdfContent = document.createElement('div');
-    pdfContent.innerHTML = `
-        <div style="text-align: center; width: 100%; padding: 20px; border: 1px solid #004c8c; border-radius: 20px; background-color: rgba(255, 255, 255, 0.9);">
-            ${element.innerHTML}
-        </div>
-    `;
+  const renderColoredCircle = (color) => (
+    <span
+      style={{
+        display: "inline-block",
+        width: "30px",
+        height: "30px",
+        borderRadius: "50%",
+        backgroundColor: color,
+      }}
+    ></span>
+  );
 
-    // Generate PDF
-    html2pdf()
-        .from(pdfContent)
-        .set(pdfOptions)
-        .save();
-};
-
+  const getPDF = () => {
+    generatePDF(reportRef);
+  };
 
   return (
     <ContentContainer>
@@ -121,11 +132,7 @@ const BloodGlucoseTest = () => {
       </TitleBox>
 
       <FormContainer>
-        <form
-          onSubmit={handleSubmit}
-          className="form"
-          style={{ width: "100%" }}
-        >
+        <form onSubmit={handleSubmit} className="form" style={{ width: "100%" }}>
           <TextField
             required
             fullWidth
@@ -169,68 +176,257 @@ const BloodGlucoseTest = () => {
         </form>
       </FormContainer>
 
+      <br />
       {report && (
-        <>
-          <Card
-            ref={reportRef}
-            sx={{
-              margin: "40px auto", // Center the card
-              padding: "20px",
-              border: "1px solid #004c8c",
-              borderRadius: "20px",
-              width: "600px", // Set a fixed width for the card
-              boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
-              backgroundColor: "rgba(255, 255, 255, 0.9)",
-            }}
-          >
-            <CardContent>
+        <Card
+          ref={reportRef}
+          sx={{
+            border: "1px solid #004c8c",
+            width: "100%",
+            maxWidth: "800px",
+            boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
+            backgroundColor: "rgba(255, 255, 255,0.9)",
+          }}
+        >
+          <CardContent>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: "20px",
+                backgroundColor: "#c6e6fb",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginBottom: "20px",
+                  marginTop: "20px",
+                  marginLeft: "20px",
+                }}
+              >
+                <img
+                  src={HospitalLogo}
+                  alt="Hospital Logo"
+                  style={{ width: "100px" }}
+                />
+                <div style={{ textAlign: "right", marginLeft: "40px" }}>
+                  <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                    WELLNESS 360
+                  </Typography>
+                  <Typography variant="body2">wellness360@gmail.com</Typography>
+                  <Typography variant="body2">University of Moratuwa</Typography>
+                  <Typography variant="body2">Phone: +94 123456789</Typography>
+                </div>
+                <div style={{ textAlign: "right" }}>
+                  <Typography
+                    variant="h6"
+                    sx={{ fontWeight: "bold", marginLeft: "220px" }}
+                  >
+                    Patient Information
+                  </Typography>
+                  <Typography variant="body1">Name: [Name]</Typography>
+                  <Typography variant="body1">Email: [Email]</Typography>
+                  <Typography variant="body1">Date: {currentDate}</Typography>
+                </div>
+              </div>
+            </div>
+
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: "600",
+                color: "#004c8c",
+                fontSize: "28px",
+                marginBottom: "20px",
+                textAlign: "center",
+              }}
+            >
+              Analysis of Blood Glucose Test Results
+            </Typography>
+            <TableContainer component={Paper}>
+              <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>
+                      <strong>Test</strong>
+                    </TableCell>
+                    <TableCell align="right" sx={{ width: "150px" }}>
+                      <strong>Expected Range</strong>
+                    </TableCell>
+                    <TableCell align="right" sx={{ width: "150px" }}>
+                      <strong>Your Result</strong>
+                    </TableCell>
+                    <TableCell align="right">
+                      <strong>Status</strong>
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <TableRow>
+                    <TableCell component="th" scope="row">
+                      Fasting Glucose
+                    </TableCell>
+                    <TableCell align="right">{expectedRanges.fastingGlucose}</TableCell>
+                    <TableCell align="right">{formData.fastingGlucose}</TableCell>
+                    <TableCell align="right" style={{ color: report[0]?.color }}>
+                      {renderColoredCircle(report[0]?.color)}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell component="th" scope="row">
+                      Random Glucose
+                    </TableCell>
+                    <TableCell align="right">{expectedRanges.randomGlucose}</TableCell>
+                    <TableCell align="right">{formData.randomGlucose}</TableCell>
+                    <TableCell align="right" style={{ color: report[1]?.color }}>
+                      {renderColoredCircle(report[1]?.color)}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell component="th" scope="row">
+                      HbA1c
+                    </TableCell>
+                    <TableCell align="right">{expectedRanges.hba1c}</TableCell>
+                    <TableCell align="right">{formData.hba1c}</TableCell>
+                    <TableCell align="right" style={{ color: report[2]?.color }}>
+                      {renderColoredCircle(report[2]?.color)}
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </TableContainer>
+
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                marginTop: "20px",
+                marginBottom: "20px",
+              }}
+            >
+              <Box
+                sx={{ display: "flex", alignItems: "center", margin: "0 20px" }}
+              >
+                {ColoredCircle("red")}
+                <Typography variant="body1" sx={{ marginLeft: "8px" }}>
+                  High
+                </Typography>
+              </Box>
+              <Box
+                sx={{ display: "flex", alignItems: "center", margin: "0 20px" }}
+              >
+                {ColoredCircle("green")}
+                <Typography variant="body1" sx={{ marginLeft: "8px" }}>
+                  Normal
+                </Typography>
+              </Box>
+              <Box
+                sx={{ display: "flex", alignItems: "center", margin: "0 20px" }}
+              >
+                {ColoredCircle("blue")}
+                <Typography variant="body1" sx={{ marginLeft: "8px" }}>
+                  Low
+                </Typography>
+              </Box>
+            </Box>
+
+            <Box sx={{ marginTop: "30px", textAlign: "center" }}>
               <Typography
                 variant="h6"
                 sx={{
                   fontWeight: "bold",
                   color: "#004c8c",
-                  fontSize: "30px",
-                  marginBottom: "30px",
-                  textAlign: "center",
-                  padding: "8px",
-                  borderRadius: "4px",
+                  fontSize: "24px",
+                  marginBottom: "16px",
                 }}
               >
-                Analyzation of Results
+                Analysis Summary
               </Typography>
+
               {report.map((item, index) => (
                 <Typography
-                  key={index}
-                  variant="body1"
+                  variant="body2"
                   sx={{
-                    marginTop: "16px",
-                    color: item.color,
+                   textAlign: "left",
+                    marginLeft: "8px",
                     fontSize: "16px",
                     lineHeight: "1.5",
-                    listStyleType: "disc",
-                    paddingLeft: "20px",
-                    textAlign: "left",
                   }}
                 >
-                  {item.text}
+                  • {item.text}
                 </Typography>
               ))}
-            </CardContent>
-          </Card>
-
-          {/* PDF Generation Button */}
-          <div style={{ textAlign: "center" }}>
-            <CardButton
-              onClick={generatePDF}
-              type="button"
+            </Box>
+          </CardContent>
+          <Typography
+            variant="body1"
+            sx={{
+              color: "#004c8c", 
+              fontSize: "16px",
+              lineHeight: "1.5",
+              borderTop: "2px solid #004c8c",
+              margin: "20px",
+            }}
+          >
+        
+            We appreciate your trust in our services. If you have any questions
+            or require further assistance, please do not hesitate to contact us.
+            <br />
+            Explore our comprehensive range of offerings:{" "}
+            <a
+              href="http://localhost:5173/services"
+              style={{
+                color: "#004c8c",
+                textDecoration: "underline",
+                fontWeight: "bold",
+              }}
             >
-              Download PDF
-            </CardButton>
-          </div>
-        </>
+              View Our Services
+            </a>
+          </Typography>
+        </Card>
+      )}
+      {/* PDF Generation Button */}
+      {report && (
+        <div style={{ textAlign: "center" }}>
+          <CardButton onClick={getPDF} type="button">
+          Download Report as PDF
+          </CardButton>
+        </div>
+      )}
+      {errors.submit && (
+        <Typography color="error" align="center" sx={{ marginTop: "10px" }}>
+          {errors.submit}
+        </Typography>
       )}
     </ContentContainer>
   );
 };
 
 export default BloodGlucoseTest;
+const renderColoredCircle = (color) => (
+  <span
+    style={{
+      display: "inline-block",
+      width: "30px",
+      height: "30px",
+      borderRadius: "50%",
+      backgroundColor: color,
+    }}
+  ></span>
+);
+
+const ColoredCircle = (color) => (
+  <span
+    style={{
+      display: "inline-block",
+      width: "15px",
+      height: "15px",
+      borderRadius: "50%",
+      backgroundColor: color,
+    }}
+  ></span>);

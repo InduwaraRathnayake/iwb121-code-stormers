@@ -105,7 +105,7 @@ const CRPPage = () => {
   const currentDate = new Date().toLocaleDateString();
 
   const expectedRanges = {
-    crpLevel: "<5.0 mg/L", // Adjust this based on the expected range for CRP
+    crpLevel: "<5.0 mg/L", 
   };
 
   const getPDF = () => {
@@ -159,13 +159,13 @@ const CRPPage = () => {
           }}
         >
           <CardContent>
-            <div
+          <div
               style={{
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
                 marginBottom: "20px",
-                borderBottom: "1px solid #004c8c",
+                backgroundColor: "#c6e6fb",
               }}
             >
               <div

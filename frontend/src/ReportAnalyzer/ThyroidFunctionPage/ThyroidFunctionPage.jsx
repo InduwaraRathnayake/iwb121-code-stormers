@@ -37,7 +37,7 @@ const ThyroidFunctionTests = () => {
   });
   const reportRef = useRef(null);
   
-  const currentDate = new Date().toLocaleDateString(); // Current date
+  const currentDate = new Date().toLocaleDateString(); 
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -99,7 +99,7 @@ const ThyroidFunctionTests = () => {
 
       const interpretations = response.data;
       setReport(interpretations);
-      setError({ tsh: "", t3: "", t4: "" }); // Clear any previous errors
+      setError({ tsh: "", t3: "", t4: "" });
     } catch (error) {
       console.error("Error submitting data to the backend:", error);
       setError({ tsh: "", t3: "", t4: "Failed to send data to the backend." });
