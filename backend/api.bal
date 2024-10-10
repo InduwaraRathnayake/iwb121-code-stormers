@@ -16,12 +16,11 @@ mysql:Client wellnessDB = check new (...databaseConfig);
     cors: {
         allowOrigins: ["http://localhost:5173"], // Your frontend's origin
         allowHeaders: ["Content-Type", "Authorization"], // Allow specific headers like Authorization if needed
-        allowMethods: ["GET", "POST", "OPTIONS", "PUT"], // Add other methods you may use
+        allowMethods: ["GET", "POST", "OPTIONS", "PUT", "DELETE"], // Add other methods you may use
         allowCredentials: true, // Enable if you are using cookies or other credentials
         maxAge: 3600 // Cache preflight response for 1 hour
     }
 }
-
 service /api on new http:Listener(9090) {
 
     // Resource to analyze blood glucose data
@@ -249,6 +248,26 @@ service /api on new http:Listener(9090) {
             check sendJsonResponse(caller, STATUS_INTERNAL_SERVER_ERROR, MSG_NAME_CHANGE_FAILED);
         }
     }
+
+
+
+    //delete user
+    resource function delete deleteUser(http:Caller caller, http:Request req) returns error? {
+        json requestBody = check req.getJsonPayload();
+        string email = (check requestBody.email).toString();
+
+        // Delete the user
+        var deleteUser = check wellnessDB->execute(
+        `DELETE FROM users WHERE email = ${email}`
+        );
+
+        if (deleteUser.affectedRowCount > 0) {
+            check sendJsonResponse(caller, STATUS_OK, MSG_USER_DELETE_SUCCESS);
+        } else {
+            check sendJsonResponse(caller, STATUS_INTERNAL_SERVER_ERROR, MSG_USER_DELETE_FAILED);
+        }
+    }
+
 
 }
 

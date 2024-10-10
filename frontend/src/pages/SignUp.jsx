@@ -74,7 +74,7 @@ const Signup = () => {
         if (error.response && error.response.data) {
           setMessage(`Signup failed: ${error.response.data.message}`);
         } else {
-          setMessage('Signup failed: An unexpected error occurred.');
+          setMessage('Signup failed: User already exits.');
         }
       }
     }

@@ -42,3 +42,5 @@ const string MSG_PASSWORD_RESET_SUCCESS = "Password reset successful";
 const string MSG_PASSWORD_RESET_FAILED = "Password reset failed";
 const string MSG_NAME_CHANGE_SUCCESS = "Name changed successfully";
 const string MSG_NAME_CHANGE_FAILED = "Failed to change name";
+const string MSG_USER_DELETE_SUCCESS = "User deleted successfully";
+const string MSG_USER_DELETE_FAILED = "Failed to delete user";
