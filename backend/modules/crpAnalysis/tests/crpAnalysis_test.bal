@@ -29,7 +29,7 @@ function testMildlyElevatedCRPLevel() returns error? {
     };
     AnalysisResult[] result = check analyzeCRP(data);
     test:assertEquals(result[0].text, "CRP level is mildly elevated (1-3 mg/L): May indicate a moderate risk for cardiovascular disease.");
-    test:assertEquals(result[0].color, "orange");
+    test:assertEquals(result[0].color, "red");
 }
 
 // Test function for high CRP levels

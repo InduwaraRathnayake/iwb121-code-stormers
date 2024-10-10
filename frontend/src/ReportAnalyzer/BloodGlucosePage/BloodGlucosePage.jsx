@@ -202,7 +202,7 @@ const BloodGlucoseTest = () => {
         </form>
       </FormContainer>
 
-      <br />
+      <br /> <br />
       {report && (
         <Card
           ref={reportRef}

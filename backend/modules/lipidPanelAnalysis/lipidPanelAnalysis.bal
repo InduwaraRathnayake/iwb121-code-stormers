@@ -23,7 +23,7 @@ public isolated function analyzeLipidPanel(LipidPanelData data) returns Analysis
     } else if (data.cholesterol >= 200.0 && data.cholesterol <= 239.0) {
         interpretations.push({ 
             "text": "Total Cholesterol is borderline high (200-239 mg/dL): Risk for heart disease may be present.", 
-            "color": "orange" 
+            "color": "red" 
         });
     } else {
         interpretations.push({ 
@@ -41,7 +41,7 @@ public isolated function analyzeLipidPanel(LipidPanelData data) returns Analysis
     } else if (data.triglycerides >= 150.0 && data.triglycerides < 199.0) {
         interpretations.push({ 
             "text": "Triglycerides are borderline high (150-199 mg/dL).", 
-            "color": "orange" 
+            "color": "red" 
         });
     } else {
         interpretations.push({ 
@@ -59,7 +59,7 @@ public isolated function analyzeLipidPanel(LipidPanelData data) returns Analysis
     } else if (data.hdl >= 40.0 && data.hdl < 60.0) {
         interpretations.push({ 
             "text": "HDL (Good Cholesterol) is acceptable (40-60 mg/dL).", 
-            "color": "orange" 
+            "color": "red" 
         });
     } else {
         interpretations.push({ 
@@ -77,12 +77,12 @@ public isolated function analyzeLipidPanel(LipidPanelData data) returns Analysis
     } else if (data.ldl >= 100.0 && data.ldl < 129.0) {
         interpretations.push({ 
             "text": "LDL (Bad Cholesterol) is near optimal (100-129 mg/dL).", 
-            "color": "orange" 
+            "color": "red" 
         });
     } else if (data.ldl >= 130.0 && data.ldl < 159.0) {
         interpretations.push({ 
             "text": "LDL (Bad Cholesterol) is borderline high (130-159 mg/dL).", 
-            "color": "orange" 
+            "color": "red" 
         });
     } else if (data.ldl >= 160.0 && data.ldl < 189.0) {
         interpretations.push({ 

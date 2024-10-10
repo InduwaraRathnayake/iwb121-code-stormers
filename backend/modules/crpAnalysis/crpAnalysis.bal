@@ -20,7 +20,7 @@ public isolated function analyzeCRP(CRPData data) returns AnalysisResult[]|error
     } else if (data.crpLevel >= 1.0 && data.crpLevel <= 3.0) {
         interpretations.push({ 
             "text": "CRP level is mildly elevated (1-3 mg/L): May indicate a moderate risk for cardiovascular disease.", 
-            "color": "orange" 
+            "color": "red" 
         });
     } else {
         interpretations.push({ 

@@ -25,7 +25,7 @@ public isolated function analyzeBloodGlucose(BloodGlucoseData data) returns Anal
     } else if (data.fastingGlucose >= 100.0 && data.fastingGlucose <= 125.0) {
         interpretations.push({ 
             "text": "Fasting glucose is elevated (Prediabetes): This condition is a warning sign for future diabetes.", 
-            "color": "orange" 
+            "color": "red" 
         });
     } else {
         interpretations.push({ "text": "Fasting glucose is high (Diabetes): This indicates that you may have diabetes.", "color": "red" });
@@ -37,7 +37,7 @@ public isolated function analyzeBloodGlucose(BloodGlucoseData data) returns Anal
     } else if (data.randomGlucose >= 140.0 && data.randomGlucose <= 199.0) {
         interpretations.push({ 
             "text": "Random glucose indicates Prediabetes: Elevated glucose levels can increase the risk of developing type 2 diabetes.", 
-            "color": "orange" 
+            "color": "red" 
         });
     } else {
         interpretations.push({ "text": "Random glucose indicates Diabetes: Persistent high levels may require medical intervention.", "color": "red" });
@@ -49,7 +49,7 @@ public isolated function analyzeBloodGlucose(BloodGlucoseData data) returns Anal
     } else if (data.hba1c >= 5.7 && data.hba1c < 6.5) {
         interpretations.push({ 
             "text": "HbA1c indicates Prediabetes: This is an important marker for long-term blood sugar control.", 
-            "color": "orange" 
+            "color": "red" 
         });
     } else {
         interpretations.push({ 

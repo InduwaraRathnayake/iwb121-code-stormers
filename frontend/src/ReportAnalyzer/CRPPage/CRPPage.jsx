@@ -169,7 +169,7 @@ const CRPPage = () => {
         </form>
       </FormContainer>
 
-      <br />
+      <br /> <br />
       {report && (
         <Card
           ref={reportRef}

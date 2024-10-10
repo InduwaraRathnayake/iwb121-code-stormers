@@ -215,7 +215,8 @@ const FBCPage = () => {
           <CardButton type="submit">Analyze</CardButton>
         </form>
       </FormContainer>
-
+      <br />
+      <br />
       {/* Report Card Section */}
       {report && (
         <Card

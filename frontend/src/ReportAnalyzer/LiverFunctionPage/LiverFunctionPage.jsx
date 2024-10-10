@@ -22,6 +22,9 @@ import {
 import axios from "axios";
 import HospitalLogo from "../../assets/logo.png";
 import generatePDF from "../../helpers/generatePDF";
+import GetCookie from "../../hooks/getcookie"; // Utility to get the email from cookies
+import decryptHash from "../../helpers/decrypting";
+import { SECRET_KEY } from "../../helpers/constants";
 
 const LiverFunctionTestsPage = () => {
   const [formData, setFormData] = useState({
@@ -33,8 +36,27 @@ const LiverFunctionTestsPage = () => {
 
   const [report, setReport] = useState(null);
   const [error, setError] = useState({});
+  const [userEmail, setUserEmail] = useState("");
+  const [fullName, setFullName] = useState("");
   const reportRef = useRef(null);
-  const currentDate = new Date().toLocaleDateString(); 
+  const currentDate = new Date().toLocaleDateString();
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const hashedemail = GetCookie("userEmail"); // Get email from cookies
+        const email = decryptHash(hashedemail, SECRET_KEY);
+        const response = await axios.post("http://localhost:9090/api/userByEmail", { email });
+        const { firstName, lastName } = response.data;
+        setUserEmail(email);
+        setFullName(`${firstName} ${lastName}`);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -50,7 +72,7 @@ const LiverFunctionTestsPage = () => {
       setError((prev) => ({
         ...prev,
         [name]: `${name} must be a valid number.`,
-      })); 
+      }));
     }
   };
 
@@ -87,10 +109,8 @@ const LiverFunctionTestsPage = () => {
         "http://localhost:9090/api/analyzeLFT",
         requestData
       );
-      console.log("🚀 ~ handleSubmit ~ response:", response);
 
       const interpretations = response.data;
-      console.log("🚀 ~ handleSubmit ~ interpretations:", interpretations);
       setReport(interpretations);
       setError({});
     } catch (error) {
@@ -244,8 +264,8 @@ const LiverFunctionTestsPage = () => {
                   >
                     Patient Information
                   </Typography>
-                  <Typography variant="body1">Name: [Name]</Typography>
-                  <Typography variant="body1">Email: [Email]</Typography>
+                  <Typography variant="body1">Name: {fullName}</Typography>
+                  <Typography variant="body1">Email: {userEmail}</Typography>
                   <Typography variant="body1">Date: {currentDate}</Typography>
                 </div>
               </div>
@@ -261,10 +281,10 @@ const LiverFunctionTestsPage = () => {
                 textAlign: "center",
               }}
             >
-              Analysis of Thyroid Function Test Results
+              Analysis of Liver Function Test Results
             </Typography>
             <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+              <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
                   <TableRow>
                     <TableCell>
@@ -281,56 +301,56 @@ const LiverFunctionTestsPage = () => {
                     </TableCell>
                   </TableRow>
                 </TableHead>
-                  <TableBody>
-                    <TableRow>
-                      <TableCell>ALT</TableCell>
-                      <TableCell align="right">{expectedRanges.alt}</TableCell>
-                      <TableCell align="right">{formData.alt}</TableCell>
-                      <TableCell
-                        align="right"
-                        style={{ color: report[0]?.color }}
-                      >
-                        {renderColoredCircle(report[0]?.color)}
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>AST</TableCell>
-                      <TableCell align="right">{expectedRanges.ast}</TableCell>
-                      <TableCell align="right">{formData.ast}</TableCell>
-                      <TableCell
-                        align="right"
-                        style={{ color: report[1]?.color }}
-                      >
-                        {renderColoredCircle(report[1]?.color)}
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>ALP</TableCell>
-                      <TableCell align="right">{expectedRanges.alp}</TableCell>
-                      <TableCell align="right">{formData.alp}</TableCell>
-                      <TableCell
-                        align="right"
-                        style={{ color: report[2]?.color }}
-                      >
-                        {renderColoredCircle(report[2]?.color)}
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>Bilirubin</TableCell>
-                      <TableCell align="right">
-                        {expectedRanges.bilirubin}
-                      </TableCell>
-                      <TableCell align="right">{formData.bilirubin}</TableCell>
-                      <TableCell
-                        align="right"
-                        style={{ color: report[3]?.color }}
-                      >
-                        {renderColoredCircle(report[3]?.color)}
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-              </TableContainer>
+                <TableBody>
+                  <TableRow>
+                    <TableCell>ALT</TableCell>
+                    <TableCell align="right">{expectedRanges.alt}</TableCell>
+                    <TableCell align="right">{formData.alt}</TableCell>
+                    <TableCell
+                      align="right"
+                      style={{ color: report[0]?.color }}
+                    >
+                      {renderColoredCircle(report[0]?.color)}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>AST</TableCell>
+                    <TableCell align="right">{expectedRanges.ast}</TableCell>
+                    <TableCell align="right">{formData.ast}</TableCell>
+                    <TableCell
+                      align="right"
+                      style={{ color: report[1]?.color }}
+                    >
+                      {renderColoredCircle(report[1]?.color)}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>ALP</TableCell>
+                    <TableCell align="right">{expectedRanges.alp}</TableCell>
+                    <TableCell align="right">{formData.alp}</TableCell>
+                    <TableCell
+                      align="right"
+                      style={{ color: report[2]?.color }}
+                    >
+                      {renderColoredCircle(report[2]?.color)}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>Bilirubin</TableCell>
+                    <TableCell align="right">
+                      {expectedRanges.bilirubin}
+                    </TableCell>
+                    <TableCell align="right">{formData.bilirubin}</TableCell>
+                    <TableCell
+                      align="right"
+                      style={{ color: report[3]?.color }}
+                    >
+                      {renderColoredCircle(report[3]?.color)}
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </TableContainer>
             <Box
               sx={{
                 display: "flex",
@@ -380,6 +400,7 @@ const LiverFunctionTestsPage = () => {
 
               {report.map((item, index) => (
                 <Typography
+                  key={index}
                   variant="body2"
                   sx={{
                     textAlign: "left",
@@ -443,6 +464,7 @@ const LiverFunctionTestsPage = () => {
 };
 
 export default LiverFunctionTestsPage;
+
 const renderColoredCircle = (color) => (
   <span
     style={{

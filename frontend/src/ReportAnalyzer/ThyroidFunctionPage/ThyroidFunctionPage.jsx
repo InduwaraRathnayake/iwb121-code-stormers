@@ -22,6 +22,9 @@ import {
 import axios from "axios";
 import HospitalLogo from "../../assets/logo.png";
 import generatePDF from "../../helpers/generatePDF";
+import GetCookie from "../../hooks/getcookie"; // Utility to get the email from cookies
+import decryptHash from "../../helpers/decrypting";
+import { SECRET_KEY } from "../../helpers/constants";
 
 const ThyroidFunctionTests = () => {
   const [formData, setFormData] = useState({
@@ -35,9 +38,31 @@ const ThyroidFunctionTests = () => {
     t3: "",
     t4: "",
   });
+  const [userEmail, setUserEmail] = useState("");
+  const [fullName, setFullName] = useState("");
   const reportRef = useRef(null);
-  
-  const currentDate = new Date().toLocaleDateString(); 
+
+  const currentDate = new Date().toLocaleDateString();
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const hashedemail = GetCookie("userEmail"); // Get email from cookies
+        const email = decryptHash(hashedemail, SECRET_KEY);
+        const response = await axios.post(
+          "http://localhost:9090/api/userByEmail",
+          { email }
+        );
+        const { firstName, lastName } = response.data;
+        setUserEmail(email);
+        setFullName(`${firstName} ${lastName}`);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -75,14 +100,14 @@ const ThyroidFunctionTests = () => {
       }
     }
 
-    setError(newError); 
-    return isValid; 
+    setError(newError);
+    return isValid;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateInput()) {
-      return; 
+      return;
     }
 
     const requestData = {
@@ -182,7 +207,7 @@ const ThyroidFunctionTests = () => {
           <CardButton type="submit">Analyze</CardButton>
         </form>
       </FormContainer>
-<br></br>
+      <br></br>
       {report && (
         <Card
           ref={reportRef}
@@ -236,8 +261,8 @@ const ThyroidFunctionTests = () => {
                   >
                     Patient Information
                   </Typography>
-                  <Typography variant="body1">Name: [Name]</Typography>
-                  <Typography variant="body1">Email: [Email]</Typography>
+                  <Typography variant="body1">Name: {fullName}</Typography>
+                  <Typography variant="body1">Email: {userEmail}</Typography>
                   <Typography variant="body1">Date: {currentDate}</Typography>
                 </div>
               </div>
@@ -316,7 +341,7 @@ const ThyroidFunctionTests = () => {
                   </TableRow>
                 </TableBody>
               </Table>
-            </TableContainer> 
+            </TableContainer>
             <Box
               sx={{
                 display: "flex",
@@ -366,9 +391,10 @@ const ThyroidFunctionTests = () => {
 
               {report.map((item, index) => (
                 <Typography
+                  key={index}
                   variant="body2"
                   sx={{
-                   textAlign: "left",
+                    textAlign: "left",
                     marginLeft: "8px",
                     fontSize: "16px",
                     lineHeight: "1.5",
@@ -383,14 +409,13 @@ const ThyroidFunctionTests = () => {
           <Typography
             variant="body1"
             sx={{
-              color: "#004c8c", 
+              color: "#004c8c",
               fontSize: "16px",
               lineHeight: "1.5",
               borderTop: "2px solid #004c8c",
               margin: "20px",
             }}
           >
-        
             We appreciate your trust in our services. If you have any questions
             or require further assistance, please do not hesitate to contact us.
             <br />
@@ -412,7 +437,7 @@ const ThyroidFunctionTests = () => {
       {report && (
         <div style={{ textAlign: "center" }}>
           <CardButton onClick={getPDF} type="button">
-          Download Report as PDF
+            Download Report as PDF
           </CardButton>
         </div>
       )}
@@ -428,7 +453,6 @@ const ThyroidFunctionTests = () => {
     </ContentContainer>
   );
 };
-
 
 export default ThyroidFunctionTests;
 const renderColoredCircle = (color) => (
@@ -452,4 +476,5 @@ const ColoredCircle = (color) => (
       borderRadius: "50%",
       backgroundColor: color,
     }}
-  ></span>);
+  ></span>
+);
