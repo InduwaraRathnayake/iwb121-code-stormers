@@ -22,6 +22,9 @@ import {
 import axios from "axios";
 import HospitalLogo from "../../assets/logo.png";
 import generatePDF from "../../helpers/generatePDF";
+import GetCookie from "../../hooks/getcookie"; // Utility to get the email from cookies
+import decryptHash from "../../helpers/decrypting";
+import { SECRET_KEY } from "../../helpers/constants";
 
 const CRPPage = () => {
   const [formData, setFormData] = useState({
@@ -30,7 +33,26 @@ const CRPPage = () => {
 
   const [report, setReport] = useState(null);
   const [error, setError] = useState({});
+  const [userEmail, setUserEmail] = useState("");
+  const [fullName, setFullName] = useState("");
   const reportRef = useRef(null);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const hashedemail = GetCookie("userEmail"); // Get email from cookies
+        const email = decryptHash(hashedemail, SECRET_KEY);
+        const response = await axios.post("http://localhost:9090/api/userByEmail", { email });
+        const { firstName, lastName } = response.data;
+        setUserEmail(email);
+        setFullName(`${firstName} ${lastName}`);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -146,7 +168,8 @@ const CRPPage = () => {
           <CardButton type="submit">Analyze</CardButton>
         </form>
       </FormContainer>
-<br></br>
+
+      <br />
       {report && (
         <Card
           ref={reportRef}
@@ -159,7 +182,7 @@ const CRPPage = () => {
           }}
         >
           <CardContent>
-          <div
+            <div
               style={{
                 display: "flex",
                 justifyContent: "space-between",
@@ -201,8 +224,8 @@ const CRPPage = () => {
                   >
                     Patient Information
                   </Typography>
-                  <Typography variant="body1">Name: [Name]</Typography>
-                  <Typography variant="body1">Email: [Email]</Typography>
+                  <Typography variant="body1">Name: {fullName}</Typography>
+                  <Typography variant="body1">Email: {userEmail}</Typography>
                   <Typography variant="body1">Date: {currentDate}</Typography>
                 </div>
               </div>
@@ -310,6 +333,7 @@ const CRPPage = () => {
               </Typography>
               {report.map((item) => (
                 <Typography
+                  key={item.text}
                   variant="body2"
                   sx={{
                     textAlign: "left",
@@ -323,35 +347,34 @@ const CRPPage = () => {
                 </Typography>
               ))}
             </Box>
-            </CardContent>
-            <Typography
-              variant="body1"
-              sx={{
+          </CardContent>
+          <Typography
+            variant="body1"
+            sx={{
+              color: "#004c8c",
+              fontSize: "16px",
+              lineHeight: "1.5",
+              borderTop: "1px solid #004c8c",
+              margin: "20px",
+            }}
+          >
+            <br></br>
+            We appreciate your trust in our services. If you have any
+            questions or require further assistance, please do not hesitate to
+            contact us.
+            <br />
+            Explore our comprehensive range of offerings:{" "}
+            <a
+              href="http://localhost:5173/services"
+              style={{
                 color: "#004c8c",
-                fontSize: "16px",
-                lineHeight: "1.5",
-                borderTop: "1px solid #004c8c",
-                margin: "20px",
+                textDecoration: "underline",
+                fontWeight: "bold",
               }}
             >
-              <br></br>
-              We appreciate your trust in our services. If you have any
-              questions or require further assistance, please do not hesitate to
-              contact us.
-              <br />
-              Explore our comprehensive range of offerings:{" "}
-              <a
-                href="http://localhost:5173/services"
-                style={{
-                  color: "#004c8c",
-                  textDecoration: "underline",
-                  fontWeight: "bold",
-                }}
-              >
-                View Our Services
-              </a>
-            </Typography>
-          
+              View Our Services
+            </a>
+          </Typography>
         </Card>
       )}
       {/* PDF Generation Button */}

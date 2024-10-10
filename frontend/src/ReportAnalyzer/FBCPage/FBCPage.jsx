@@ -20,8 +20,11 @@ import {
   CardButton,
 } from "../../components/Card";
 import axios from "axios";
-import HospitalLogo from "../../assets/logo.png"; 
+import HospitalLogo from "../../assets/logo.png";
 import generatePDF from "../../helpers/generatePDF";
+import GetCookie from "../../hooks/getcookie"; // Utility to get the email from cookies
+import decryptHash from "../../helpers/decrypting";
+import { SECRET_KEY } from "../../helpers/constants";
 
 const FBCPage = () => {
   const [formData, setFormData] = useState({
@@ -32,12 +35,31 @@ const FBCPage = () => {
   });
 
   const [report, setReport] = useState(null);
-  const [error, setError] = useState({}); 
+  const [error, setError] = useState({});
+  const [userEmail, setUserEmail] = useState("");
+  const [fullName, setFullName] = useState("");
   const reportRef = useRef(null);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const hashedemail = GetCookie("userEmail"); // Get email from cookies
+        const email = decryptHash(hashedemail, SECRET_KEY);
+        const response = await axios.post("http://localhost:9090/api/userByEmail", { email });
+        const { firstName, lastName } = response.data;
+        setUserEmail(email);
+        setFullName(`${firstName} ${lastName}`);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const regex = /^\d*\.?\d*$/; 
+    const regex = /^\d*\.?\d*$/;
 
     if (regex.test(value) || value === "") {
       setFormData({
@@ -46,32 +68,31 @@ const FBCPage = () => {
       });
       setError((prevErrors) => ({
         ...prevErrors,
-        [name]: "", 
+        [name]: "",
       }));
     } else {
       setError((prevErrors) => ({
         ...prevErrors,
-        [name]: `${name} must be a valid number.`, 
+        [name]: `${name} must be a valid number.`,
       }));
     }
   };
 
   const validateInput = () => {
-    const newErrors = {}; 
-   
+    const newErrors = {};
     for (const key in formData) {
       if (formData[key] === "") {
-        newErrors[key] = `${key} cannot be empty.`; 
+        newErrors[key] = `${key} cannot be empty.`;
       }
     }
-    setError(newErrors); 
-    return Object.keys(newErrors).length === 0; 
+    setError(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateInput()) {
-      return; 
+      return;
     }
 
     const requestData = {
@@ -82,14 +103,10 @@ const FBCPage = () => {
     };
 
     try {
-      
       const response = await axios.post(
         "http://localhost:9090/api/analyzeFBC",
         requestData
       );
-      console.log("🚀 ~ handleSubmit ~ response:", response);
-
-      
       const interpretations = response.data.map((item) => ({
         test: item.test,
         expectedRange: item.expectedRange,
@@ -99,13 +116,12 @@ const FBCPage = () => {
       }));
 
       setReport(interpretations);
-      setError({}); 
+      setError({});
     } catch (error) {
       console.error("Error submitting data to the backend:", error);
-      setError({ general: "Failed to send data to the backend." }); 
+      setError({ general: "Failed to send data to the backend." });
     }
   };
-
 
   useEffect(() => {
     if (report && reportRef.current) {
@@ -113,7 +129,7 @@ const FBCPage = () => {
     }
   }, [report]);
 
-  const currentDate = new Date().toLocaleDateString(); 
+  const currentDate = new Date().toLocaleDateString();
 
   const expectedRanges = {
     whiteBloodCells: "4.0-11.0 x 10⁹/L",
@@ -154,8 +170,8 @@ const FBCPage = () => {
             value={formData.whiteBloodCells}
             onChange={handleChange}
             sx={{ marginBottom: "16px" }}
-            error={!!error.whiteBloodCells} 
-            helperText={error.whiteBloodCells} 
+            error={!!error.whiteBloodCells}
+            helperText={error.whiteBloodCells}
           />
           <TextField
             required
@@ -167,8 +183,8 @@ const FBCPage = () => {
             value={formData.redBloodCells}
             onChange={handleChange}
             sx={{ marginBottom: "16px" }}
-            error={!!error.redBloodCells} 
-            helperText={error.redBloodCells} 
+            error={!!error.redBloodCells}
+            helperText={error.redBloodCells}
           />
           <TextField
             required
@@ -180,8 +196,8 @@ const FBCPage = () => {
             value={formData.hemoglobin}
             onChange={handleChange}
             sx={{ marginBottom: "16px" }}
-            error={!!error.hemoglobin} 
-            helperText={error.hemoglobin} 
+            error={!!error.hemoglobin}
+            helperText={error.hemoglobin}
           />
           <TextField
             required
@@ -193,8 +209,8 @@ const FBCPage = () => {
             value={formData.platelets}
             onChange={handleChange}
             sx={{ marginBottom: "16px" }}
-            error={!!error.platelets} 
-            helperText={error.platelets} 
+            error={!!error.platelets}
+            helperText={error.platelets}
           />
           <CardButton type="submit">Analyze</CardButton>
         </form>
@@ -219,7 +235,7 @@ const FBCPage = () => {
                 justifyContent: "space-between",
                 alignItems: "center",
                 marginBottom: "20px",
-                backgroundColor: "#c6e6fb", 
+                backgroundColor: "#c6e6fb",
               }}
             >
               <div
@@ -230,7 +246,6 @@ const FBCPage = () => {
                   marginBottom: "20px",
                   marginTop: "20px",
                   marginLeft: "20px",
-                  
                 }}
               >
                 <img
@@ -256,25 +271,25 @@ const FBCPage = () => {
                   >
                     Patient Information
                   </Typography>
-                  <Typography variant="body1">Name: [Name]</Typography>
-                  <Typography variant="body1">Email: [Email]</Typography>
+                  <Typography variant="body1">Name: {fullName}</Typography>
+                  <Typography variant="body1">Email: {userEmail}</Typography>
                   <Typography variant="body1">Date: {currentDate}</Typography>
                 </div>
               </div>
             </div>
-           
+
             <Typography
-  variant="h6"
-  sx={{
-    fontWeight: "600",
-    color: "#004c8c",
-    fontSize: "28px",
-    marginBottom: "20px",
-    textAlign: "center",
-  }}
->
-  Analysis of Full Blood Count (FBC) Test Results
-</Typography>
+              variant="h6"
+              sx={{
+                fontWeight: "600",
+                color: "#004c8c",
+                fontSize: "28px",
+                marginBottom: "20px",
+                textAlign: "center",
+              }}
+            >
+              Analysis of Full Blood Count (FBC) Test Results
+            </Typography>
 
             <TableContainer component={Paper}>
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -417,9 +432,10 @@ const FBCPage = () => {
 
               {report.map((item, index) => (
                 <Typography
+                  key={index}
                   variant="body2"
                   sx={{
-                   textAlign: "left",
+                    textAlign: "left",
                     marginLeft: "8px",
                     fontSize: "16px",
                     lineHeight: "1.5",
@@ -434,14 +450,13 @@ const FBCPage = () => {
           <Typography
             variant="body1"
             sx={{
-              color: "#004c8c", 
+              color: "#004c8c",
               fontSize: "16px",
               lineHeight: "1.5",
               borderTop: "2px solid #004c8c",
               margin: "20px",
             }}
           >
-        
             We appreciate your trust in our services. If you have any questions
             or require further assistance, please do not hesitate to contact us.
             <br />

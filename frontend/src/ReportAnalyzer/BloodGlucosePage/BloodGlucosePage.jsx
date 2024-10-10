@@ -22,6 +22,9 @@ import {
 import axios from "axios";
 import HospitalLogo from "../../assets/logo.png";
 import generatePDF from "../../helpers/generatePDF";
+import GetCookie from "../../hooks/getcookie"; // Utility to get the email from cookies
+import decryptHash from "../../helpers/decrypting";
+import { SECRET_KEY } from "../../helpers/constants";
 
 const BloodGlucoseTest = () => {
   const [formData, setFormData] = useState({
@@ -32,9 +35,28 @@ const BloodGlucoseTest = () => {
 
   const [report, setReport] = useState(null);
   const [errors, setErrors] = useState({});
+  const [userEmail, setUserEmail] = useState("");
+  const [fullName, setFullName] = useState("");
   const reportRef = useRef(null);
 
   const currentDate = new Date().toLocaleDateString();
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const hashedemail = GetCookie("userEmail"); // Get email from cookies
+        const email = decryptHash(hashedemail, SECRET_KEY);
+        const response = await axios.post("http://localhost:9090/api/userByEmail", { email });
+        const { firstName, lastName } = response.data;
+        setUserEmail(email);
+        setFullName(`${firstName} ${lastName}`);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -132,7 +154,11 @@ const BloodGlucoseTest = () => {
       </TitleBox>
 
       <FormContainer>
-        <form onSubmit={handleSubmit} className="form" style={{ width: "100%" }}>
+        <form
+          onSubmit={handleSubmit}
+          className="form"
+          style={{ width: "100%" }}
+        >
           <TextField
             required
             fullWidth
@@ -218,7 +244,9 @@ const BloodGlucoseTest = () => {
                     WELLNESS 360
                   </Typography>
                   <Typography variant="body2">wellness360@gmail.com</Typography>
-                  <Typography variant="body2">University of Moratuwa</Typography>
+                  <Typography variant="body2">
+                    University of Moratuwa
+                  </Typography>
                   <Typography variant="body2">Phone: +94 123456789</Typography>
                 </div>
                 <div style={{ textAlign: "right" }}>
@@ -228,8 +256,8 @@ const BloodGlucoseTest = () => {
                   >
                     Patient Information
                   </Typography>
-                  <Typography variant="body1">Name: [Name]</Typography>
-                  <Typography variant="body1">Email: [Email]</Typography>
+                  <Typography variant="body1">Name: {fullName}</Typography>
+                  <Typography variant="body1">Email: {userEmail}</Typography>
                   <Typography variant="body1">Date: {currentDate}</Typography>
                 </div>
               </div>
@@ -270,9 +298,16 @@ const BloodGlucoseTest = () => {
                     <TableCell component="th" scope="row">
                       Fasting Glucose
                     </TableCell>
-                    <TableCell align="right">{expectedRanges.fastingGlucose}</TableCell>
-                    <TableCell align="right">{formData.fastingGlucose}</TableCell>
-                    <TableCell align="right" style={{ color: report[0]?.color }}>
+                    <TableCell align="right">
+                      {expectedRanges.fastingGlucose}
+                    </TableCell>
+                    <TableCell align="right">
+                      {formData.fastingGlucose}
+                    </TableCell>
+                    <TableCell
+                      align="right"
+                      style={{ color: report[0]?.color }}
+                    >
                       {renderColoredCircle(report[0]?.color)}
                     </TableCell>
                   </TableRow>
@@ -280,9 +315,16 @@ const BloodGlucoseTest = () => {
                     <TableCell component="th" scope="row">
                       Random Glucose
                     </TableCell>
-                    <TableCell align="right">{expectedRanges.randomGlucose}</TableCell>
-                    <TableCell align="right">{formData.randomGlucose}</TableCell>
-                    <TableCell align="right" style={{ color: report[1]?.color }}>
+                    <TableCell align="right">
+                      {expectedRanges.randomGlucose}
+                    </TableCell>
+                    <TableCell align="right">
+                      {formData.randomGlucose}
+                    </TableCell>
+                    <TableCell
+                      align="right"
+                      style={{ color: report[1]?.color }}
+                    >
                       {renderColoredCircle(report[1]?.color)}
                     </TableCell>
                   </TableRow>
@@ -292,7 +334,10 @@ const BloodGlucoseTest = () => {
                     </TableCell>
                     <TableCell align="right">{expectedRanges.hba1c}</TableCell>
                     <TableCell align="right">{formData.hba1c}</TableCell>
-                    <TableCell align="right" style={{ color: report[2]?.color }}>
+                    <TableCell
+                      align="right"
+                      style={{ color: report[2]?.color }}
+                    >
                       {renderColoredCircle(report[2]?.color)}
                     </TableCell>
                   </TableRow>
@@ -347,11 +392,12 @@ const BloodGlucoseTest = () => {
                 Analysis Summary
               </Typography>
 
-              {report.map((item, index) => (
+              {report.map((item) => (
                 <Typography
+                  key={item.text}
                   variant="body2"
                   sx={{
-                   textAlign: "left",
+                    textAlign: "left",
                     marginLeft: "8px",
                     fontSize: "16px",
                     lineHeight: "1.5",
@@ -365,14 +411,13 @@ const BloodGlucoseTest = () => {
           <Typography
             variant="body1"
             sx={{
-              color: "#004c8c", 
+              color: "#004c8c",
               fontSize: "16px",
               lineHeight: "1.5",
               borderTop: "2px solid #004c8c",
               margin: "20px",
             }}
           >
-        
             We appreciate your trust in our services. If you have any questions
             or require further assistance, please do not hesitate to contact us.
             <br />
@@ -394,7 +439,7 @@ const BloodGlucoseTest = () => {
       {report && (
         <div style={{ textAlign: "center" }}>
           <CardButton onClick={getPDF} type="button">
-          Download Report as PDF
+            Download Report as PDF
           </CardButton>
         </div>
       )}
@@ -408,17 +453,6 @@ const BloodGlucoseTest = () => {
 };
 
 export default BloodGlucoseTest;
-const renderColoredCircle = (color) => (
-  <span
-    style={{
-      display: "inline-block",
-      width: "30px",
-      height: "30px",
-      borderRadius: "50%",
-      backgroundColor: color,
-    }}
-  ></span>
-);
 
 const ColoredCircle = (color) => (
   <span
@@ -429,4 +463,5 @@ const ColoredCircle = (color) => (
       borderRadius: "50%",
       backgroundColor: color,
     }}
-  ></span>);
+  ></span>
+);
