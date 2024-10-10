@@ -7,25 +7,25 @@ import profile4 from "../assets/profile4.jpg";
 const teamMembers = [
   {
     name: "Induwara Rathnayake",
-    title: "Department of Computer Science & Engineering, Universty of Moratuwa",
+    title: "Department of Computer Science & Engineering, University of Moratuwa",
     description: "induwarar.22@cse.mrt.ac.lk",
     image: profile1,
   },
   {
     name: "Pathumi Ranasinghe",
-    title: "Department of Computer Science & Engineering, Universty of Moratuwa",
+    title: "Department of Computer Science & Engineering, University of Moratuwa",
     description: "pathumi.22@cse.mrt.ac.lk",
     image: profile2,
   },
   {
     name: "Sanuji Samarakoon",
-    title: "Department of Computer Science & Engineering, Universty of Moratuwa",
+    title: "Department of Computer Science & Engineering, University of Moratuwa",
     description: "sanuji.22@cse.mrt.ac.lk",
     image: profile3,
   },
   {
     name: "Shanthisha Jayathunga",
-    title: "Department of Computer Science & Engineering, Universty of Moratuwa",
+    title: "Department of Computer Science & Engineering, University of Moratuwa",
     description: "shanthisha.22@cse.mrt.ac.lk",
     image: profile4,
   },
@@ -72,6 +72,7 @@ const About = () => {
             ? { marginLeft: "0", marginRight: "auto" }
             : { marginRight: "0", marginLeft: "auto" };
 
+
           return (
             <div
               key={index}
@@ -82,7 +83,9 @@ const About = () => {
               }}
             >
               <div style={textAlignmentStyle}>
-                <h3 style={{ ...nameStyle, fontWeight: "bold" }}>{member.name}</h3>
+                <h3 style={{ ...nameStyle, fontWeight: "bold" }}>
+                  {member.name}
+                </h3>
                 <p style={titleStyle}>{member.title}</p>
                 <p style={descriptionStyle}>{member.description}</p>
               </div>
@@ -129,13 +132,12 @@ const cardStyle = {
   width: "650px",
   height: "200px",
   padding: "20px",
-  backgroundColor: "rgba(18, 84, 136, 0.5)",
+  backgroundColor: "rgba(153, 255, 255, 0.2)",
   boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
   borderRadius: "100px",
   border: "2px solid rgba(10, 116, 218, 0.5)",
   marginBottom: "-20px", // Example of using a negative margin to pull cards closer
 };
-
 
 const cardLeftStyle = {
   flexDirection: "row",
@@ -174,14 +176,14 @@ const avatarStyle = {
   borderRadius: "50%", // Make the image round
   objectFit: "cover",
   border: "2px solid #0A74DA",
-  
 };
 
 const nameStyle = {
   fontSize: "1.4em",
   margin: "0 0 5px",
-  color: "#FFFFFF",
+  color: "#034c81",
   textAlign: "center",
+
 };
 
 const titleStyle = {
@@ -195,7 +197,6 @@ const descriptionStyle = {
   fontSize: "0.9em",
   color: "#123499",
   textAlign: "center",
-  
 };
 
 export default About;
