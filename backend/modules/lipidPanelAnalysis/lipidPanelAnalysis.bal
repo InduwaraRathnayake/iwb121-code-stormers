@@ -11,7 +11,7 @@ type AnalysisResult record {
     string color;
 };
 
-public function analyzeLipidPanel(LipidPanelData data) returns AnalysisResult[]|error {
+public isolated function analyzeLipidPanel(LipidPanelData data) returns AnalysisResult[]|error {
     AnalysisResult[] interpretations = [];
 
     // Cholesterol Interpretation

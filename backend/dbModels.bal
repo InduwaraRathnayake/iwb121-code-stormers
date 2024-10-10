@@ -37,7 +37,7 @@ const string MSG_USER_ADDED_SUCCESS = "User added successfully";
 const string MSG_USER_ADD_FAILED = "Failed to add user";
 
 
-public function sendJsonResponse(http:Caller caller, int status, string message) returns error? {
+public isolated function sendJsonResponse(http:Caller caller, int status, string message) returns error? {
     http:Response res = new;
     json response = {message: message, status: status};
     res.setJsonPayload(response);

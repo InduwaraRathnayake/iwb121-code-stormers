@@ -12,7 +12,7 @@ type AnalysisResult record {
     string color;
 };
 
-public function analyzeFBC(FBCData data) returns AnalysisResult[]|error {
+public isolated function analyzeFBC(FBCData data) returns AnalysisResult[]|error {
     AnalysisResult[] interpretations = [];
 
     // WBC Interpretation

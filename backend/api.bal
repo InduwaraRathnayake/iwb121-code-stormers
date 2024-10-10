@@ -10,21 +10,21 @@ import ballerina/sql;
 import ballerinax/mysql;
 import ballerinax/mysql.driver as _;
 
-mysql:Client wellnessDB = check new (...databaseConfig);
+final mysql:Client wellnessDB = check new (...databaseConfig);
 
 @http:ServiceConfig {
     cors: {
-        allowOrigins: ["http://localhost:5173"], // Your frontend's origin
-        allowHeaders: ["Content-Type", "Authorization"], // Allow specific headers like Authorization if needed
-        allowMethods: ["GET", "POST", "OPTIONS", "PUT", "DELETE"], // Add other methods you may use
-        allowCredentials: true, // Enable if you are using cookies or other credentials
-        maxAge: 3600 // Cache preflight response for 1 hour
+        allowOrigins: ["http://localhost:5173"], 
+        allowHeaders: ["Content-Type", "Authorization"], 
+        allowMethods: ["GET", "POST", "OPTIONS", "PUT", "DELETE"], 
+        allowCredentials: true, 
+        maxAge: 3600 
     }
 }
 service /api on new http:Listener(9090) {
 
     // Resource to analyze blood glucose data
-    resource function post analyzeBloodGlucose(http:Caller caller, BloodGlucoseData data) returns error? {
+    isolated resource function post analyzeBloodGlucose(http:Caller caller, BloodGlucoseData data) returns error? {
 
         // Call the analyzeBloodGlucose function to get the interpretations
         AnalysisResult[] interpretations = check BAG:analyzeBloodGlucose(data);
@@ -36,7 +36,7 @@ service /api on new http:Listener(9090) {
     }
 
     // Resource to analyze CRP data
-    resource function post analyzeCRP(http:Caller caller, CRPData data) returns error? {
+    isolated resource function post analyzeCRP(http:Caller caller, CRPData data) returns error? {
         // Call the analyzeCRP function to get the interpretations
         AnalysisResult[] interpretations = check CA:analyzeCRP(data);
 
@@ -47,7 +47,7 @@ service /api on new http:Listener(9090) {
     }
 
     // Resource to analyze FBC data
-    resource function post analyzeFBC(http:Caller caller, FBCData data) returns error? {
+    isolated resource function post analyzeFBC(http:Caller caller, FBCData data) returns error? {
         // Call the analyzeFBC function to get the interpretations
         AnalysisResult[] interpretations = check FA:analyzeFBC(data);
 
@@ -58,7 +58,7 @@ service /api on new http:Listener(9090) {
     }
 
     // Resource to analyze Lipid Panel data
-    resource function post analyzeLipidPanel(http:Caller caller, LipidPanelData data) returns error? {
+    isolated resource function post analyzeLipidPanel(http:Caller caller, LipidPanelData data) returns error? {
         // Call the analyzeLipidPanel function to get the interpretations
         AnalysisResult[] interpretations = check LPA:analyzeLipidPanel(data);
 
@@ -69,7 +69,7 @@ service /api on new http:Listener(9090) {
     }
 
     // Resource to analyze LFT data
-    resource function post analyzeLFT(http:Caller caller, LFTData data) returns error? {
+    isolated resource function post analyzeLFT(http:Caller caller, LFTData data) returns error? {
         // Call the analyzeLFT function to get the interpretations
         AnalysisResult[] interpretations = check LFTA:analyzeLFT(data);
 
@@ -80,7 +80,7 @@ service /api on new http:Listener(9090) {
     }
 
     // Resource to analyze TFT data
-    resource function post analyzeTFT(http:Caller caller, TFTData data) returns error? {
+    isolated resource function post analyzeTFT(http:Caller caller, TFTData data) returns error? {
         // Call the analyzeTFT function to get the interpretations
         AnalysisResult[] interpretations = check TFA:analyzeTFT(data);
 
@@ -90,13 +90,13 @@ service /api on new http:Listener(9090) {
         check caller->respond(res);
     }
 
-    resource function get users() returns User[]|error {
+    isolated resource function get users() returns User[]|error {
         stream<User, sql:Error?> userStream = wellnessDB->query(`SELECT * FROM users`);
         return from var user in userStream
             select user;
     }
 
-    resource function post signup(http:Caller caller, http:Request req) returns error? {
+    isolated resource function post signup(http:Caller caller, http:Request req) returns error? {
         json requestBody = check req.getJsonPayload();
         NewUser user = {
             username: (check requestBody.username).toString(),
@@ -140,7 +140,7 @@ service /api on new http:Listener(9090) {
         }
     }
 
-    resource function post login(http:Caller caller, http:Request req) returns error? {
+    isolated resource function post login(http:Caller caller, http:Request req) returns error? {
         json requestBody = check req.getJsonPayload();
         string email = (check requestBody.email).toString();
         string password = (check requestBody.password).toString(); // Check if the user exists
@@ -173,7 +173,7 @@ service /api on new http:Listener(9090) {
     }
 
     //get user details by email
-    resource function post userByEmail(http:Caller caller, http:Request req) returns error? {
+    isolated resource function post userByEmail(http:Caller caller, http:Request req) returns error? {
         json requestBody = check req.getJsonPayload();
         string email = (check requestBody.email).toString();
         stream<User, sql:Error?> userStream = wellnessDB->query(
@@ -187,18 +187,18 @@ service /api on new http:Listener(9090) {
             http:Response res = new;
             res.setPayload(
                 {
-                    "username": user.username,
-                    "firstName": user.first_name,
-                    "lastName": user.last_name,
-                    "email": user.email
-                }
+                "username": user.username,
+                "firstName": user.first_name,
+                "lastName": user.last_name,
+                "email": user.email
+            }
             );
             check caller->respond(res);
         }
     }
 
     //forgot password
-    resource function post forgotPassword(http:Caller caller, http:Request req) returns error? {
+    isolated resource function post forgotPassword(http:Caller caller, http:Request req) returns error? {
         json requestBody = check req.getJsonPayload();
         string email = (check requestBody.email).toString();
         string newPassword = (check requestBody.password).toString();
@@ -231,7 +231,7 @@ service /api on new http:Listener(9090) {
     }
 
     //change first name and last name
-    resource function put changeName(http:Caller caller, http:Request req) returns error? {
+    isolated resource function put changeName(http:Caller caller, http:Request req) returns error? {
         json requestBody = check req.getJsonPayload();
         string email = (check requestBody.email).toString();
         string firstName = (check requestBody.first_name).toString();
@@ -249,10 +249,8 @@ service /api on new http:Listener(9090) {
         }
     }
 
-
-
     //delete user
-    resource function delete deleteUser(http:Caller caller, http:Request req) returns error? {
+    isolated resource function delete deleteUser(http:Caller caller, http:Request req) returns error? {
         json requestBody = check req.getJsonPayload();
         string email = (check requestBody.email).toString();
 
@@ -267,7 +265,6 @@ service /api on new http:Listener(9090) {
             check sendJsonResponse(caller, STATUS_INTERNAL_SERVER_ERROR, MSG_USER_DELETE_FAILED);
         }
     }
-
 
 }
 

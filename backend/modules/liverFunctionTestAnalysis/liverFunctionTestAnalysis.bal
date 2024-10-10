@@ -11,7 +11,7 @@ type AnalysisResult record {
     string color;
 };
 
-public function analyzeLFT(LFTData data) returns AnalysisResult[]|error {
+public isolated function analyzeLFT(LFTData data) returns AnalysisResult[]|error {
     AnalysisResult[] interpretations = [];
 
     // ALT Interpretation
