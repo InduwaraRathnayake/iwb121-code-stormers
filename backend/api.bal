@@ -10,15 +10,16 @@ import ballerina/sql;
 import ballerinax/mysql;
 import ballerinax/mysql.driver as _;
 
+
 final mysql:Client wellnessDB = check new (...databaseConfig);
 
 @http:ServiceConfig {
     cors: {
-        allowOrigins: ["http://localhost:5173"], 
-        allowHeaders: ["Content-Type", "Authorization"], 
-        allowMethods: ["GET", "POST", "OPTIONS", "PUT", "DELETE"], 
-        allowCredentials: true, 
-        maxAge: 3600 
+        allowOrigins: ["http://localhost:5173"],
+        allowHeaders: ["Content-Type", "Authorization"],
+        allowMethods: ["GET", "POST", "OPTIONS", "PUT", "DELETE"],
+        allowCredentials: true,
+        maxAge: 3600
     }
 }
 service /api on new http:Listener(9090) {

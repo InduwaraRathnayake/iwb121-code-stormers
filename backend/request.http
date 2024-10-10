@@ -82,7 +82,7 @@ POST http://localhost:9090/api/login
 Content-Type: application/json
 
 {
-    "email": "testuser@example.com",
+    "email":  "JohnDoe@gmail.com",
     "password": "password123"
 }
 
@@ -99,7 +99,7 @@ POST http://localhost:9090/api/forgotPassword
 Content-Type: application/json
 
 {
-    "email": "testuser@example.com",
+    "email": "JohnDoe@gmail.com",
     "password": "newpassword123"
 }
 

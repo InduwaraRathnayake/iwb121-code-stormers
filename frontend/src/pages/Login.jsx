@@ -61,19 +61,28 @@ const Login = ({ setIsLoggedIn }) => {
           password: formData.password,
         });
         // console.log("🚀 ~ handleSubmit ~ response:", response)
-
-        // Hash the useremail before storing it in the cookie
-        const hashedUseremail = encryptString(formData.useremail, SECRET_KEY);
-        
-        // Set the hashed useremail in the cookie
-        SetCookie('userEmail', hashedUseremail);
-        
-        setMessage('Login successful!');
-        setIsLoggedIn(true); // Set login status in state
-        localStorage.setItem('isLoggedIn', 'true'); // Persist login status in localStorage
-
-        // Navigate to profile page on success
-        navigate('/');
+  
+        if (response.status === 200) {
+          const responseData = response.data;
+          if (responseData.status === 401) {
+            setMessage('Unauthorized! Incorrect useremail or password.');
+          } else {
+            // Hash the useremail before storing it in the cookie
+            const hashedUseremail = encryptString(formData.useremail, SECRET_KEY);
+            
+            // Set the hashed useremail in the cookie
+            SetCookie('userEmail', hashedUseremail);
+            
+            setMessage('Login successful!');
+            setIsLoggedIn(true); // Set login status in state
+            localStorage.setItem('isLoggedIn', 'true'); // Persist login status in localStorage
+  
+            // Navigate to profile page on success
+            navigate('/');
+          }
+        } else {
+          setMessage('Login failed. Please enter correct email or password.');
+        }
         
       } catch (error) {
         if (error.response && error.response.status === 401) {
@@ -84,7 +93,6 @@ const Login = ({ setIsLoggedIn }) => {
       }
     }
   };
-
   return (
     <Container
       sx={{
@@ -181,7 +189,7 @@ const Login = ({ setIsLoggedIn }) => {
               <Typography
                 variant="body2"
                 color="textSecondary"
-                sx={{ textAlign: 'center', marginTop: '10px' }}
+                sx={{ textAlign: 'center', marginTop: '10px', color: 'red' }}
               >
                 {message}
               </Typography>
