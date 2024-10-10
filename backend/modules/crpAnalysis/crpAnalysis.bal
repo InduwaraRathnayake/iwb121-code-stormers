@@ -8,7 +8,7 @@ type AnalysisResult record {
 };
 
 
-public function analyzeCRP(CRPData data) returns AnalysisResult[]|error {
+public isolated function analyzeCRP(CRPData data) returns AnalysisResult[]|error {
     AnalysisResult[] interpretations = [];
 
     // Interpret CRP levels

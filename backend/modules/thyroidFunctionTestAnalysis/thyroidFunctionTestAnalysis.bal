@@ -10,7 +10,7 @@ type AnalysisResult record {
     string color;
 };
 
-public function analyzeTFT(TFTData data) returns AnalysisResult[]|error {
+public isolated function analyzeTFT(TFTData data) returns AnalysisResult[]|error {
     AnalysisResult[] interpretations = [];
 
     // TSH Interpretation

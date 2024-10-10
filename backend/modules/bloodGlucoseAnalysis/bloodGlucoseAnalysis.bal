@@ -11,7 +11,7 @@ type AnalysisResult record {
     string color;
 };
 
-public function analyzeBloodGlucose(BloodGlucoseData data) returns AnalysisResult[]|error  {
+public isolated function analyzeBloodGlucose(BloodGlucoseData data) returns AnalysisResult[]|error  {
     AnalysisResult[] interpretations = [];
     
     // Fasting Glucose Interpretation
