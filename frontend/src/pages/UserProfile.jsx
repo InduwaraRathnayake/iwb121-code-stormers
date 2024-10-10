@@ -8,11 +8,20 @@ import {
   Card,
   Avatar,
   CardContent,
+  IconButton,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Button,
 } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { CardButton, TitleBox } from "../components/Card";
 import GetCookie from "../hooks/getcookie"; // Utility to get the email from cookies
 import decryptHash from "../helpers/decrypting";
 import { SECRET_KEY } from "../helpers/constants";
+import RemoveCookie from "../hooks/removecookie";
 
 const UserProfile = () => {
   const [userData, setUserData] = useState(null); // Updated state for user data
@@ -29,6 +38,8 @@ const UserProfile = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [changePassword, setChangePassword] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [showDeleteIcon, setShowDeleteIcon] = useState(true);
 
   // Fetch user data on component mount
   useEffect(() => {
@@ -56,11 +67,13 @@ const UserProfile = () => {
 
   const handleEditToggle = () => {
     setIsEditing(!isEditing);
+    setShowDeleteIcon(false); // Show delete icon
     if (isEditing) {
       setFormData(userData); // Reset form data when editing is canceled
       setCurrentPassword(""); // Reset current password field
       setNewPassword(""); // Reset new password field
       setChangePassword(false); // Reset change password option
+      setShowDeleteIcon(true); // Show delete icon
     }
   };
 
@@ -107,6 +120,36 @@ const UserProfile = () => {
     }
   };
 
+  const handleDeleteClick = () => {
+    setOpenDialog(true);
+  };
+
+   const handleDialogClose = (confirmed) => {
+    setOpenDialog(false);
+    if (confirmed) {
+      // Handle the delete action here
+      const hashedemail = GetCookie("userEmail"); // Get email from cookies
+      const mail = decryptHash(hashedemail, SECRET_KEY);
+      console.log("🚀 from line 130 ~ handleDialogClose ~ email:", mail);
+      if (mail) {
+        console.log("🚀 ~ from line 132 handleDialogClose ~ email:", mail);
+        axios
+          .delete("http://localhost:9090/api/deleteUser", {
+            data: { email: mail },
+          })
+          .then(() => {
+            console.log("Profile deleted successfully.");
+            RemoveCookie("userEmail");
+            localStorage.setItem("isLoggedIn", false);
+            window.location.href = "/login";
+          })
+          .catch((error) => {
+            console.error("Error deleting profile:", error);
+          });
+      }
+    }
+  };
+
   return (
     <Container maxWidth="sm" sx={{ marginTop: 5, marginBottom: 5 }}>
       <TitleBox>
@@ -115,7 +158,16 @@ const UserProfile = () => {
         </Typography>
       </TitleBox>
 
-      <Card variant="outlined" sx={{ padding: 3 }}>
+      <Card variant="outlined" sx={{ padding: 3, position: 'relative' }}>
+        {showDeleteIcon && 
+          <IconButton
+            aria-label="delete"
+            sx={{ position: 'absolute', top: 18, right: 18, color: 'red', scale: 'large' }}
+            onClick={handleDeleteClick}
+          >
+            <DeleteIcon />
+          </IconButton>
+        }
         <CardContent>
           {isEditing ? (
             <form onSubmit={handleSubmit}>
@@ -233,6 +285,26 @@ const UserProfile = () => {
           )}
         </CardContent>
       </Card>
+
+      <Dialog
+        open={openDialog}
+        onClose={() => handleDialogClose(false)}
+      >
+        <DialogTitle>Confirm Delete</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete your profile? This action cannot be undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => handleDialogClose(false)} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={() => handleDialogClose(true)} color="primary" autoFocus>
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };

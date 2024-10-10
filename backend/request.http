@@ -102,3 +102,12 @@ Content-Type: application/json
     "email": "testuser@example.com",
     "password": "newpassword123"
 }
+
+### DELETE USER 
+DELETE http://localhost:9090/api/deleteUser
+Content-Type: application/json
+
+{
+    "email": "rathnayakermib.22@uom.lk"
+
+}
