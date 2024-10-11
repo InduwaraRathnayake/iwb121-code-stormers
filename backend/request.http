@@ -111,3 +111,16 @@ Content-Type: application/json
     "email": "rathnayakermib.22@uom.lk"
 
 }
+
+### Send a POST request to the contactUs endpoint
+POST http://localhost:9090/api/contactUs
+Content-Type: application/json
+
+{
+  "subject": "Inquiry about services",
+  "firstName": "John",
+  "lastName": "Doe",
+  "mobileNo": "1234567890",
+  "email": "john.doe@example.com",
+  "message": "I would like to know more about your services."
+}

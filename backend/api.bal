@@ -10,7 +10,6 @@ import ballerina/sql;
 import ballerinax/mysql;
 import ballerinax/mysql.driver as _;
 
-
 final mysql:Client wellnessDB = check new (...databaseConfig);
 
 @http:ServiceConfig {
@@ -22,15 +21,14 @@ final mysql:Client wellnessDB = check new (...databaseConfig);
         maxAge: 3600
     }
 }
+
 service /api on new http:Listener(9090) {
 
     // Resource to analyze blood glucose data
     isolated resource function post analyzeBloodGlucose(http:Caller caller, BloodGlucoseData data) returns error? {
 
-        // Call the analyzeBloodGlucose function to get the interpretations
         AnalysisResult[] interpretations = check BAG:analyzeBloodGlucose(data);
 
-        //return the interpretations as JSON
         http:Response res = new;
         res.setPayload(interpretations.toJson());
         check caller->respond(res);
@@ -38,10 +36,8 @@ service /api on new http:Listener(9090) {
 
     // Resource to analyze CRP data
     isolated resource function post analyzeCRP(http:Caller caller, CRPData data) returns error? {
-        // Call the analyzeCRP function to get the interpretations
         AnalysisResult[] interpretations = check CA:analyzeCRP(data);
 
-        // Return the interpretations as JSON
         http:Response res = new;
         res.setPayload(interpretations.toJson());
         check caller->respond(res);
@@ -49,10 +45,8 @@ service /api on new http:Listener(9090) {
 
     // Resource to analyze FBC data
     isolated resource function post analyzeFBC(http:Caller caller, FBCData data) returns error? {
-        // Call the analyzeFBC function to get the interpretations
         AnalysisResult[] interpretations = check FA:analyzeFBC(data);
 
-        // Return the interpretations as JSON
         http:Response res = new;
         res.setPayload(interpretations.toJson());
         check caller->respond(res);
@@ -60,10 +54,8 @@ service /api on new http:Listener(9090) {
 
     // Resource to analyze Lipid Panel data
     isolated resource function post analyzeLipidPanel(http:Caller caller, LipidPanelData data) returns error? {
-        // Call the analyzeLipidPanel function to get the interpretations
         AnalysisResult[] interpretations = check LPA:analyzeLipidPanel(data);
 
-        // Return the interpretations as JSON
         http:Response res = new;
         res.setPayload(interpretations.toJson());
         check caller->respond(res);
@@ -71,10 +63,8 @@ service /api on new http:Listener(9090) {
 
     // Resource to analyze LFT data
     isolated resource function post analyzeLFT(http:Caller caller, LFTData data) returns error? {
-        // Call the analyzeLFT function to get the interpretations
         AnalysisResult[] interpretations = check LFTA:analyzeLFT(data);
 
-        // Return the interpretations as JSON
         http:Response res = new;
         res.setPayload(interpretations.toJson());
         check caller->respond(res);
@@ -82,19 +72,11 @@ service /api on new http:Listener(9090) {
 
     // Resource to analyze TFT data
     isolated resource function post analyzeTFT(http:Caller caller, TFTData data) returns error? {
-        // Call the analyzeTFT function to get the interpretations
         AnalysisResult[] interpretations = check TFA:analyzeTFT(data);
 
-        // Return the interpretations as JSON
         http:Response res = new;
         res.setPayload(interpretations.toJson());
         check caller->respond(res);
-    }
-
-    isolated resource function get users() returns User[]|error {
-        stream<User, sql:Error?> userStream = wellnessDB->query(`SELECT * FROM users`);
-        return from var user in userStream
-            select user;
     }
 
     isolated resource function post signup(http:Caller caller, http:Request req) returns error? {
@@ -116,10 +98,8 @@ service /api on new http:Listener(9090) {
 
         if existingUser is User {
             if existingUser.username == user.username {
-                // If a user with the same username exists, return an error message
                 check sendJsonResponse(caller, STATUS_BAD_REQUEST, MSG_USERNAME_EXISTS);
             } else if existingUser.email == user.email {
-                // If a user with the same email exists, return an error message
                 check sendJsonResponse(caller, STATUS_BAD_REQUEST, MSG_EMAIL_EXISTS);
             }
         } else {
@@ -144,33 +124,35 @@ service /api on new http:Listener(9090) {
     isolated resource function post login(http:Caller caller, http:Request req) returns error? {
         json requestBody = check req.getJsonPayload();
         string email = (check requestBody.email).toString();
-        string password = (check requestBody.password).toString(); // Check if the user exists
+        string password = (check requestBody.password).toString();
 
         stream<User, sql:Error?> userStream = wellnessDB->query(
         `SELECT * FROM users WHERE email = ${email}`
         );
         var userResult = check userStream.next();
         User? user = userResult is record {|User value;|} ? userResult.value : ();
+
         // Hash the entered password
         byte[] enteredPasswordHash = check hashPassword(password);
 
         if user is User {
             // Decrypt the password hash
-
             byte[] decryptedHash = check decryptPasswordHash(user.password);
 
-            // Compare the entered password hash with the decrypted password hash
             if (enteredPasswordHash.toBase64() == decryptedHash.toBase64()) {
-                // If the passwords match, return a success message
                 check sendJsonResponse(caller, STATUS_OK, MSG_LOGIN_SUCCESS);
             } else {
-                // If the passwords do not match, return an error message
                 check sendJsonResponse(caller, STATUS_UNAUTHORIZED, MSG_LOGIN_FAILED);
             }
         } else {
-            // If the user does not exist, return an error message
             check sendJsonResponse(caller, STATUS_UNAUTHORIZED, MSG_LOGIN_FAILED);
         }
+    }
+
+    isolated resource function get users() returns User[]|error {
+        stream<User, sql:Error?> userStream = wellnessDB->query(`SELECT * FROM users`);
+        return from var user in userStream
+            select user;
     }
 
     //get user details by email
@@ -222,8 +204,6 @@ service /api on new http:Listener(9090) {
             );
 
             if (updatePassword.affectedRowCount > 0) {
-                // Send the new password to the user's email
-
                 check sendJsonResponse(caller, STATUS_OK, MSG_PASSWORD_RESET_SUCCESS);
             } else {
                 check sendJsonResponse(caller, STATUS_INTERNAL_SERVER_ERROR, MSG_PASSWORD_RESET_FAILED);
@@ -255,7 +235,6 @@ service /api on new http:Listener(9090) {
         json requestBody = check req.getJsonPayload();
         string email = (check requestBody.email).toString();
 
-        // Delete the user
         var deleteUser = check wellnessDB->execute(
         `DELETE FROM users WHERE email = ${email}`
         );
@@ -264,6 +243,28 @@ service /api on new http:Listener(9090) {
             check sendJsonResponse(caller, STATUS_OK, MSG_USER_DELETE_SUCCESS);
         } else {
             check sendJsonResponse(caller, STATUS_INTERNAL_SERVER_ERROR, MSG_USER_DELETE_FAILED);
+        }
+    }
+
+    //contact us
+    isolated resource function post contactUs(http:Caller caller, http:Request req) returns error? {
+        json requestBody = check req.getJsonPayload();
+        string subject = (check requestBody.subject).toString();
+        string firstName = (check requestBody.firstName).toString();
+        string lastName = (check requestBody.lastName).toString();
+        string mobileNo = (check requestBody.mobileNo).toString();
+        string email = (check requestBody.email).toString();
+        string message = (check requestBody.message).toString();
+
+        var insertData = check wellnessDB->execute(
+        `INSERT INTO contact_form(subject, first_name, last_name, mobile_no, email, message) 
+         VALUES (${subject}, ${firstName}, ${lastName}, ${mobileNo}, ${email}, ${message})`
+        );
+
+        if (insertData.affectedRowCount > 0) {
+            check sendJsonResponse(caller, STATUS_OK, "Message sent successfully");
+        } else {
+            check sendJsonResponse(caller, STATUS_INTERNAL_SERVER_ERROR, "Failed to send message");
         }
     }
 

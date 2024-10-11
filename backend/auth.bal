@@ -1,19 +1,5 @@
 import ballerina/crypto;
 
-// Function to obtain the RSA private key from a key file
-isolated function decodePrivateKey() returns crypto:PrivateKey|error {
-    string keyFile = "resources/private.key";
-    crypto:PrivateKey privateKey = check crypto:decodeRsaPrivateKeyFromKeyFile(keyFile, "wellnessipss");
-    return privateKey;
-}
-
-// Function to obtain the RSA public key from a certificate file
-isolated function decodePublicKey() returns crypto:PublicKey|error {
-    string certFile = "resources/public.crt";
-    crypto:PublicKey publicKey = check crypto:decodeRsaPublicKeyFromCertFile(certFile);
-    return publicKey;
-}
-
 // Function to hash the password using SHA-512
 isolated function hashPassword(string password) returns byte[]|error {
     byte[] passwordBytes = password.toBytes();
@@ -26,10 +12,25 @@ isolated function encryptPasswordHash(byte[] hashedPassword) returns byte[]|erro
     return crypto:encryptRsaEcb(hashedPassword, publicKey);
 }
 
+// Function to obtain the RSA private key from a key file
+isolated function decodePrivateKey() returns crypto:PrivateKey|error {
+    string keyFile = "resources/private.key";
+    crypto:PrivateKey privateKey = check crypto:decodeRsaPrivateKeyFromKeyFile(keyFile, "wellnessipss");
+    return privateKey;
+}
+
+
 // Function to decrypt the encrypted hash using the private key
 isolated function decryptPasswordHash(byte[] encryptedHash) returns byte[]|error {
     crypto:PrivateKey privateKey = check decodePrivateKey();
     return check crypto:decryptRsaEcb(encryptedHash, privateKey);
+}
+
+// Function to obtain the RSA public key from a certificate file
+isolated function decodePublicKey() returns crypto:PublicKey|error {
+    string certFile = "resources/public.crt";
+    crypto:PublicKey publicKey = check crypto:decodeRsaPublicKeyFromCertFile(certFile);
+    return publicKey;
 }
 
 // Define HTTP status codes
