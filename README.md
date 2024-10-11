@@ -1,7 +1,8 @@
 # WELLNESS 360
 
-| ![Image 1]() | ![Wellness 360 Logo](./ReadMEAssets/logo.png) |
-|------------------------------------------|------------------------------------------|
+| <img src="./ReadMEAssets/Welcome.png" alt="Wellness 360 Welcome" width="500" style="margin-right: 20px;"> | <img src="./ReadMEAssets/logo.png" alt="Wellness 360 Logo" width="200" style="margin-left: 20px;"> |
+|:------------------------------------------:|:------------------------------------------:|
+
 
 ## Project Overview
 
