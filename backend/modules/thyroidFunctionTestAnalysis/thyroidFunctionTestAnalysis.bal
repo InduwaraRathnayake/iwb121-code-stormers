@@ -1,8 +1,13 @@
-public // Define the data model for TFT input
+# Description.
+#
+# + tsh - thyroid-stimulating hormone level
+# + t3 - triiodothyronine level
+# + t4 - thyroxine level
+public 
 type TFTData record {
-    float tsh; // Thyroid Stimulating Hormone
-    float t3;  // Triiodothyronine
-    float t4;  // Thyroxine
+    float tsh; 
+    float t3;  
+    float t4;  
 };
 
 type AnalysisResult record {
@@ -10,6 +15,10 @@ type AnalysisResult record {
     string color;
 };
 
+# Description.
+#
+# + data - TFTData record
+# + return - AnalysisResult array or error
 public isolated function analyzeTFT(TFTData data) returns AnalysisResult[]|error {
     AnalysisResult[] interpretations = [];
 

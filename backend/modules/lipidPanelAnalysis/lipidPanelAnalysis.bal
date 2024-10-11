@@ -1,9 +1,14 @@
-// Define the data model for Lipid Panel input
+# Description.
+#
+# + cholesterol - total cholesterol level
+# + triglycerides - triglycerides level 
+# + hdl - high density lipoprotein 
+# + ldl - low density lipoprotein
 public type LipidPanelData record {
     float cholesterol;
     float triglycerides;
-    float hdl; // High-Density Lipoprotein
-    float ldl; // Low-Density Lipoprotein
+    float hdl; 
+    float ldl; 
 };
 
 type AnalysisResult record {
@@ -11,6 +16,10 @@ type AnalysisResult record {
     string color;
 };
 
+# Description.
+#
+# + data - LipidPanelData record
+# + return - AnalysisResult array or error
 public isolated function analyzeLipidPanel(LipidPanelData data) returns AnalysisResult[]|error {
     AnalysisResult[] interpretations = [];
 
@@ -96,5 +105,5 @@ public isolated function analyzeLipidPanel(LipidPanelData data) returns Analysis
         });
     }
 
-    return interpretations; // Return the analysis results as JSON
+    return interpretations; 
 }

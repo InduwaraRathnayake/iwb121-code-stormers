@@ -1,5 +1,10 @@
 
-// Define the data model for FBC input
+# Description.
+#
+# + whiteBloodCells - white blood cell count
+# + redBloodCells - red blood cell count 
+# + platelets - platelet count
+# + hemoglobin - hemoglobin level
 public type FBCData record {
     float whiteBloodCells;
     float redBloodCells;
@@ -12,6 +17,10 @@ type AnalysisResult record {
     string color;
 };
 
+# Description.
+#
+# + data - FBCData record
+# + return - AnalysisResult array or error
 public isolated function analyzeFBC(FBCData data) returns AnalysisResult[]|error {
     AnalysisResult[] interpretations = [];
 
@@ -75,5 +84,5 @@ public isolated function analyzeFBC(FBCData data) returns AnalysisResult[]|error
         interpretations.push({ text: "Platelet count is normal, indicating a healthy coagulation process.", color: "green" });
     }
 
-    return interpretations; // Return the analysis results as JSON
+    return interpretations;
 }
