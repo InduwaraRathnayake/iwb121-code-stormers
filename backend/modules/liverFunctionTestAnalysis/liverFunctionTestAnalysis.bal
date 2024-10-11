@@ -1,9 +1,15 @@
 // Define the data model for LFT input
+# Description.
+#
+# + alt - Alanine Aminotransferase
+# + ast - Aspartate Aminotransferase 
+# + alp - Alkaline Phosphatase 
+# + bilirubin - Total Bilirubin
 public type LFTData record {
-    float alt;      // Alanine Aminotransferase
-    float ast;      // Aspartate Aminotransferase
-    float alp;      // Alkaline Phosphatase
-    float bilirubin; // Total Bilirubin
+    float alt;      
+    float ast;      
+    float alp;      
+    float bilirubin; 
 };
 
 type AnalysisResult record {
@@ -11,6 +17,10 @@ type AnalysisResult record {
     string color;
 };
 
+# Description.
+#
+# + data - LFTData record
+# + return - AnalysisResult array or error
 public isolated function analyzeLFT(LFTData data) returns AnalysisResult[]|error {
     AnalysisResult[] interpretations = [];
 
@@ -66,5 +76,5 @@ public isolated function analyzeLFT(LFTData data) returns AnalysisResult[]|error
         });
     }
 
-    return interpretations; // Return the analysis results as JSON
+    return interpretations; 
 }

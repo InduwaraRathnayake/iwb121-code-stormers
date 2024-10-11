@@ -1,5 +1,8 @@
-// backend/services/bloodGlucoseService.bal
-
+# Description.
+#
+# + fastingGlucose - fasting glucose level in mg/dL  
+# + randomGlucose - random glucose level in mg/dL
+# + hba1c - HbA1c level in percentage
 public type BloodGlucoseData record {
     float fastingGlucose;
     float randomGlucose;
@@ -11,6 +14,10 @@ type AnalysisResult record {
     string color;
 };
 
+# Description.
+#
+# + data - BloodGlucoseData record
+# + return - AnalysisResult array or error
 public isolated function analyzeBloodGlucose(BloodGlucoseData data) returns AnalysisResult[]|error  {
     AnalysisResult[] interpretations = [];
     
@@ -58,5 +65,5 @@ public isolated function analyzeBloodGlucose(BloodGlucoseData data) returns Anal
         });
     }
 
-    return interpretations; // Return the analysis results as JSON
+    return interpretations;
 }

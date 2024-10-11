@@ -1,3 +1,6 @@
+# Description.
+#
+# + crpLevel - C-reactive protein level
 public type CRPData record {
     float crpLevel;
 };
@@ -8,6 +11,10 @@ type AnalysisResult record {
 };
 
 
+# Description.
+#
+# + data - CRPData record
+# + return - AnalysisResult array or error
 public isolated function analyzeCRP(CRPData data) returns AnalysisResult[]|error {
     AnalysisResult[] interpretations = [];
 
@@ -29,5 +36,5 @@ public isolated function analyzeCRP(CRPData data) returns AnalysisResult[]|error
         });
     }
 
-    return interpretations; // Return the analysis results as JSON
+    return interpretations;
 }
