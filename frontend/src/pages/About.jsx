@@ -33,7 +33,7 @@ const teamMembers = [
 
 const About = () => {
   return (
-    <div style={containerStyle}>
+    <div className="p-5 text-center">
       <Typography
         variant="h4"
         component="h1"
@@ -47,50 +47,44 @@ const About = () => {
       >
         About Us
       </Typography>
-      <h1 style={{ ...headerStyle, fontWeight: "bold" }}>
+      <h1 className="mb-2 text-2xl font-bold text-blue-800">
         Meet our team of creators, designers, and world-class problem solvers
       </h1>
-      <p style={subHeaderStyle}>
+      <p className="mb-5 italic text-gray-700 text-lg">
         To be the company our customers want us to be, it takes an eclectic
         group of passionate operators. Get to know the people leading the way.
       </p>
       <br />
 
-      <div style={gridContainerStyle}>
+      <div className="flex flex-col gap-5">
         {teamMembers.map((member, index) => {
           const isLeftAligned = index % 2 === 0;
           const cardAlignmentStyle = isLeftAligned
-            ? cardLeftStyle
-            : cardRightStyle;
-          const textAlignmentStyle = isLeftAligned
-            ? textContainerStyle
-            : textContainerStyleRight;
-          const imageMarginStyle = isLeftAligned
-            ? imageContainerStyle
-            : imageContainerStyleRight;
-          const cardMarginStyle = isLeftAligned
-            ? { marginLeft: "0", marginRight: "auto" }
-            : { marginRight: "0", marginLeft: "auto" };
-
+            ? "lg:flex-row lg:mr-auto lg:ml-20"
+            : "lg:flex-row-reverse lg:ml-auto lg:mr-20";
 
           return (
             <div
               key={index}
-              style={{
-                ...cardStyle,
-                ...cardAlignmentStyle,
-                ...cardMarginStyle,
-              }}
+              className={`flex flex-col lg:flex ${cardAlignmentStyle} items-center w-full lg:w-[650px] h-auto lg:h-[200px] p-5 bg-[rgba(153,255,255,0.2)] shadow-[0_4px_10px_rgba(0,0,0,0.1)] lg:rounded-[100px] border-2 border-[rgba(10,116,218,0.5)] mb-[-20px]`}
             >
-              <div style={textAlignmentStyle}>
-                <h3 style={{ ...nameStyle, fontWeight: "bold" }}>
+              <div className={`flex flex-col text-center flex-1 mb-3`}>
+                <h3 className="text-[1.4em] font-bold text-[#034c81] mb-[5px]">
                   {member.name}
                 </h3>
-                <p style={titleStyle}>{member.title}</p>
-                <p style={descriptionStyle}>{member.description}</p>
+                <p className="text-[#0a2472] text-[1em] mb-[10px]">
+                  {member.title}
+                </p>
+                <p className="text-[#123499] text-[0.9em]">
+                  {member.description}
+                </p>
               </div>
-              <div style={imageMarginStyle}>
-                <img src={member.image} alt={member.name} style={avatarStyle} />
+              <div className={`${isLeftAligned ? 'ml-[20px]' : 'mr-[20px]'} lg:ml-5 lg:mr-5`}>
+                <img
+                  src={member.image}
+                  alt={member.name}
+                  className="w-[150px] h-[150px] rounded-full object-cover border-2 border-[#0A74DA]"
+                />
               </div>
             </div>
           );
@@ -99,104 +93,6 @@ const About = () => {
       </div>
     </div>
   );
-};
-
-// Styles
-const containerStyle = {
-  padding: "20px",
-  textAlign: "center",
-};
-
-const headerStyle = {
-  marginBottom: "10px",
-  color: "#0A74DA",
-  fontSize: "1.5em",
-};
-
-const gridContainerStyle = {
-  display: "flex",
-  flexDirection: "column",
-  gap: 0, // Reduced gap between cards to 5px
-};
-
-const subHeaderStyle = {
-  marginBottom: "20px",
-  fontStyle: "italic",
-  color: "#333",
-  fontSize: "1.2em",
-};
-
-const cardStyle = {
-  display: "flex",
-  alignItems: "center",
-  width: "650px",
-  height: "200px",
-  padding: "20px",
-  backgroundColor: "rgba(153, 255, 255, 0.2)",
-  boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
-  borderRadius: "100px",
-  border: "2px solid rgba(10, 116, 218, 0.5)",
-  marginBottom: "-20px", // Example of using a negative margin to pull cards closer
-};
-
-const cardLeftStyle = {
-  flexDirection: "row",
-};
-
-const cardRightStyle = {
-  flexDirection: "row-reverse",
-};
-
-const textContainerStyle = {
-  display: "flex",
-  flexDirection: "column",
-  textAlign: "left",
-  flex: "1",
-};
-
-const textContainerStyleRight = {
-  display: "flex",
-  flexDirection: "column",
-  textAlign: "left",
-  flex: "1",
-};
-
-const imageContainerStyle = {
-  marginLeft: "20px",
-};
-
-const imageContainerStyleRight = {
-  marginRight: "20px",
-  padding: "20px",
-};
-
-const avatarStyle = {
-  width: "150px",
-  height: "150px",
-  borderRadius: "50%", // Make the image round
-  objectFit: "cover",
-  border: "2px solid #0A74DA",
-};
-
-const nameStyle = {
-  fontSize: "1.4em",
-  margin: "0 0 5px",
-  color: "#034c81",
-  textAlign: "center",
-
-};
-
-const titleStyle = {
-  color: "#0a2472",
-  fontSize: "1em",
-  margin: "0 0 10px",
-  textAlign: "center",
-};
-
-const descriptionStyle = {
-  fontSize: "0.9em",
-  color: "#123499",
-  textAlign: "center",
 };
 
 export default About;
