@@ -12,6 +12,7 @@ import Typography from "@mui/material/Typography";
 import { Link } from "react-router-dom";
 import RemoveCookie from "../../hooks/removecookie";
 
+// Navigation options
 const pages = ["Home", "About Us", "Our Services", "Contact Us"];
 const settings = ["User Profile", "Logout"];
 const reportsOptions = ["Reports", "Calculators"];
@@ -53,18 +54,23 @@ function Navbar() {
 
   return (
     <>
-      <AppBar position="fixed" sx={{ backgroundColor: "#125488" }}>
+      <AppBar
+        position="fixed"
+        sx={{ backgroundColor: "#125488", overflowX: "hidden" }}
+      >
         <Toolbar>
+          {/* Logo Section */}
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             <Link to="/">
               <img
                 src="/logo.png"
                 alt="MyWebsite Logo"
-                style={{ height: "50px", width: "auto" }}
+                style={{ maxWidth: "100%", height: "50px", width: "auto" }} // Responsive scaling
               />
             </Link>
           </Box>
 
+          {/* Mobile Menu Icon */}
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
@@ -94,10 +100,7 @@ function Navbar() {
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
                   <Link
                     to={`/${page.toLowerCase().replace(" ", "-")}`}
-                    style={{
-                      textDecoration: "none",
-                      color: "inherit",
-                    }}
+                    style={{ textDecoration: "none", color: "inherit" }}
                   >
                     <Typography
                       sx={{
@@ -115,7 +118,14 @@ function Navbar() {
             </Menu>
           </Box>
 
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" }, alignItems: "center" }}>
+          {/* Desktop Menu */}
+          <Box
+            sx={{
+              flexGrow: 1,
+              display: { xs: "none", md: "flex" },
+              alignItems: "center",
+            }}
+          >
             {pages.map((page) =>
               page === "Our Services" ? (
                 <Box
@@ -137,10 +147,7 @@ function Navbar() {
                   >
                     <Link
                       to="/services"
-                      style={{
-                        textDecoration: "none",
-                        color: "inherit",
-                      }}
+                      style={{ textDecoration: "none", color: "inherit" }}
                     >
                       {page}
                     </Link>
@@ -164,10 +171,7 @@ function Navbar() {
                       <MenuItem key={report} onClick={handleCloseReportsMenu}>
                         <Link
                           to={`/${report.toLowerCase().replace(" ", "-")}`}
-                          style={{
-                            textDecoration: "none",
-                            color: "inherit",
-                          }}
+                          style={{ textDecoration: "none", color: "inherit" }}
                         >
                           <Typography
                             sx={{
@@ -200,10 +204,7 @@ function Navbar() {
                 >
                   <Link
                     to={`/${page.toLowerCase().replace(" ", "-")}`}
-                    style={{
-                      textDecoration: "none",
-                      color: "inherit",
-                    }}
+                    style={{ textDecoration: "none", color: "inherit" }}
                   >
                     {page}
                   </Link>
@@ -212,10 +213,15 @@ function Navbar() {
             )}
           </Box>
 
+          {/* User Profile and Avatar */}
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Profile">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="User Avatar" src="/user-icon.png" sx={{ width: 45, height: 45 }}  />
+                <Avatar
+                  alt="User Avatar"
+                  src="/user-icon.png"
+                  sx={{ width: 45, height: 45 }}
+                />
               </IconButton>
             </Tooltip>
             <Menu
@@ -243,10 +249,7 @@ function Navbar() {
                   <MenuItem key={setting} onClick={handleCloseUserMenu}>
                     <Link
                       to={`/${setting.toLowerCase().replace(" ", "-")}`}
-                      style={{
-                        textDecoration: "none",
-                        color: "inherit",
-                      }}
+                      style={{ textDecoration: "none", color: "inherit" }}
                     >
                       <Typography>{setting}</Typography>
                     </Link>
@@ -257,10 +260,24 @@ function Navbar() {
           </Box>
         </Toolbar>
       </AppBar>
+
       {/* Add margin to the top of your main content to prevent it from being hidden behind the navbar */}
-      <Box sx={{ mt: 8 }}> {/* Adjust the value to fit your navbar height */}
+      <Box sx={{ mt: 8 }}>
+        {" "}
+        {/* Adjust the value to fit your navbar height */}
         {/* Your main content goes here */}
       </Box>
+
+      {/* Fixing the overflow issue globally */}
+      <style>
+        {`
+          body {
+            margin--0;
+            padding: 0;
+            overflow-x: hidden;
+          }
+        `}
+      </style>
     </>
   );
 }

@@ -14,6 +14,7 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom'; // Import us
 import axios from 'axios'; // Import Axios
 import backgroundImage from '../assets/signUp-image.jpeg';
 
+
 const Signup = () => {
   const [formData, setFormData] = useState({
     username: '',
@@ -66,15 +67,26 @@ const Signup = () => {
         });
         console.log("🚀 ~ handleSubmit ~ response:", response)
 
-        // Handle success (e.g., navigate to the login page)
-        setMessage('Signup successful! Redirecting to login...');
-        setTimeout(() => navigate('/login'), 2000); // Redirect after 2 seconds
+        if (response.status === 200) {
+          const responseData = response.data;
+          if (responseData.status === 400) {
+            setMessage('Signup failed: User already exists.');
+          } else {
+            setMessage('Signup successful! Redirecting to login...');
+            localStorage.setItem('isLoggedIn', 'true'); // Persist login status in localStorage
+
+            // Navigate to profile page on success
+            setTimeout(() => navigate('/login'), 2000); // Redirect after 2 seconds
+          }
+        } else {
+          setMessage('Signup failed. Please enter correct email or password.');
+        }
       } catch (error) {
         // Handle error (e.g., display an error message)
         if (error.response && error.response.data) {
           setMessage(`Signup failed: ${error.response.data.message}`);
         } else {
-          setMessage('Signup failed: User already exits.');
+          setMessage('Signup failed: User already exists.');
         }
       }
     }

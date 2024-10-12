@@ -1,14 +1,13 @@
-import React from 'react';
-import { Box, Typography, Button } from '@mui/material';
-import bannerImage from '../assets/banner-image.jpg'; // Replace with your banner image
-import logo from '../assets/logo.png'; // Replace with your logo image
+import { Box, Typography } from '@mui/material';
+import bannerImage from '../assets/banner-image.jpg'; 
+import logo from '../assets/logo.png'; 
 
 const Banner = () => {
   return (
     <Box
       sx={{
         position: 'relative',
-        height: '650px', // Full viewport height
+        height: '100vh', // Full viewport height
         width: '100%', // Full viewport width
         backgroundImage: `url(${bannerImage})`,
         backgroundSize: 'cover',
@@ -27,10 +26,10 @@ const Banner = () => {
           left: 0,
           right: 0,
           bottom: 0,
-          background: 'rgba(0, 0, 0, 0.2)', // Darker overlay for better text visibility
+          background: 'rgba(0, 0, 0, 0.2)', 
           zIndex: 1,
         },
-        overflow: 'hidden', // Prevents any overflow issues with animations
+        overflow: 'hidden', 
       }}
     >
       {/* Logo with transparency, adjusted position */}
@@ -39,14 +38,14 @@ const Banner = () => {
         src={logo} 
         alt="Logo" 
         sx={{
-          width: '320px',
-          mt: 25, // Reduced margin below the logo to lift it higher
+          width: { xs: '200px', sm: '250px', md: '350px' },
+          mt: { xs: 10, sm: 15, md: 26 }, 
           zIndex: 2,
-          opacity: 0.8, // Adjust the opacity for transparency
-          transition: 'transform 0.3s ease, opacity 0.3s ease', // Smooth hover effect
+          opacity: 0.8, 
+          transition: 'transform 0.3s ease, opacity 0.3s ease',
           '&:hover': {
-            transform: 'scale(1.05)', // Slightly scale up on hover
-            opacity: 1, // Fully visible on hover
+            transform: 'scale(1.05)', 
+            opacity: 1, 
           },
         }} 
       />
@@ -57,9 +56,10 @@ const Banner = () => {
           fontWeight: 'bold',
           fontFamily: 'Montserrat, sans-serif',
           textShadow: '2px 2px 6px rgba(0, 0, 0, 0.8)',
-          mt: 12,
+          mt: { xs: 5, sm: 8, md: 10 }, 
           zIndex: 2,
-          animation: 'fadeIn 1s ease-in-out', // Fade-in animation
+          animation: 'fadeIn 1s ease-in-out',
+          fontSize: { xs: '1.5rem', sm: '2rem', md: '3rem' }, 
         }}
       >
         Welcome to Wellness 360
@@ -69,9 +69,10 @@ const Banner = () => {
         variant="h6"
         sx={{
           textShadow: '2px 2px 6px rgba(0, 0, 0, 0.8)',
-          mb: 12,
+          mb: { xs: 5, sm: 8, md: 15 }, 
           zIndex: 2,
-          animation: 'fadeIn 2s ease-in-out', // Fade-in animation
+          animation: 'fadeIn 2s ease-in-out', 
+          fontSize: { xs: '1rem', sm: '1.25rem', md: '1.5rem' }, 
         }}
       >
         Your journey to a healthier life starts here.
