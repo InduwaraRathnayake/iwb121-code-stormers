@@ -7,8 +7,8 @@ const Banner = () => {
     <Box
       sx={{
         position: 'relative',
-        height: '100vh', // Full viewport height
-        width: '100%', // Full viewport width
+        height: '100vh', 
+        width: '100%', 
         backgroundImage: `url(${bannerImage})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
