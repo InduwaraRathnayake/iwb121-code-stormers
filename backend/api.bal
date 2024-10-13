@@ -4,6 +4,8 @@ import backend.fbcAnalysis as FA;
 import backend.lipidPanelAnalysis as LPA;
 import backend.liverFunctionTestAnalysis as LFTA;
 import backend.thyroidFunctionTestAnalysis as TFA;
+import backend.bmiCalculator as BC;
+import backend.whrCalculator as WHR;
 
 import ballerina/http;
 import ballerina/sql;
@@ -268,5 +270,37 @@ service /api on new http:Listener(9090) {
         }
     }
 
+    //bmi calculator
+    isolated resource function post calculateBMI(http:Caller caller, http:Request req) returns error? {
+        json requestBody = check req.getJsonPayload();
+        float height = check requestBody.height;
+        float weight = check requestBody.weight;
+
+        float bmi = BC:calculateBMI(height, weight);
+        string category = BC:categorizeBMI(bmi);
+
+        http:Response res = new;
+        res.setPayload(
+            {
+            "bmi": bmi,
+            "category": category
+        }
+        );
+        check caller->respond(res);
+    }
+
+    //whr calculator
+        resource function post calculateWHR(http:Caller caller, http:Request req) returns error? {
+        json requestBody = check req.getJsonPayload();
+        float waist = check requestBody.waist;
+        float hip = check requestBody.hip;
+        string gender = check requestBody.gender;
+
+        float ratio = WHR:calculateWHR(waist, hip);
+        string category = WHR:categorizeWHR(ratio, gender);
+
+        json response = { ratio: ratio, category: category };
+        check caller->respond(response);
+    }
 }
 

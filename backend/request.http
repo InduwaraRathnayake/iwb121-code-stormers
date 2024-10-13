@@ -124,3 +124,23 @@ Content-Type: application/json
   "email": "john.doe@example.com",
   "message": "I would like to know more about your services."
 }
+
+### Calculate BMI
+POST http://localhost:9090/api/calculateBMI
+Content-Type: application/json
+
+{
+  "height": 170.0,
+  "weight": 70.0
+}
+
+
+### Calculate WHR
+POST http://localhost:9090/api/calculateWHR
+Content-Type: application/json
+
+{
+  "waist": 80.0,
+  "hip": 100.0,
+  "gender": "male"
+}

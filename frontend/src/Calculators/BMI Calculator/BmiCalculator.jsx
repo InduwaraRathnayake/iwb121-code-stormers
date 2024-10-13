@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import { useState, useRef } from "react";
 import {
   Container,
   Box,
@@ -12,6 +12,7 @@ import {
 import bmiImage from "../../assets/bmi.jpg";
 import { ContentContainer, TitleBox, CardButton } from "../../components/Card";
 import GaugeChart from "react-gauge-chart";
+import axios from "axios";
 
 export default function BMICalculator() {
   const [formData, setFormData] = useState({
@@ -45,68 +46,41 @@ export default function BMICalculator() {
     });
   };
 
-  const handleKeyPress = (e) => {
-    const char = String.fromCharCode(e.which);
-    if (!/^[0-9.]+$/.test(char)) {
-      e.preventDefault();
-      setWeightError("Please enter numbers only."); // Set error message for invalid input
-    }
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const { height, weight } = formData;
-    let valid = true; // Flag to check if inputs are valid
+    let valid = true; 
 
     // Validate height input
     if (!height || isNaN(height) || height <= 0) {
-      setHeightError("Please enter a valid positive number for height."); // Set height error message
-      valid = false; // Mark as invalid
+      setHeightError("Please enter a valid positive number for height."); 
+      valid = false; 
     }
 
     // Validate weight input
     if (!weight || isNaN(weight) || weight <= 0) {
-      setWeightError("Please enter a valid positive number for weight."); // Set weight error message
-      valid = false; // Mark as invalid
+      setWeightError("Please enter a valid positive number for weight.");
+      valid = false; 
     }
 
-    if (!valid) return; // Prevent submission if inputs are invalid
+    if (!valid) return; 
 
-    const bmiValue = (weight / (height / 100) ** 2).toFixed(2);
-    setBmi(bmiValue);
-    categorizeBMI(bmiValue);
+    try {
+      const response = await axios.post("http://localhost:9090/api/calculateBMI", {
+        height: parseFloat(height),
+        weight: parseFloat(weight),
+      });
 
-    // Scroll to the report section after form submission
-    if (reportRef.current) {
-      reportRef.current.scrollIntoView({ behavior: "smooth" });
+      setBmi(response.data.bmi.toFixed(2));
+      setBmiCategory(response.data.category);
+
+      // Scroll to the report section after form submission
+      if (reportRef.current) {
+        reportRef.current.scrollIntoView({ behavior: "smooth" });
+      }
+    } catch (error) {
+      console.error("Error calculating BMI:", error);
     }
-  };
-
-  const categorizeBMI = (bmi) => {
-    let category = "";
-    let message = "";
-    if (bmi < 18.5) {
-      category = "Underweight";
-      message =
-        "Your body is less than the normal recommended weight. You need to eat more nutritious food with adequate exercises. ";
-    } else if (bmi >= 18.5 && bmi <= 22.9) {
-      category = "Normal weight";
-      message =
-        "Your weight is within the normal recommended weight. Maintain your weight with adequate exercises.";
-    } else if (bmi >= 23 && bmi <= 24.9) {
-      category = "Risk to overweight";
-      message =
-        "Your weight is within the normal recommended weight. Try to bring it down with more exercises and correct dietary practices.";
-    } else if (bmi >= 25 && bmi <= 29.9) {
-      category = "Overweight";
-      message =
-        "Your weight is more than the normal recommended weight. Bring it down with more exercises and correct dietary practices. ";
-    } else {
-      category = "Obesity";
-      message =
-        "Your weight is very much higher than the normal recommended weight and is a risk factor for many other diseases like diabetes and heart disease. ";
-    }
-    setBmiCategory(`${category} - ${message}`);
   };
 
   return (
@@ -153,10 +127,10 @@ export default function BMICalculator() {
                 label="Height (cm)"
                 value={formData.height}
                 onChange={handleChange}
-                error={!!heightError} // Display error state if there's a height error
-                helperText={heightError} // Display height error message
+                error={!!heightError} 
+                helperText={heightError} 
                 sx={{ marginBottom: "16px" }}
-                type="text" // Set input type to text to allow onKeyPress event
+                type="text" 
               />
               <TextField
                 required
@@ -167,10 +141,10 @@ export default function BMICalculator() {
                 label="Weight (kg)"
                 value={formData.weight}
                 onChange={handleChange}
-                error={!!weightError} // Display error state if there's a weight error
-                helperText={weightError} // Display weight error message
+                error={!!weightError} 
+                helperText={weightError} 
                 sx={{ marginBottom: "16px" }}
-                type="text" // Set input type to text to allow onKeyPress event
+                type="text" 
               />
               <RadioGroup
                 name="gender"
@@ -267,4 +241,4 @@ export default function BMICalculator() {
       </ContentContainer>
     </Container>
   );
-};
+}
