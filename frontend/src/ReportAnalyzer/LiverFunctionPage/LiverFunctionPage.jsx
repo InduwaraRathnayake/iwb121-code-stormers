@@ -22,9 +22,11 @@ import {
 import axios from "axios";
 import HospitalLogo from "../../assets/logo.png";
 import generatePDF from "../../helpers/generatePDF";
-import GetCookie from "../../hooks/getcookie"; // Utility to get the email from cookies
+import GetCookie from "../../hooks/getcookie"; 
 import decryptHash from "../../helpers/decrypting";
 import { SECRET_KEY } from "../../helpers/constants";
+import ReportFooter from "../../components/Report/ReportFooter";
+import ReportHeader from "../../components/Report/ReportHeader";
 
 const LiverFunctionTestsPage = () => {
   const [formData, setFormData] = useState({
@@ -46,7 +48,10 @@ const LiverFunctionTestsPage = () => {
       try {
         const hashedemail = GetCookie("userEmail"); // Get email from cookies
         const email = decryptHash(hashedemail, SECRET_KEY);
-        const response = await axios.post("http://localhost:9090/api/userByEmail", { email });
+        const response = await axios.post(
+          "http://localhost:9090/api/userByEmail",
+          { email }
+        );
         const { firstName, lastName } = response.data;
         setUserEmail(email);
         setFullName(`${firstName} ${lastName}`);
@@ -232,43 +237,7 @@ const LiverFunctionTestsPage = () => {
                 backgroundColor: "#c6e6fb",
               }}
             >
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  marginBottom: "20px",
-                  marginTop: "20px",
-                  marginLeft: "20px",
-                }}
-              >
-                <img
-                  src={HospitalLogo}
-                  alt="Hospital Logo"
-                  style={{ width: "100px" }}
-                />
-                <div style={{ textAlign: "right", marginLeft: "40px" }}>
-                  <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-                    WELLNESS 360
-                  </Typography>
-                  <Typography variant="body2">wellness360@gmail.com</Typography>
-                  <Typography variant="body2">
-                    University of Moratuwa
-                  </Typography>
-                  <Typography variant="body2">Phone: +94 123456789</Typography>
-                </div>
-                <div style={{ textAlign: "right" }}>
-                  <Typography
-                    variant="h6"
-                    sx={{ fontWeight: "bold", marginLeft: "220px" }}
-                  >
-                    Patient Information
-                  </Typography>
-                  <Typography variant="body1">Name: {fullName}</Typography>
-                  <Typography variant="body1">Email: {userEmail}</Typography>
-                  <Typography variant="body1">Date: {currentDate}</Typography>
-                </div>
-              </div>
+               <ReportHeader fullName={fullName} userEmail={userEmail} currentDate={currentDate} />
             </div>
 
             <Typography
@@ -414,32 +383,7 @@ const LiverFunctionTestsPage = () => {
               ))}
             </Box>
           </CardContent>
-
-          <Typography
-            variant="body1"
-            sx={{
-              color: "#004c8c",
-              fontSize: "16px",
-              lineHeight: "1.5",
-              borderTop: "2px solid #004c8c",
-              margin: "20px",
-            }}
-          >
-            We appreciate your trust in our services. If you have any questions
-            or require further assistance, please do not hesitate to contact us.
-            <br />
-            Explore our comprehensive range of offerings:{" "}
-            <a
-              href="http://localhost:5173/services"
-              style={{
-                color: "#004c8c",
-                textDecoration: "underline",
-                fontWeight: "bold",
-              }}
-            >
-              View Our Services
-            </a>
-          </Typography>
+          <ReportFooter />   
         </Card>
       )}
       {/* PDF Generation Button */}
