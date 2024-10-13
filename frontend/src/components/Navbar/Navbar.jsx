@@ -199,7 +199,7 @@ function Navbar() {
                     "&:hover": {
                       color: "lightblue",
                     },
-                    marginRight: 4, // Increase right margin for more spacing
+                    marginRight: 5, 
                   }}
                 >
                   <Link
