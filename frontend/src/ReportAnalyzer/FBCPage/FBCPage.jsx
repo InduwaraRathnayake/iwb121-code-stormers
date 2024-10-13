@@ -480,7 +480,7 @@ const FBCPage = () => {
       {report && (
         <div style={{ textAlign: "center" }}>
           <CardButton onClick={getPDF} type="button">
-            Download PDF
+            Download Report as PDF
           </CardButton>
         </div>
       )}

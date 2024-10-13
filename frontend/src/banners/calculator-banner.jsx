@@ -2,13 +2,13 @@ import { Container, Box } from '@mui/material';
 import { useEffect } from 'react';
 import { motion, useAnimation } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import BmiBannerCard from './bmi-banner'; // Importing the existing BMI card
-import WHRCard from './WHR-banner'; // Importing the existing WHR card
+import BmiBannerCard from './bmi-banner'; 
+import WHRCard from './WHR-banner'; 
 
 const CalculatorsCard = () => {
   const controls = useAnimation();
   const { ref, inView } = useInView({
-    triggerOnce: false, // Set this to false to trigger the animation repeatedly
+    triggerOnce: false,
     threshold: 0.1,
   });
 
@@ -23,13 +23,13 @@ const CalculatorsCard = () => {
   const cardVariants = {
     hidden: (direction) => ({
       opacity: 0,
-      rotateY: direction === 'left' ? 75 : -75, // Rotate 75 degrees on Y-axis
-      x: direction === 'left' ? '-50%' : '50%', // Move out of view
+      rotateY: direction === 'left' ? 75 : -75, 
+      x: direction === 'left' ? '-50%' : '50%', 
     }),
     visible: {
       opacity: 1,
-      rotateY: 0, // Reset rotation
-      x: 0, // Reset position
+      rotateY: 0, 
+      x: 0, 
       transition: { duration: 1.5 },
     },
   };
@@ -41,7 +41,7 @@ const CalculatorsCard = () => {
         justifyContent="space-between"
         alignItems="center"
         minHeight="100vh"
-        sx={{ flexDirection: { xs: 'column', md: 'row' } }} // Stack vertically on small screens
+        sx={{ flexDirection: { xs: 'column', md: 'row' } }} 
       >
         <motion.div
           custom="left"

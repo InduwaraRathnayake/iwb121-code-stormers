@@ -12,12 +12,12 @@ const Footer = () => {
             easy tracking, all in one app. Start now!
           </p>
           <div className="flex gap-4 mt-4">
+          <Link to="#">
+              <img src="/yt.png" alt="Youtube" className="w-12 h-12" />
+            </Link>
             <Link to="#">
               <img src="/fb.png" alt="Facebook" className="w-10 h-10" />
-            </Link>
-            <Link to="#">
-              <img src="/in.png" alt="Instagram" className="w-10 h-10" />
-            </Link>
+            </Link>    
           </div>
         </div>
 

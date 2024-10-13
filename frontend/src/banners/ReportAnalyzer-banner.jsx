@@ -113,11 +113,11 @@ const BloodReportCard = () => {
           >
             <Box
               component="img"
-              src={bloodReportBanner} // Update with the actual image path
+              src={bloodReportBanner} 
               alt="Blood Report Analyzer Banner"
               sx={{
-                width: '90%', // Increased width for the image
-                height: 'auto', // Adjusted height to auto for proper aspect ratio
+                width: '90%', 
+                height: 'auto', 
                 borderRadius: '10px',
                 boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
               }}

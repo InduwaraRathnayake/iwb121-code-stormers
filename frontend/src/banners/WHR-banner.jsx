@@ -2,7 +2,7 @@ import React from 'react';
 import { Container, Box, Typography, Card, CardContent } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { CardButton } from '../components/Card';
-import waistToHipBanner from '../assets/whr-banner.jpg'; // Update with the actual image path
+import waistToHipBanner from '../assets/whr-banner.jpg'; 
 
 const WHRCard = () => {
   return (
@@ -11,9 +11,9 @@ const WHRCard = () => {
         <Card
           sx={{
             display: 'flex',
-            flexDirection: 'column', // Stack elements vertically
-            maxWidth: 500, // Maximum width
-            height: 600, // Adjusted height for better aspect ratio
+            flexDirection: 'column',
+            maxWidth: 500,
+            height: 600,
             boxShadow: 5,
             borderRadius: '20px',
             backgroundColor: "rgba(255, 255, 255, 0.7)",
@@ -26,7 +26,7 @@ const WHRCard = () => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              p: 2, // Adjusted padding
+              p: 2, 
             }}
           >
             <CardContent>
@@ -35,7 +35,7 @@ const WHRCard = () => {
                 component="h1"
                 sx={{
                   fontWeight: 900,
-                  fontSize: '24px', // Font size
+                  fontSize: '24px', 
                   color: '#034c81',
                   textAlign: 'center',
                   marginBottom: '15px',
@@ -45,10 +45,10 @@ const WHRCard = () => {
               </Typography>
               <Typography
                 sx={{
-                  mb: 2, // Margin bottom
+                  mb: 2, 
                   textAlign: 'center',
                   color: '#666',
-                  fontSize: '16px', // Font size for readability
+                  fontSize: '16px', 
                 }}
               >
                 Want to know if your waist to hip ratio is in a healthy range? Click the button below to find out!
@@ -65,11 +65,11 @@ const WHRCard = () => {
               >
                 <Box
                   component="img"
-                  src={waistToHipBanner} // Update with the actual image path
+                  src={waistToHipBanner} 
                   alt="Waist to Hip Ratio Banner"
                   sx={{
                     width: '80%',
-                    height: 'auto', // Adjusted height to auto for proper aspect ratio
+                    height: 'auto',
                     borderRadius: '10px',
                     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
                   }}
@@ -82,7 +82,7 @@ const WHRCard = () => {
                   variant="contained"
                   color="primary"
                   component={RouterLink}
-                  to="/whr-calculator" // Update with the actual route
+                  to="/whr-calculator" 
                 >
                   Calculate Your Ratio Now
                 </CardButton>
