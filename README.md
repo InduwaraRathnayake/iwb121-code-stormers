@@ -6,7 +6,7 @@
 
 ## Project Overview
 
-This project analyzes various health reports, such as blood glucose, CRP, FBC, lipid panel, liver function, and thyroid function. It uses **Ballerina** for the backend and **React.js** for the frontend. Key features include user authentication, profile management, and cloud report upload functionality.
+This project analyzes various health reports, such as blood glucose, CRP, FBC, lipid panel, liver function, and thyroid function. It uses **Ballerina** for the backend and **React.js** for the frontend. Key features include user authentication, profile management, and report download functionality.
 
 ## Prerequisites
 
@@ -86,11 +86,11 @@ port=24836
 
 ```toml
 [databaseConfig]
-host = "localhost"
-user = "root"
-password = "your_local_password"
-database = "wellness"
-port = 3306
+host= "localhost"
+user= "root"
+password= "your_local_password"
+database= "wellness"
+port= 3306
 ```
 
 #### Step 3: Start the Backend
