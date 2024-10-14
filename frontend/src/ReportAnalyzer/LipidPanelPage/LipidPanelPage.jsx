@@ -4,13 +4,6 @@ import {
   Typography,
   Card,
   CardContent,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
   Box,
 } from "@mui/material";
 import {
@@ -27,6 +20,7 @@ import { SECRET_KEY } from "../../helpers/constants";
 import ReportFooter from "../../components/Report/ReportFooter";
 import ReportHeader from "../../components/Report/ReportHeader";
 import StatusLegend from "../../components/Report/StatusLegend";
+import ReportTable from "../../components/Report/ReportTable";
 
 const LipidPanelPage = () => {
   const [formData, setFormData] = useState({
@@ -218,44 +212,15 @@ const LipidPanelPage = () => {
             >
               Lipid Panel Test Results
             </Typography>
-
-            <TableContainer component={Paper}>
-              <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>
-                      <strong>Test</strong>
-                    </TableCell>
-                    <TableCell align="right" sx={{ width: "150px" }}>
-                      <strong>Expected Range</strong>
-                    </TableCell>
-                    <TableCell align="right" sx={{ width: "150px" }}>
-                      <strong>Your Result</strong>
-                    </TableCell>
-                    <TableCell align="right">
-                      <strong>Status</strong>
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {Object.keys(expectedRanges).map((key, index) => (
-                    <TableRow key={key}>
-                      <TableCell component="th" scope="row">
-                        {key.charAt(0).toUpperCase() + key.slice(1)}
-                      </TableCell>
-                      <TableCell align="right">{expectedRanges[key]}</TableCell>
-                      <TableCell align="right">{formData[key]}</TableCell>
-                      <TableCell
-                        align="right"
-                        style={{ color: report[index]?.color }}
-                      >
-                        {renderColoredCircle(report[index]?.color)}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
+            <ReportTable
+        headers={["Test", "Expected Range", "Your Result", "Status"]}
+        rows={Object.keys(expectedRanges).map((key, index) => [
+          key.charAt(0).toUpperCase() + key.slice(1),
+          expectedRanges[key],
+          `${formData[key]} mg/dL`,
+          renderColoredCircle(report[index]?.color),
+        ])}
+      />
             <StatusLegend />
             <Box sx={{ marginTop: "30px", textAlign: "center" }}>
               <Typography

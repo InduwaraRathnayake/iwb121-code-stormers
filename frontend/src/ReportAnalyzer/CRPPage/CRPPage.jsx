@@ -4,13 +4,6 @@ import {
   Typography,
   Card,
   CardContent,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
   Box,
 } from "@mui/material";
 import {
@@ -27,6 +20,7 @@ import { SECRET_KEY } from "../../helpers/constants";
 import ReportFooter from "../../components/Report/ReportFooter";
 import ReportHeader from "../../components/Report/ReportHeader";
 import StatusLegend from "../../components/Report/StatusLegend";
+import ReportTable from "../../components/Report/ReportTable";
 
 const CRPPage = () => {
   const [formData, setFormData] = useState({
@@ -213,47 +207,17 @@ const CRPPage = () => {
             >
               Analysis of C-Reactive Protein (CRP) Test Results
             </Typography>
-
-            <TableContainer component={Paper}>
-              <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>
-                      <strong>Test</strong>
-                    </TableCell>
-                    <TableCell align="right" sx={{ width: "150px" }}>
-                      <strong>Expected Range</strong>
-                    </TableCell>
-                    <TableCell align="right" sx={{ width: "150px" }}>
-                      <strong>Your Result</strong>
-                    </TableCell>
-                    <TableCell align="right">
-                      <strong>Status</strong>
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <TableRow>
-                    <TableCell component="th" scope="row">
-                      CRP Level
-                    </TableCell>
-                    <TableCell align="right">
-                      {expectedRanges.crpLevel}
-                    </TableCell>
-                    <TableCell align="right">
-                      {formData.crpLevel} mg/L
-                    </TableCell>
-                    <TableCell
-                      align="right"
-                      style={{ color: report?.[0]?.color }}
-                    >
-                      {renderColoredCircle(report?.[0]?.color)}
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </TableContainer>
-
+            <ReportTable
+            headers={["Test", "Expected Range", "Your Result", "Status"]}
+            rows={[
+              [
+                "CRP Level",
+                expectedRanges.crpLevel,
+                `${formData.crpLevel} mg/L`,
+                renderColoredCircle(report?.[0]?.color),
+              ],
+            ]}
+          />
             <StatusLegend />
             <Box sx={{ marginTop: "30px", textAlign: "center" }}>
               <Typography

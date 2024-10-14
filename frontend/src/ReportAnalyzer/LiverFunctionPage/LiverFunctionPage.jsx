@@ -4,13 +4,6 @@ import {
   Typography,
   Card,
   CardContent,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
   Box,
 } from "@mui/material";
 import {
@@ -27,6 +20,7 @@ import { SECRET_KEY } from "../../helpers/constants";
 import ReportFooter from "../../components/Report/ReportFooter";
 import ReportHeader from "../../components/Report/ReportHeader";
 import StatusLegend from "../../components/Report/StatusLegend";
+import ReportTable from "../../components/Report/ReportTable";
 
 const LiverFunctionTestsPage = () => {
   const [formData, setFormData] = useState({
@@ -131,10 +125,10 @@ const LiverFunctionTestsPage = () => {
   }, [report]);
 
   const expectedRanges = {
-    alt: "7 - 56 U/L",
-    ast: "10 - 40 U/L",
-    alp: "44 - 147 U/L",
-    bilirubin: "0.3 - 1.2 mg/dL",
+    alt: "less than 40 U/L",
+    ast: "less than 40 U/L",
+    alp: "less than 120 U/L",
+    bilirubin: "less than 1.2 mg/dL",
   };
 
   const getPDF = () => {
@@ -252,74 +246,15 @@ const LiverFunctionTestsPage = () => {
             >
               Analysis of Liver Function Test Results
             </Typography>
-            <TableContainer component={Paper}>
-              <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>
-                      <strong>Test</strong>
-                    </TableCell>
-                    <TableCell align="right" sx={{ width: "150px" }}>
-                      <strong>Expected Range</strong>
-                    </TableCell>
-                    <TableCell align="right" sx={{ width: "150px" }}>
-                      <strong>Your Result</strong>
-                    </TableCell>
-                    <TableCell align="right">
-                      <strong>Status</strong>
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <TableRow>
-                    <TableCell>ALT</TableCell>
-                    <TableCell align="right">{expectedRanges.alt}</TableCell>
-                    <TableCell align="right">{formData.alt}</TableCell>
-                    <TableCell
-                      align="right"
-                      style={{ color: report[0]?.color }}
-                    >
-                      {renderColoredCircle(report[0]?.color)}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>AST</TableCell>
-                    <TableCell align="right">{expectedRanges.ast}</TableCell>
-                    <TableCell align="right">{formData.ast}</TableCell>
-                    <TableCell
-                      align="right"
-                      style={{ color: report[1]?.color }}
-                    >
-                      {renderColoredCircle(report[1]?.color)}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>ALP</TableCell>
-                    <TableCell align="right">{expectedRanges.alp}</TableCell>
-                    <TableCell align="right">{formData.alp}</TableCell>
-                    <TableCell
-                      align="right"
-                      style={{ color: report[2]?.color }}
-                    >
-                      {renderColoredCircle(report[2]?.color)}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>Bilirubin</TableCell>
-                    <TableCell align="right">
-                      {expectedRanges.bilirubin}
-                    </TableCell>
-                    <TableCell align="right">{formData.bilirubin}</TableCell>
-                    <TableCell
-                      align="right"
-                      style={{ color: report[3]?.color }}
-                    >
-                      {renderColoredCircle(report[3]?.color)}
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </TableContainer>
+            <ReportTable
+              headers={["Test", "Expected Range", "Your Result", "Status"]}
+              rows={[
+                ["ALT", expectedRanges.alt, `${formData.alt} U/L`, renderColoredCircle(report?.[0]?.color), ],
+                [ "AST",  expectedRanges.ast,`${formData.ast} U/L`, renderColoredCircle(report?.[1]?.color),],
+                [ "ALP",expectedRanges.alp, `${formData.alp} U/L`,renderColoredCircle(report?.[2]?.color), ],
+                [ "Bilirubin", expectedRanges.bilirubin, `${formData.bilirubin} mg/dL`, renderColoredCircle(report?.[3]?.color),],
+              ]}
+            />
             <StatusLegend />
 
             <Box sx={{ marginTop: "30px", textAlign: "center" }}>

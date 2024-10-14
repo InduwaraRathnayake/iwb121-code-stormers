@@ -1,18 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import {
-  TextField,
-  Typography,
-  Card,
-  CardContent,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Box,
-} from "@mui/material";
+import { TextField, Typography, Card, CardContent, Box } from "@mui/material";
 import {
   ContentContainer,
   TitleBox,
@@ -27,6 +14,7 @@ import { SECRET_KEY } from "../../helpers/constants";
 import ReportFooter from "../../components/Report/ReportFooter";
 import ReportHeader from "../../components/Report/ReportHeader";
 import StatusLegend from "../../components/Report/StatusLegend";
+import ReportTable from "../../components/Report/ReportTable";
 
 const FBCPage = () => {
   const [formData, setFormData] = useState({
@@ -47,7 +35,10 @@ const FBCPage = () => {
       try {
         const hashedemail = GetCookie("userEmail"); // Get email from cookies
         const email = decryptHash(hashedemail, SECRET_KEY);
-        const response = await axios.post("http://localhost:9090/api/userByEmail", { email });
+        const response = await axios.post(
+          "http://localhost:9090/api/userByEmail",
+          { email }
+        );
         const { firstName, lastName } = response.data;
         setUserEmail(email);
         setFullName(`${firstName} ${lastName}`);
@@ -136,7 +127,7 @@ const FBCPage = () => {
   const expectedRanges = {
     whiteBloodCells: "4.0-11.0 x 10⁹/L",
     redBloodCells: "4.5-5.9 x 10¹²/L",
-    hemoglobin: "130-180 g/L",
+    hemoglobin: "13.8-17.2 g/L",
     platelets: "150-450 x 10⁹/L",
   };
 
@@ -241,8 +232,11 @@ const FBCPage = () => {
                 backgroundColor: "#c6e6fb",
               }}
             >
-              <ReportHeader fullName={fullName} userEmail={userEmail} currentDate={currentDate} />
-              
+              <ReportHeader
+                fullName={fullName}
+                userEmail={userEmail}
+                currentDate={currentDate}
+              />
             </div>
 
             <Typography
@@ -257,98 +251,35 @@ const FBCPage = () => {
             >
               Analysis of Full Blood Count (FBC) Test Results
             </Typography>
-
-            <TableContainer component={Paper}>
-              <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>
-                      <strong>Test</strong>
-                    </TableCell>
-                    <TableCell align="right" sx={{ width: "150px" }}>
-                      <strong>Expected Range</strong>
-                    </TableCell>
-                    <TableCell align="right" sx={{ width: "150px" }}>
-                      <strong>Your Result</strong>
-                    </TableCell>
-                    <TableCell align="right">
-                      <strong>Status</strong>
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <TableRow>
-                    <TableCell component="th" scope="row">
-                      White Blood Cells
-                    </TableCell>
-                    <TableCell align="right">
-                      {expectedRanges.whiteBloodCells}
-                    </TableCell>
-                    <TableCell align="right">
-                      {formData.whiteBloodCells} x 10⁹/L{" "}
-                    </TableCell>
-                    <TableCell
-                      align="right"
-                      style={{ color: report[0]?.color }}
-                    >
-                      {renderColoredCircle(report[0]?.color)}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell component="th" scope="row">
-                      Red Blood Cells
-                    </TableCell>
-                    <TableCell align="right">
-                      {expectedRanges.redBloodCells}
-                    </TableCell>
-                    <TableCell align="right">
-                      {formData.redBloodCells} x 10¹²/L
-                    </TableCell>
-                    <TableCell
-                      align="right"
-                      style={{ color: report[1]?.color }}
-                    >
-                      {renderColoredCircle(report[1]?.color)}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell component="th" scope="row">
-                      Hemoglobin
-                    </TableCell>
-                    <TableCell align="right">
-                      {expectedRanges.hemoglobin}
-                    </TableCell>
-                    <TableCell align="right">
-                      {formData.hemoglobin} g/L
-                    </TableCell>
-                    <TableCell
-                      align="right"
-                      style={{ color: report[2]?.color }}
-                    >
-                      {renderColoredCircle(report[2]?.color)}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell component="th" scope="row">
-                      Platelets
-                    </TableCell>
-                    <TableCell align="right">
-                      {expectedRanges.platelets}
-                    </TableCell>
-                    <TableCell align="right">
-                      {formData.platelets} x 10⁹/L
-                    </TableCell>
-                    <TableCell
-                      align="right"
-                      style={{ color: report[3]?.color }}
-                    >
-                      {renderColoredCircle(report[3]?.color)}
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </TableContainer>
-
+            <ReportTable
+              headers={["Test", "Expected Range", "Your Result", "Status"]}
+              rows={[
+                [
+                  "White Blood Cells",
+                  expectedRanges.whiteBloodCells,
+                  `${formData.whiteBloodCells} x 10⁹/L`,
+                  renderColoredCircle(report[0]?.color),
+                ],
+                [
+                  "Red Blood Cells",
+                  expectedRanges.redBloodCells,
+                  `${formData.redBloodCells} x 10¹²/L`,
+                  renderColoredCircle(report[1]?.color),
+                ],
+                [
+                  "Hemoglobin",
+                  expectedRanges.hemoglobin,
+                  `${formData.hemoglobin} g/L`,
+                  renderColoredCircle(report[2]?.color),
+                ],
+                [
+                  "Platelets",
+                  expectedRanges.platelets,
+                  `${formData.platelets} x 10⁹/L`,
+                  renderColoredCircle(report[3]?.color),
+                ],
+              ]}
+            />
             <StatusLegend />
 
             <Box sx={{ marginTop: "30px", textAlign: "center" }}>
@@ -380,7 +311,7 @@ const FBCPage = () => {
               ))}
             </Box>
           </CardContent>
-          <ReportFooter />       
+          <ReportFooter />
         </Card>
       )}
 

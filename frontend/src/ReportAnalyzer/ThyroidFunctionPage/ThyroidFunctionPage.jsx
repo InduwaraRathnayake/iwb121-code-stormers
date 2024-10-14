@@ -4,13 +4,6 @@ import {
   Typography,
   Card,
   CardContent,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
   Box,
 } from "@mui/material";
 import {
@@ -27,6 +20,7 @@ import { SECRET_KEY } from "../../helpers/constants";
 import ReportFooter from "../../components/Report/ReportFooter";
 import ReportHeader from "../../components/Report/ReportHeader";
 import StatusLegend from "../../components/Report/StatusLegend";
+import ReportTable from "../../components/Report/ReportTable";
 
 const ThyroidFunctionTests = () => {
   const [formData, setFormData] = useState({
@@ -141,8 +135,8 @@ const ThyroidFunctionTests = () => {
 
   const expectedRanges = {
     tsh: "0.4 - 4.0 mIU/L",
-    t3: "2.3 - 4.2 ng/mL",
-    t4: "0.8 - 1.8 µg/dL",
+    t3: "0.8 - 2.0 ng/mL",
+    t4: "4.5 - 12.0 µg/dL",
   };
 
   const getPDF = () => {
@@ -246,68 +240,30 @@ const ThyroidFunctionTests = () => {
             >
               Analysis of Thyroid Function Test Results
             </Typography>
-
-            <TableContainer component={Paper}>
-              <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>
-                      <strong>Test</strong>
-                    </TableCell>
-                    <TableCell align="right" sx={{ width: "150px" }}>
-                      <strong>Expected Range</strong>
-                    </TableCell>
-                    <TableCell align="right" sx={{ width: "150px" }}>
-                      <strong>Your Result</strong>
-                    </TableCell>
-                    <TableCell align="right">
-                      <strong>Status</strong>
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <TableRow>
-                    <TableCell component="th" scope="row">
-                      TSH
-                    </TableCell>
-                    <TableCell align="right">{expectedRanges.tsh}</TableCell>
-                    <TableCell align="right">{formData.tsh}</TableCell>
-                    <TableCell
-                      align="right"
-                      style={{ color: report[0]?.color }}
-                    >
-                      {renderColoredCircle(report[0]?.color)}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell component="th" scope="row">
-                      T3
-                    </TableCell>
-                    <TableCell align="right">{expectedRanges.t3}</TableCell>
-                    <TableCell align="right">{formData.t3}</TableCell>
-                    <TableCell
-                      align="right"
-                      style={{ color: report[1]?.color }}
-                    >
-                      {renderColoredCircle(report[1]?.color)}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell component="th" scope="row">
-                      T4
-                    </TableCell>
-                    <TableCell align="right">{expectedRanges.t4}</TableCell>
-                    <TableCell align="right">{formData.t4}</TableCell>
-                    <TableCell
-                      align="right"
-                      style={{ color: report[2]?.color }}
-                    >
-                      {renderColoredCircle(report[2]?.color)}
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </TableContainer>
+            <ReportTable
+              headers={["Test", "Expected Range", "Your Result", "Status"]}
+              rows={[
+                [
+                  "TSH",
+                  expectedRanges.tsh,
+                  `${formData.tsh} mIU/L`,
+                  renderColoredCircle(report[0]?.color),
+                ],
+                [
+                  "T3",
+                  expectedRanges.t3,
+                  `${formData.t3} ng/mL`,
+                  renderColoredCircle(report[1]?.color),
+                ],
+                [
+                  "T4",
+                  expectedRanges.t4,
+                  `${formData.t4} µg/dL`,
+                  renderColoredCircle(report[2]?.color),
+                ],
+              ]}
+            />
+          
             <StatusLegend />
             <Box sx={{ marginTop: "30px", textAlign: "center" }}>
               <Typography

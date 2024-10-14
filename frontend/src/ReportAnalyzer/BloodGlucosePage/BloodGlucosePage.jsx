@@ -4,13 +4,6 @@ import {
   Typography,
   Card,
   CardContent,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
   Box,
 } from "@mui/material";
 import {
@@ -27,6 +20,7 @@ import { SECRET_KEY } from "../../helpers/constants";
 import ReportFooter from "../../components/Report/ReportFooter";
 import ReportHeader from "../../components/Report/ReportHeader";
 import StatusLegend from "../../components/Report/StatusLegend";
+import ReportTable from "../../components/Report/ReportTable";
 
 const BloodGlucoseTest = () => {
   const [formData, setFormData] = useState({
@@ -241,75 +235,31 @@ const BloodGlucoseTest = () => {
             >
               Analysis of Blood Glucose Test Results
             </Typography>
-            <TableContainer component={Paper}>
-              <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>
-                      <strong>Test</strong>
-                    </TableCell>
-                    <TableCell align="right" sx={{ width: "150px" }}>
-                      <strong>Expected Range</strong>
-                    </TableCell>
-                    <TableCell align="right" sx={{ width: "150px" }}>
-                      <strong>Your Result</strong>
-                    </TableCell>
-                    <TableCell align="right">
-                      <strong>Status</strong>
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <TableRow>
-                    <TableCell component="th" scope="row">
-                      Fasting Glucose
-                    </TableCell>
-                    <TableCell align="right">
-                      {expectedRanges.fastingGlucose}
-                    </TableCell>
-                    <TableCell align="right">
-                      {formData.fastingGlucose}
-                    </TableCell>
-                    <TableCell
-                      align="right"
-                      style={{ color: report[0]?.color }}
-                    >
-                      {renderColoredCircle(report[0]?.color)}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell component="th" scope="row">
-                      Random Glucose
-                    </TableCell>
-                    <TableCell align="right">
-                      {expectedRanges.randomGlucose}
-                    </TableCell>
-                    <TableCell align="right">
-                      {formData.randomGlucose}
-                    </TableCell>
-                    <TableCell
-                      align="right"
-                      style={{ color: report[1]?.color }}
-                    >
-                      {renderColoredCircle(report[1]?.color)}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell component="th" scope="row">
-                      HbA1c
-                    </TableCell>
-                    <TableCell align="right">{expectedRanges.hba1c}</TableCell>
-                    <TableCell align="right">{formData.hba1c}</TableCell>
-                    <TableCell
-                      align="right"
-                      style={{ color: report[2]?.color }}
-                    >
-                      {renderColoredCircle(report[2]?.color)}
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </TableContainer>
+
+            <ReportTable
+          headers={["Test", "Expected Range", "Your Result", "Status"]}
+          rows={[
+            [
+              "Fasting Glucose",
+              expectedRanges.fastingGlucose, 
+              `${formData.fastingGlucose} mg/dL`,
+              renderColoredCircle(report?.[0]?.color),
+            ],
+            [
+              "Random Glucose",
+              expectedRanges.fastingGlucose, 
+              `${formData.randomGlucose} mg/dL`,
+              renderColoredCircle(report?.[1]?.color),
+            ],
+            [
+              "HbA1c",
+              expectedRanges.fastingGlucose, 
+              `${formData.hba1c} %`,
+              renderColoredCircle(report?.[2]?.color),
+            ],
+          ]}
+        />
+      
 
             <StatusLegend />
 
