@@ -26,6 +26,7 @@ import decryptHash from "../../helpers/decrypting";
 import { SECRET_KEY } from "../../helpers/constants";
 import ReportFooter from "../../components/Report/ReportFooter";
 import ReportHeader from "../../components/Report/ReportHeader";
+import StatusLegend from "../../components/Report/StatusLegend";
 
 const FBCPage = () => {
   const [formData, setFormData] = useState({
@@ -348,40 +349,7 @@ const FBCPage = () => {
               </Table>
             </TableContainer>
 
-            {/* Status Legend Section */}
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                marginTop: "20px",
-                marginBottom: "20px",
-              }}
-            >
-              <Box
-                sx={{ display: "flex", alignItems: "center", margin: "0 20px" }}
-              >
-                {ColoredCircle("red")}
-                <Typography variant="body1" sx={{ marginLeft: "8px" }}>
-                  High
-                </Typography>
-              </Box>
-              <Box
-                sx={{ display: "flex", alignItems: "center", margin: "0 20px" }}
-              >
-                {ColoredCircle("green")}
-                <Typography variant="body1" sx={{ marginLeft: "8px" }}>
-                  Normal
-                </Typography>
-              </Box>
-              <Box
-                sx={{ display: "flex", alignItems: "center", margin: "0 20px" }}
-              >
-                {ColoredCircle("blue")}
-                <Typography variant="body1" sx={{ marginLeft: "8px" }}>
-                  Low
-                </Typography>
-              </Box>
-            </Box>
+            <StatusLegend />
 
             <Box sx={{ marginTop: "30px", textAlign: "center" }}>
               <Typography
@@ -445,18 +413,6 @@ const renderColoredCircle = (color) => (
       display: "inline-block",
       width: "30px",
       height: "30px",
-      borderRadius: "50%",
-      backgroundColor: color,
-    }}
-  ></span>
-);
-
-const ColoredCircle = (color) => (
-  <span
-    style={{
-      display: "inline-block",
-      width: "20px",
-      height: "20px",
       borderRadius: "50%",
       backgroundColor: color,
     }}

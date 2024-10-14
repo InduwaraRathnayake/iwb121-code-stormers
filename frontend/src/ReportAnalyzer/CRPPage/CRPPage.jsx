@@ -21,11 +21,12 @@ import {
 } from "../../components/Card";
 import axios from "axios";
 import generatePDF from "../../helpers/generatePDF";
-import GetCookie from "../../hooks/getcookie"; 
+import GetCookie from "../../hooks/getcookie";
 import decryptHash from "../../helpers/decrypting";
 import { SECRET_KEY } from "../../helpers/constants";
 import ReportFooter from "../../components/Report/ReportFooter";
 import ReportHeader from "../../components/Report/ReportHeader";
+import StatusLegend from "../../components/Report/StatusLegend";
 
 const CRPPage = () => {
   const [formData, setFormData] = useState({
@@ -41,9 +42,12 @@ const CRPPage = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const hashedemail = GetCookie("userEmail"); 
+        const hashedemail = GetCookie("userEmail");
         const email = decryptHash(hashedemail, SECRET_KEY);
-        const response = await axios.post("http://localhost:9090/api/userByEmail", { email });
+        const response = await axios.post(
+          "http://localhost:9090/api/userByEmail",
+          { email }
+        );
         const { firstName, lastName } = response.data;
         setUserEmail(email);
         setFullName(`${firstName} ${lastName}`);
@@ -128,7 +132,7 @@ const CRPPage = () => {
   const currentDate = new Date().toLocaleDateString();
 
   const expectedRanges = {
-    crpLevel: "<5.0 mg/L", 
+    crpLevel: "<5.0 mg/L",
   };
 
   const getPDF = () => {
@@ -146,7 +150,6 @@ const CRPPage = () => {
           C-Reactive Protein (CRP) Report Analyzer
         </Typography>
       </TitleBox>
-
       <FormContainer>
         <form
           onSubmit={handleSubmit}
@@ -169,7 +172,6 @@ const CRPPage = () => {
           <CardButton type="submit">Analyze</CardButton>
         </form>
       </FormContainer>
-
       <br /> <br />
       {report && (
         <Card
@@ -192,7 +194,11 @@ const CRPPage = () => {
                 backgroundColor: "#c6e6fb",
               }}
             >
-              <ReportHeader fullName={fullName} userEmail={userEmail} currentDate={currentDate} />
+              <ReportHeader
+                fullName={fullName}
+                userEmail={userEmail}
+                currentDate={currentDate}
+              />
             </div>
 
             <Typography
@@ -248,41 +254,7 @@ const CRPPage = () => {
               </Table>
             </TableContainer>
 
-            {/* Status Legend Section */}
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                marginTop: "20px",
-                marginBottom: "20px",
-              }}
-            >
-              <Box
-                sx={{ display: "flex", alignItems: "center", margin: "0 20px" }}
-              >
-                {ColoredCircle("red")}
-                <Typography variant="body1" sx={{ marginLeft: "8px" }}>
-                  High
-                </Typography>
-              </Box>
-              <Box
-                sx={{ display: "flex", alignItems: "center", margin: "0 20px" }}
-              >
-                {ColoredCircle("green")}
-                <Typography variant="body1" sx={{ marginLeft: "8px" }}>
-                  Normal
-                </Typography>
-              </Box>
-              <Box
-                sx={{ display: "flex", alignItems: "center", margin: "0 20px" }}
-              >
-                {ColoredCircle("blue")}
-                <Typography variant="body1" sx={{ marginLeft: "8px" }}>
-                  Low
-                </Typography>
-              </Box>
-            </Box>
-
+            <StatusLegend />
             <Box sx={{ marginTop: "30px", textAlign: "center" }}>
               <Typography
                 variant="h6"
@@ -349,18 +321,5 @@ const renderColoredCircle = (color) => {
     ></span>
   );
 };
-
-const ColoredCircle = (color) => (
-  <span
-    style={{
-      display: "inline-block",
-      width: "20px",
-      height: "20px",
-      borderRadius: "50%",
-      backgroundColor: color,
-      marginRight: "5px",
-    }}
-  ></span>
-);
 
 export default CRPPage;

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import PropTypes from 'prop-types'; // Import PropTypes
+import PropTypes from 'prop-types'; 
 import {
   Container,
   Box,
@@ -11,12 +11,12 @@ import {
 } from '@mui/material';
 import { CardButton } from '../components/Card';
 import { Link as RouterLink } from 'react-router-dom';
-import axios from 'axios'; // Import axios for making HTTP requests
-import SetCookie from '../hooks/setcookie'; // Import SetCookie
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import axios from 'axios';
+import SetCookie from '../hooks/setcookie'; 
+import { useNavigate } from 'react-router-dom';
 import backgroundImage from '../assets/login-image.jpg';
-import encryptString from '../helpers/hashAlgorithm'; // Import encryption helper
-import { SECRET_KEY } from '../helpers/constants'; // Import secret key for encryption
+import encryptString from '../helpers/hashAlgorithm'; 
+import { SECRET_KEY } from '../helpers/constants'; 
 
 const Login = ({ setIsLoggedIn }) => {
   const [formData, setFormData] = useState({
@@ -24,16 +24,15 @@ const Login = ({ setIsLoggedIn }) => {
     password: '',
   });
   const [errors, setErrors] = useState({});
-  const [message, setMessage] = useState(''); // Add state for feedback messages
-  const navigate = useNavigate(); // Use useNavigate for navigation
-
+  const [message, setMessage] = useState(''); 
+  const navigate = useNavigate(); 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: value,
     });
-    setErrors({}); // Clear errors on input change
+    setErrors({}); 
   };
 
   const validateInput = () => {
@@ -48,36 +47,32 @@ const Login = ({ setIsLoggedIn }) => {
     }
 
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0; // returns true if no errors
+    return Object.keys(newErrors).length === 0; 
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateInput()) {
       try {
-        // Make login request to backend
+       
         const response = await axios.post('http://localhost:9090/api/login', {
           email: formData.useremail,
           password: formData.password,
         });
-        // console.log("🚀 ~ handleSubmit ~ response:", response)
   
         if (response.status === 200) {
           const responseData = response.data;
           if (responseData.status === 401) {
             setMessage('Unauthorized! Incorrect useremail or password.');
           } else {
-            // Hash the useremail before storing it in the cookie
             const hashedUseremail = encryptString(formData.useremail, SECRET_KEY);
             
-            // Set the hashed useremail in the cookie
             SetCookie('userEmail', hashedUseremail);
             
             setMessage('Login successful!');
-            setIsLoggedIn(true); // Set login status in state
-            localStorage.setItem('isLoggedIn', 'true'); // Persist login status in localStorage
+            setIsLoggedIn(true); 
+            localStorage.setItem('isLoggedIn', 'true'); 
   
-            // Navigate to profile page on success
             navigate('/');
           }
         } else {
@@ -108,8 +103,8 @@ const Login = ({ setIsLoggedIn }) => {
           borderRadius: '20px',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
           overflow: 'hidden',
-          height: '600px', // Adjust height as needed
-          width: '1000px', // Adjust width as needed
+          height: '600px', 
+          width: '1000px', 
         }}
       >
         <Box
@@ -124,7 +119,7 @@ const Login = ({ setIsLoggedIn }) => {
         <Card
           sx={{
             padding: '40px',
-            width: '450px', // Adjust width as needed
+            width: '450px',
             backgroundColor: 'rgba(255, 255, 255, 0.9)',
           }}
         >

@@ -53,9 +53,8 @@ const ContactUsComp = () => {
           flex: 1,
           p: 7,
           paddingBottom: "0px",
-          minWidth: "300px",
-           // Set background with opacity
-           backgroundColor: "rgba(255, 255, 255, 0.7)", // Set background with opacity
+          minWidth: "300px",   
+           backgroundColor: "rgba(255, 255, 255, 0.7)", 
 
                 borderRadius: "10px",
                 borderColor: "#125488",
@@ -125,7 +124,7 @@ const ContactUsComp = () => {
                 flex: 1,
                 p: 7,
                 minWidth: "300px",
-                backgroundColor: "rgba(255, 255, 255, 0.7)", // Set background with opacity
+                backgroundColor: "rgba(255, 255, 255, 0.7)", 
           borderRadius: "10px",
           borderColor: "#125488",
           borderWidth: "1px",

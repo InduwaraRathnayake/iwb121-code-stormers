@@ -10,8 +10,8 @@ import {
   Link,
 } from '@mui/material';
 import { CardButton } from '../components/Card';
-import { Link as RouterLink, useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
-import axios from 'axios'; // Import Axios
+import { Link as RouterLink, useNavigate } from 'react-router-dom'; 
+import axios from 'axios'; 
 import backgroundImage from '../assets/signUp-image.jpeg';
 
 
@@ -25,8 +25,8 @@ const Signup = () => {
     confirmPassword: '',
   });
   const [errors, setErrors] = useState({});
-  const [message, setMessage] = useState(''); // For showing success/error messages
-  const navigate = useNavigate(); // Use useNavigate to redirect after signup
+  const [message, setMessage] = useState(''); 
+  const navigate = useNavigate(); 
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,7 +34,7 @@ const Signup = () => {
       ...formData,
       [name]: value,
     });
-    setErrors({}); // Clear errors on input change
+    setErrors({}); 
   };
 
   const validateInput = () => {
@@ -50,14 +50,14 @@ const Signup = () => {
     }
 
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0; // returns true if no errors
+    return Object.keys(newErrors).length === 0; 
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateInput()) {
       try {
-        // Send the signup data to the backend
+      
         const response = await axios.post('http://localhost:9090/api/signup', {
           username: formData.username,
           first_name: formData.firstName,
@@ -73,16 +73,14 @@ const Signup = () => {
             setMessage('Signup failed: User already exists.');
           } else {
             setMessage('Signup successful! Redirecting to login...');
-            localStorage.setItem('isLoggedIn', 'true'); // Persist login status in localStorage
+            localStorage.setItem('isLoggedIn', 'true'); 
 
-            // Navigate to profile page on success
-            setTimeout(() => navigate('/login'), 2000); // Redirect after 2 seconds
+            setTimeout(() => navigate('/login'), 2000); 
           }
         } else {
           setMessage('Signup failed. Please enter correct email or password.');
         }
       } catch (error) {
-        // Handle error (e.g., display an error message)
         if (error.response && error.response.data) {
           setMessage(`Signup failed: ${error.response.data.message}`);
         } else {
