@@ -29,7 +29,6 @@ const ContactUsComp = () => {
       const response = await axios.post('http://localhost:9090/api/contactUs', formData);
       if (response.status === 200) {
         setMessage('Form submitted successfully!');
-        //clear form data
         setFormData({
           subject: '',
           firstName: '',

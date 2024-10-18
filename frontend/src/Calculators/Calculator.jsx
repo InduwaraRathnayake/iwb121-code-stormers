@@ -11,7 +11,6 @@ const  Calculator = () => {
           flexDirection: "column",
           alignItems: "center",
           padding: 3,
-          //backgroundColor: "#e3f2fd",
         }}
       >
         <Typography
@@ -37,7 +36,7 @@ const  Calculator = () => {
         alignItems="center"
         marginTop={-10}
         minHeight="100vh"
-        sx={{ flexDirection: { xs: 'column', md: 'row' } }} // Stack vertically on small screens
+        sx={{ flexDirection: { xs: 'column', md: 'row' } }} 
       >
         <Box sx={{ flex: 1, mr: { xs: 0, md: 2 } }}>
           <WHRCard /> {/* WHR card on the left */}

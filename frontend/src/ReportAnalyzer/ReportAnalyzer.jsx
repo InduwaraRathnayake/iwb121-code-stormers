@@ -72,7 +72,6 @@ export default function ReportAnalyzer() {
         flexDirection: "column",
         alignItems: "center",
         padding: 3,
-        //backgroundColor: "#e3f2fd",
       }}
     >
       <Typography

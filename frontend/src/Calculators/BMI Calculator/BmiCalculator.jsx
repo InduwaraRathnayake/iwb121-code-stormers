@@ -23,17 +23,14 @@ export default function BMICalculator() {
   const [bmi, setBmi] = useState(null);
   const [bmiCategory, setBmiCategory] = useState("");
 
-  // Separate error states for height and weight
   const [heightError, setHeightError] = useState("");
   const [weightError, setWeightError] = useState("");
 
-  // Ref for the report section
   const reportRef = useRef(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // Reset error messages when user starts typing
     if (name === "height") {
       setHeightError("");
     } else if (name === "weight") {
@@ -51,13 +48,11 @@ export default function BMICalculator() {
     const { height, weight } = formData;
     let valid = true; 
 
-    // Validate height input
     if (!height || isNaN(height) || height <= 0) {
       setHeightError("Please enter a valid positive number for height."); 
       valid = false; 
     }
 
-    // Validate weight input
     if (!weight || isNaN(weight) || weight <= 0) {
       setWeightError("Please enter a valid positive number for weight.");
       valid = false; 
@@ -74,7 +69,6 @@ export default function BMICalculator() {
       setBmi(response.data.bmi.toFixed(2));
       setBmiCategory(response.data.category);
 
-      // Scroll to the report section after form submission
       if (reportRef.current) {
         reportRef.current.scrollIntoView({ behavior: "smooth" });
       }
@@ -184,7 +178,7 @@ export default function BMICalculator() {
         </Box>
         {bmi && (
           <Card
-            ref={reportRef} // Reference to scroll into
+            ref={reportRef} 
             sx={{
               display: "flex",
               justifyContent: "center",
