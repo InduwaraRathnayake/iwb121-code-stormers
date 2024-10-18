@@ -7,8 +7,8 @@ import About from "./pages/About";
 import ContactUs from "./pages/ContactUs";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
-import ReportAnalyzer from "./ReportAnalyzer/ReportAnalyzer"; // Importing ReportAnalyzer
-import FBCPage from "./ReportAnalyzer/FBCPage/FBCPage"; // Importing specific test pages
+import ReportAnalyzer from "./ReportAnalyzer/ReportAnalyzer"; 
+import FBCPage from "./ReportAnalyzer/FBCPage/FBCPage"; 
 import LipidPanel from "./ReportAnalyzer/LipidPanelPage/LipidPanelPage";
 import LiverFunctionTests from "./ReportAnalyzer/LiverFunctionPage/LiverFunctionPage";
 import BloodGlucoseTest from "./ReportAnalyzer/BloodGlucosePage/BloodGlucosePage";
@@ -60,12 +60,10 @@ const Layout = () => {
   const location = useLocation();
   const shouldHideNavbarFooter = location.pathname === "/login" || location.pathname === "/signup";
 
-  // Get isLoggedIn from localStorage or initialize as false
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     return localStorage.getItem('isLoggedIn') === 'false' ? false : true;
   });
 
-  // Keep isLoggedIn synced with localStorage
   useEffect(() => {
     localStorage.setItem('isLoggedIn', isLoggedIn);
   }, [isLoggedIn]);
@@ -117,10 +115,10 @@ export default App;
 const layoutStyle = {
   display: "flex",
   flexDirection: "column",
-  minHeight: "100vh", // Ensures the layout takes up the full height of the viewport
+  minHeight: "100vh", 
 };
 
 const contentStyle = {
-  flex: "1", // Takes up the remaining space between navbar and footer
+  flex: "1", 
 };
 

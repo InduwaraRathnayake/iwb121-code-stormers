@@ -26,21 +26,21 @@ type FBCData record {
 type LipidPanelData record {
     float cholesterol;
     float triglycerides;
-    float hdl; // High-Density Lipoprotein
-    float ldl; // Low-Density Lipoprotein
+    float hdl; 
+    float ldl; 
 };
 
 // Define the data model for LFT input
 type LFTData record {
-    float alt;      // Alanine Aminotransferase
-    float ast;      // Aspartate Aminotransferase
-    float alp;      // Alkaline Phosphatase
-    float bilirubin; // Total Bilirubin
+    float alt;      
+    float ast;     
+    float alp;     
+    float bilirubin; 
 };
 
 // Define the data model for TFT input
 type TFTData record {
-    float tsh; // Thyroid Stimulating Hormone
-    float t3;  // Triiodothyronine
-    float t4;  // Thyroxine
+    float tsh; 
+    float t3;  
+    float t4;  
 };

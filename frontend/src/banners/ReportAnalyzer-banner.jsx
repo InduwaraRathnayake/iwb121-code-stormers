@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Container, Box, Typography, Card, CardContent } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { CardButton } from '../components/Card';
-import bloodReportBanner from '../assets/blood-report-banner.jpg'; // Update with the actual image path
+import bloodReportBanner from '../assets/blood-report-banner.jpg'; 
 import { useInView } from 'react-intersection-observer';
 
 const BloodReportCard = () => {
@@ -37,14 +37,14 @@ const BloodReportCard = () => {
       >
         <Card
           sx={{
-            maxWidth: { xs: '90%', md: 1100 }, // Full width on small screens, max width on medium and up
-            height: 'auto', // Set height to auto for responsive behavior
-            minHeight: '500px', // Set a minimum height for the card
+            maxWidth: { xs: '90%', md: 1100 }, 
+            height: 'auto', 
+            minHeight: '500px',
             boxShadow: 5,
             borderRadius: '20px',
             backgroundColor: "rgba(255, 255, 255, 0.7)",
             overflow: 'hidden',
-            display: { xs: 'block', md: 'flex' }, // Block on small screens, flex on medium and up
+            display: { xs: 'block', md: 'flex' },
           }}
         >
           {/* Content Box */}
@@ -93,7 +93,7 @@ const BloodReportCard = () => {
                   variant="contained"
                   color="primary"
                   component={RouterLink}
-                  to="/reports" // Update with the actual route
+                  to="/reports" 
                 >
                   Start Analyzing Your Report Now
                 </CardButton>

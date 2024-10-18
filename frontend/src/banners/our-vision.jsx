@@ -22,7 +22,7 @@ const OurVision = () => {
             position: 'relative',
             zIndex: 1,
             textAlign: 'center',
-            padding: 0, // Remove padding if any
+            padding: 0, 
           }}
         >
           <Typography

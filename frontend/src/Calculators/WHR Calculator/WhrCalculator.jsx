@@ -46,22 +46,20 @@ const WHRCalculator = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate inputs before calculating
     const { waist, hip } = formData;
-    let valid = true; // Flag to check if inputs are valid
+    let valid = true;
 
     if (!waist || isNaN(waist)) {
-      setWaistError("Please enter a valid number."); // Set waist error message
-      valid = false; // Mark as invalid
+      setWaistError("Please enter a valid number."); 
+      valid = false; 
     }
 
     if (!hip || isNaN(hip)) {
-      setHipError("Please enter a valid number."); // Set hip error message
-      valid = false; // Mark as invalid
+      setHipError("Please enter a valid number.");
+      valid = false; 
     }
 
-    if (!valid) return; // Prevent submission if inputs are invalid
-
+    if (!valid) return; 
     try {
       const response = await axios.post("http://localhost:9090/api/calculateWHR", {
         waist: parseFloat(waist),
@@ -72,7 +70,6 @@ const WHRCalculator = () => {
       setRatio(response.data.ratio.toFixed(2));
       setRatioCategory(response.data.category);
 
-      // Scroll to report card after form submission
       if (reportRef.current) {
         reportRef.current.scrollIntoView({ behavior: "smooth" });
       }
@@ -193,7 +190,7 @@ const WHRCalculator = () => {
         </Box>
         {ratio && (
           <Card
-            ref={reportRef} // Add the ref to the report card
+            ref={reportRef} 
             sx={{
               display: "flex",
               justifyContent: "center",

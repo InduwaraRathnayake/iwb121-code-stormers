@@ -1,8 +1,7 @@
 import React from "react";
 import { Box, Card, CardContent, CardMedia, Typography } from "@mui/material";
-import Slider from "react-slick"; // Import Slider
+import Slider from "react-slick";
 
-// Import images
 import stayhydrated from "../assets/stayhydrated.jpg";
 import balancedDiet from "../assets/balanced-diet.jpg";
 import exercise from "../assets/exercise.jpg";
@@ -69,12 +68,12 @@ export default function HealthTips() {
     dots: true,
     infinite: true,
     speed: 1000,
-    slidesToShow: 4, // Number of cards to show at once
+    slidesToShow: 4, 
     slidesToScroll: 1,
-    centerMode: true, // Enable center mode to show the current card prominently
-    centerPadding: "20px", // Adds padding to the left and right of the center card
-    autoplay: true, // Enable autoplay
-    autoplaySpeed: 3000, // Duration to wait before switching to the next slide (in milliseconds)
+    centerMode: true,
+    centerPadding: "20px", 
+    autoplay: true,
+    autoplaySpeed: 3000, 
     responsive: [
       {
         breakpoint: 1024,
@@ -133,10 +132,10 @@ export default function HealthTips() {
                 sx={{
                   cursor: "pointer",
                   borderRadius: "20px",
-                  backgroundColor: "rgba(255, 255, 255, 0.8)", // Semi-transparent white for card backgrounds
+                  backgroundColor: "rgba(255, 255, 255, 0.8)", 
                   boxShadow: "rgba(133, 189, 215, 0.878) 0px 20px 20px -15px",
                   transition: "transform 0.3s, box-shadow 0.3s",
-                  height: "400px", // Fixed height for uniformity
+                  height: "400px",
                   "&:hover": {
                     transform: "scale(1.05)",
                     boxShadow: "rgba(133, 189, 215, 0.878) 0px 30px 30px -20px",
@@ -149,9 +148,9 @@ export default function HealthTips() {
                   image={tip.image}
                   alt={tip.title}
                   sx={{
-                    objectFit: "cover", // Ensures the image covers the area without distortion
-                    width: "100%", // Ensures full width of card
-                    height: "240px", // Fixed height for uniformity
+                    objectFit: "cover", 
+                    width: "100%", 
+                    height: "240px", 
                   }}
                 />
                 <CardContent>

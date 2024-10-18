@@ -18,13 +18,13 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { CardButton, TitleBox } from "../components/Card";
-import GetCookie from "../hooks/getcookie"; // Utility to get the email from cookies
+import GetCookie from "../hooks/getcookie";
 import decryptHash from "../helpers/decrypting";
 import { SECRET_KEY } from "../helpers/constants";
 import RemoveCookie from "../hooks/removecookie";
 
 const UserProfile = () => {
-  const [userData, setUserData] = useState(null); // Updated state for user data
+  const [userData, setUserData] = useState(null); 
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -41,9 +41,8 @@ const UserProfile = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [showDeleteIcon, setShowDeleteIcon] = useState(true);
 
-  // Fetch user data on component mount
   useEffect(() => {
-    const hashedemail = GetCookie("userEmail"); // Get email from cookies
+    const hashedemail = GetCookie("userEmail"); 
     const email = decryptHash(hashedemail, SECRET_KEY);
     console.log("🚀 ~ useEffect ~ email:", email);
     if (email) {
@@ -67,13 +66,13 @@ const UserProfile = () => {
 
   const handleEditToggle = () => {
     setIsEditing(!isEditing);
-    setShowDeleteIcon(false); // Show delete icon
+    setShowDeleteIcon(false); 
     if (isEditing) {
-      setFormData(userData); // Reset form data when editing is canceled
-      setCurrentPassword(""); // Reset current password field
-      setNewPassword(""); // Reset new password field
-      setChangePassword(false); // Reset change password option
-      setShowDeleteIcon(true); // Show delete icon
+      setFormData(userData);
+      setCurrentPassword(""); 
+      setNewPassword(""); 
+      setChangePassword(false); 
+      setShowDeleteIcon(true); 
     }
   };
 
@@ -86,7 +85,7 @@ const UserProfile = () => {
     e.preventDefault();
     
     if (changePassword && currentPassword && newPassword) {
-      // Handle password change
+  
       axios
         .post("http://localhost:9090/api/forgotPassword", {
           email: userData.email,
@@ -94,7 +93,7 @@ const UserProfile = () => {
         })
         .then(() => {
           alert("Password changed successfully.");
-          setCurrentPassword(""); // Reset password fields
+          setCurrentPassword(""); 
           setNewPassword("");
           setChangePassword(false);
         })
@@ -111,8 +110,8 @@ const UserProfile = () => {
         })
         .then(() => {
           alert("Profile updated successfully.");
-          setUserData(formData); // Update the local state with the new data
-          setIsEditing(false); // Exit editing mode
+          setUserData(formData); 
+          setIsEditing(false);
         })
         .catch((error) => {
           console.error("Error updating profile:", error);
@@ -127,8 +126,7 @@ const UserProfile = () => {
    const handleDialogClose = (confirmed) => {
     setOpenDialog(false);
     if (confirmed) {
-      // Handle the delete action here
-      const hashedemail = GetCookie("userEmail"); // Get email from cookies
+      const hashedemail = GetCookie("userEmail"); 
       const mail = decryptHash(hashedemail, SECRET_KEY);
       console.log("🚀 from line 130 ~ handleDialogClose ~ email:", mail);
       if (mail) {
