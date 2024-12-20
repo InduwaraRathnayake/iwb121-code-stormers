@@ -14,7 +14,7 @@ This project analyzes various health reports, such as blood glucose, CRP, FBC, l
 
 ## Prerequisites
 
-- [Node.js](https://nodejs.org/) (for frontend)
+- [React.js](https://react.dev/) (for frontend)
 - [Ballerina](https://ballerina.io/) (for backend)
 - MySQL Database (Aiven.io or local setup)
 - Java KeyStore and related files for encryption
@@ -156,9 +156,9 @@ Refer to `api.bal` for REST API details on CRUD operations for user data, health
 
 This project was developed by the following team members:
 
-- [PathumiRanasinghe](https://github.com/PathumiRanasinghe)
-- [SanujiSamarakoon](https://github.com/sanujis)
-- [ShanthishaShyamana](https://github.com/ShanthishaShyamana)
+- [Pathumi Ranasinghe](https://github.com/PathumiRanasinghe)
+- [Sanuji Samarakoon](https://github.com/sanujis)
+- [Shanthisha Shyamana](https://github.com/ShanthishaShyamana)
 
 ## Contributing
 
